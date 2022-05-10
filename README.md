@@ -1,6 +1,6 @@
-# Wex App (wex)
+# wex-results (wex-results)
 
-A front end for the ERP Wex Project
+Wex application for managing student results
 
 ## Install the dependencies
 ```bash
@@ -20,14 +20,6 @@ quasar dev
 yarn lint
 # or
 npm run lint
-```
-
-
-### Format the files
-```bash
-yarn format
-# or
-npm run format
 ```
 
 

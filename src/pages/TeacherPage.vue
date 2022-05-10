@@ -6,7 +6,7 @@
         <q-card-section class="col-3 flex flex-center">
           <q-img
             class="rounded-borders"
-            src="~/assets/img/profile-placeholder.jpg"
+            src="~/assets/profile-placeholder.jpg"
             style="width: 100px; hieght: 100px"
           />
         </q-card-section>

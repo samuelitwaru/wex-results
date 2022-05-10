@@ -20,7 +20,7 @@
     <q-drawer v-model="leftDrawerOpen" show-if-above bordered :width="220">
       <q-list>
         <q-img
-          src="~/assets/img/string.png"
+          src="~/assets/string.png"
           :ratio="1"
           style="width: 120px; hieght: 120px"
           spinner-color="primary"
@@ -48,71 +48,71 @@
 </template>
 
 <script>
-import { defineComponent, ref } from "vue";
+import { defineComponent, ref } from 'vue'
 // import EssentialLink from "components/EssentialLink.vue";
 
 const linksList = [
   {
-    title: "Home",
-    icon: "home",
-    link: "/",
+    title: 'Home',
+    icon: 'home',
+    link: '/'
   },
   {
-    title: "Levels",
-    icon: "signal_cellular_alt",
-    link: "/levels",
+    title: 'Levels',
+    icon: 'signal_cellular_alt',
+    link: '/levels'
   },
   {
-    title: "Subjects",
-    icon: "subject",
-    link: "/subjects",
+    title: 'Class Rooms',
+    icon: 'class',
+    link: '/class-rooms'
   },
   {
-    title: "Teachers",
-    icon: "supervisor_account",
-    link: "/teachers",
+    title: 'Subjects',
+    icon: 'subject',
+    link: '/subjects'
   },
   {
-    title: "Class Rooms",
-    icon: "class",
-    link: "/class-rooms",
+    title: 'Teachers',
+    icon: 'supervisor_account',
+    link: '/teachers'
   },
   {
-    title: "Students",
-    icon: "school",
-    link: "/students",
+    title: 'Students',
+    icon: 'school',
+    link: '/students'
   },
   {
-    title: "Grading Systems",
-    icon: "stars",
-    link: "/grading-systems",
+    title: 'Grading Systems',
+    icon: 'stars',
+    link: '/grading-systems'
   },
   {
-    title: "Assessments",
-    icon: "assessment",
-    link: "/assessments",
-  },
-];
+    title: 'Assessments',
+    icon: 'assessment',
+    link: '/assessments'
+  }
+]
 
 export default defineComponent({
-  name: "MainLayout",
+  name: 'MainLayout',
 
   components: {
     // EssentialLink,
   },
 
-  setup() {
-    const leftDrawerOpen = ref(false);
+  setup () {
+    const leftDrawerOpen = ref(false)
 
     return {
       essentialLinks: linksList,
       leftDrawerOpen,
-      toggleLeftDrawer() {
-        leftDrawerOpen.value = !leftDrawerOpen.value;
-      },
-    };
-  },
-});
+      toggleLeftDrawer () {
+        leftDrawerOpen.value = !leftDrawerOpen.value
+      }
+    }
+  }
+})
 </script>
 
 <style>

@@ -5,7 +5,7 @@
         <q-card-section class="col-5 flex flex-center">
           <q-img
             class="rounded-borders"
-            src="~/assets/img/string.png"
+            src="~/assets/string.png"
             :ratio="1"
             style="width: 120px; hieght: 120px"
           />
@@ -25,21 +25,22 @@
 </template>
 
 <script>
-import { defineComponent } from "vue";
+import { defineComponent } from 'vue'
 
 export default defineComponent({
-  name: "IndexPage",
-  data() {
+  name: 'IndexPage',
+
+  data () {
     return {
       formData: {
-        text: "Samuel",
-      },
-    };
+        text: 'Samuel'
+      }
+    }
   },
   methods: {
-    onSubmit() {
-      alert(this.formData.text);
-    },
-  },
-});
+    onSubmit () {
+      alert(this.formData.text)
+    }
+  }
+})
 </script>

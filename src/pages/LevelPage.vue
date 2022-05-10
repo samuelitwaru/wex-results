@@ -28,7 +28,7 @@
           <q-form @submit="updateLevel" class="q-gutter-md">
             <q-input
               v-model="formData.rank"
-              type="text"
+              type="number"
               label="Rank"
               required
             />
@@ -86,7 +86,6 @@ export default {
     },
 
     updateLevel() {
-      console.log(this.formData);
       this.$api
         .put(`/levels/${this.level.id}/`, this.formData)
         .then((response) => {

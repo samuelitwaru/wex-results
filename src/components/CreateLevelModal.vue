@@ -11,12 +11,11 @@
         <q-card-section>
           <div class="text-h6">New Level</div>
         </q-card-section>
-
         <q-card-section class="q-pt-none">
           <q-form @submit="createLevel" class="q-gutter-md">
             <q-input
               v-model="formData.rank"
-              type="text"
+              type="number"
               label="Rank"
               required
             />
@@ -77,7 +76,6 @@ export default {
   },
   methods: {
     createLevel() {
-      console.log(this.formData);
       this.$api.post(`/levels/`, this.formData).then((response) => {
         this.$emit("addLevel", response.data);
         this.medium = false;

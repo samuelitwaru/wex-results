@@ -1,13 +1,12 @@
 {
-  "name": "wex",
+  "name": "wex-results",
   "version": "0.0.1",
-  "description": "A front end for the ERP Wex Project",
-  "productName": "Wex App",
+  "description": "Wex application for managing student results",
+  "productName": "wex-results",
   "author": "samuelitwaru <samuelitwaru@gmail.com>",
   "private": true,
   "scripts": {
     "lint": "eslint --ext .js,.vue ./",
-    "format": "prettier --write \"**/*.{js,vue,scss,html,md,json}\" --ignore-path .gitignore",
     "test": "echo \"No test specified\" && exit 0"
   },
   "dependencies": {
@@ -24,8 +23,10 @@
     "eslint": "^8.10.0",
     "eslint-plugin-vue": "^8.5.0",
     "eslint-webpack-plugin": "^3.1.1",
-    "eslint-config-prettier": "^8.1.0",
-    "prettier": "^2.5.1",
+    "eslint-config-standard": "^17.0.0-1",
+    "eslint-plugin-import": "^2.19.1",
+    "eslint-plugin-n": "^14.0.0",
+    "eslint-plugin-promise": "^6.0.0",
     "@quasar/app-webpack": "^3.0.0"
   },
   "browserslist": [

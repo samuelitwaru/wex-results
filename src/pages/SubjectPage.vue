@@ -16,7 +16,7 @@
       <q-separator />
 
       <div class="row">
-        <div class="col-md-4 q-pa-sm">
+        <div class="col-12 q-pa-sm">
           <strong>Subject</strong>
           <q-form @submit="updateSubject" class="q-gutter-md">
             <q-input
@@ -33,10 +33,10 @@
             </div>
           </q-form>
         </div>
-        <div class="col-md-4 q-pa-sm">
+        <div class="col-12 q-pa-sm">
           <strong>Teachers</strong>
         </div>
-        <div class="col-md-4 q-pa-sm">
+        <div class="col-12 q-pa-sm">
           <strong>Classes</strong>
         </div>
       </div>

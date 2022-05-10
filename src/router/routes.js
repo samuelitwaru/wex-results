@@ -12,7 +12,7 @@ const routes = [
     component: () => import('layouts/MainLayout.vue'),
     children: [
       { path: '', component: () => import('pages/StudentsPage.vue') },
-      { path: ':id', component: () => import('pages/StudentPage.vue') },
+      { path: ':id', component: () => import('pages/StudentPage.vue') }
     ]
   },
 
@@ -21,7 +21,7 @@ const routes = [
     component: () => import('layouts/MainLayout.vue'),
     children: [
       { path: '', component: () => import('pages/TeachersPage.vue') },
-      { path: ':id', component: () => import('pages/TeacherPage.vue') },
+      { path: ':id', component: () => import('pages/TeacherPage.vue') }
     ]
   },
 
@@ -30,7 +30,7 @@ const routes = [
     component: () => import('layouts/MainLayout.vue'),
     children: [
       { path: '', component: () => import('pages/ClassRoomsPage.vue') },
-      { path: ':id', component: () => import('pages/ClassRoomPage.vue') },
+      { path: ':id', component: () => import('pages/ClassRoomPage.vue') }
     ]
   },
 
@@ -39,7 +39,7 @@ const routes = [
     component: () => import('layouts/MainLayout.vue'),
     children: [
       { path: '', component: () => import('pages/SubjectsPage.vue') },
-      { path: ':id', component: () => import('pages/SubjectPage.vue') },
+      { path: ':id', component: () => import('pages/SubjectPage.vue') }
     ]
   },
 
@@ -48,7 +48,7 @@ const routes = [
     component: () => import('layouts/MainLayout.vue'),
     children: [
       { path: '', component: () => import('pages/LevelsPage.vue') },
-      { path: ':id', component: () => import('pages/LevelPage.vue') },
+      { path: ':id', component: () => import('pages/LevelPage.vue') }
     ]
   },
 
@@ -57,7 +57,7 @@ const routes = [
     component: () => import('layouts/MainLayout.vue'),
     children: [
       { path: '', component: () => import('pages/GradingSystemsPage.vue') },
-      { path: ':id', component: () => import('pages/GradingSystemPage.vue') },
+      { path: ':id', component: () => import('pages/GradingSystemPage.vue') }
     ]
   },
 
@@ -71,13 +71,11 @@ const routes = [
         component: () => import('pages/AssessmentPage.vue'),
         children: [
           { path: '', component: () => import('components/UpdateAssessment.vue') },
-          { path: 'scores', component: () => import('components/AssessmentScores.vue') },
+          { path: 'scores', component: () => import('components/AssessmentScores.vue') }
         ]
-      },
+      }
     ]
   },
-
-
 
   // Always leave this as last one,
   // but you can also remove it

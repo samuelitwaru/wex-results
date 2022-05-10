@@ -65,7 +65,7 @@ export default {
     return {
       classRooms: [],
       formData: {
-        name: "Epeduno James",
+        name: "",
       },
     };
   },

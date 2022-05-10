@@ -78,10 +78,10 @@
             <q-select
               outlined
               v-model="formData.class_room"
-              option-label="name"
+              :option-label="(item) => `${item.name} ${item.stream}`"
               option-value="id"
               :options="classRooms"
-              label="Class Room"
+              label="Class"
               emit-value
               map-options
             />
@@ -115,9 +115,9 @@ export default {
   data() {
     return {
       formData: {
-        first_name: "Smith",
-        last_name: "Okot",
-        middle_name: "",
+        first_name: null,
+        last_name: null,
+        middle_name: null,
         dob: null,
         class_room: null,
       },
