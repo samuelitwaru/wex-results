@@ -13,7 +13,11 @@
         </q-card-section>
 
         <q-card-section class="q-pt-none">
-          <q-form @submit="createStudent" class="q-gutter-md">
+          <q-form
+            @submit="createStudent"
+            @reset="resetForm"
+            class="q-gutter-md"
+          >
             <q-input
               v-model="formData.first_name"
               type="text"
@@ -128,10 +132,10 @@ export default {
   },
   methods: {
     createStudent() {
-      console.log(this.formData);
       this.$api.post(`/students/`, this.formData).then((response) => {
         this.$emit("addStudent", response.data);
         this.medium = false;
+        this.resetForm();
       });
     },
 
@@ -139,6 +143,14 @@ export default {
       this.$api.get(`/class-rooms/`).then((response) => {
         this.classRooms = response.data;
       });
+    },
+
+    resetForm() {
+      this.formData.first_name = null;
+      this.formData.last_name = null;
+      this.formData.middle_name = null;
+      this.formData.dob = null;
+      this.formData.class_room = null;
     },
   },
 };

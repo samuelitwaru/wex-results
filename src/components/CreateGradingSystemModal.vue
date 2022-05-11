@@ -1,7 +1,7 @@
 <template>
   <div>
     <q-btn
-      label="New GradingSystem"
+      label="New Grading System"
       icon="add"
       color="primary"
       @click="medium = true"
@@ -13,7 +13,11 @@
         </q-card-section>
 
         <q-card-section class="q-pt-none">
-          <q-form @submit="createGradingSystem" class="q-gutter-md">
+          <q-form
+            @submit="createGradingSystem"
+            @reset="resetForm"
+            class="q-gutter-md"
+          >
             <q-input
               v-model="formData.name"
               type="text"
@@ -49,10 +53,7 @@ import { ref } from "vue";
 export default {
   setup() {
     return {
-      small: ref(false),
       medium: ref(false),
-      fullWidth: ref(false),
-      fullHeight: ref(false),
     };
   },
   data() {
@@ -70,10 +71,10 @@ export default {
   },
   methods: {
     createGradingSystem() {
-      console.log(this.formData);
       this.$api.post(`/grading-systems/`, this.formData).then((response) => {
         this.$emit("addGradingSystem", response.data);
         this.medium = false;
+        this.resetForm();
       });
     },
 
@@ -81,6 +82,12 @@ export default {
       this.$api.get(`/grading-systems/`).then((response) => {
         this.grading_systems = response.data;
       });
+    },
+
+    resetForm() {
+      this.formData.name = null;
+      this.formData.rank = null;
+      this.formData.description = null;
     },
   },
 };

@@ -8,6 +8,7 @@
             {{ class_room.name }}
           </div>
           <div>{{ class_room.stream }}</div>
+          <div v-if='class_room.teacher'>{{ class_room.teacher_detail.name }}</div>
         </q-card-section>
       </q-card-section>
 

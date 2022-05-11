@@ -13,24 +13,13 @@
         </q-card-section>
 
         <q-card-section class="q-pt-none">
-          <q-form @submit="createTeacher" class="q-gutter-md">
+          <q-form @submit="createTeacher" @reset="restForm" class="q-gutter-md">
             <q-input
               v-model="formData.name"
               type="text"
               label="Name"
               required
             />
-            <!-- <q-select
-              outlined
-              v-model="formData.class_rooms"
-              option-label="name"
-              option-value="id"
-              :options="classRooms"
-              label="Class Room"
-              emit-value
-              map-options
-              multiple
-            /> -->
 
             <div class="flex justify-between">
               <div>
@@ -55,10 +44,7 @@ export default {
   props: ["teachers"],
   setup() {
     return {
-      small: ref(false),
       medium: ref(false),
-      fullWidth: ref(false),
-      fullHeight: ref(false),
     };
   },
   data() {
@@ -74,10 +60,10 @@ export default {
   },
   methods: {
     createTeacher() {
-      console.log(this.formData);
       this.$api.post(`/teachers/`, this.formData).then((response) => {
         this.$emit("addTeacher", response.data);
         this.medium = false;
+        this.resetForm();
       });
     },
 
@@ -85,6 +71,10 @@ export default {
       this.$api.get(`/class-rooms/`).then((response) => {
         this.classRooms = response.data;
       });
+    },
+
+    resetForm() {
+      this.formData.name = null;
     },
   },
 };

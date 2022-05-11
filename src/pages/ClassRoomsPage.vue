@@ -42,8 +42,8 @@ export default {
   data() {
     return {
       columns: [
-        { name: "name", label: "Name", field: "name", align: "left" },
-        { name: "stream", label: "Stream", field: "stream", align: "left" },
+        { name: "name", label: "Name", field: 'name', format: (data, row)=>`${data} ${row.stream}`, align: "left" },
+        { name: "teacher", label: "Teacher", field: 'teacher_detail', format: (data, row)=>`${data.name}`, align: "left" },
         { name: "action", label: "Action", field: "action", align: "left" },
       ],
       class_rooms: [],

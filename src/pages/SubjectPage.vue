@@ -3,8 +3,8 @@
     <confirm-dialog ref="confirmDialog" />
     <q-card class="my-card no-borders" flat>
       <q-card-section horizontal>
-        <q-card-section class="q-pt-xs">
-          <div class="text-h5 q-mt-sm q-mb-xs">
+        <q-card-section class="q-pa-sm">
+          <div class="text-h5">
             {{ subject.name }}
           </div>
           <div class="subtitle q-mt-sm q-mb-xs">
@@ -34,10 +34,20 @@
           </q-form>
         </div>
         <div class="col-12 q-pa-sm">
-          <strong>Teachers</strong>
-        </div>
-        <div class="col-12 q-pa-sm">
-          <strong>Classes</strong>
+          <q-markup-table>
+            <thead>
+              <tr>
+                <th class="text-left">Teachers</th>
+                <th class="text-right"></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="teacher in teachers" :key='teacher.id'>
+                <td class="text-left">{{teacher.teacher_detail.name}}</td>
+                <td class="text-right"></td>
+              </tr>
+            </tbody>
+          </q-markup-table>
         </div>
       </div>
     </q-card>
@@ -61,6 +71,7 @@ export default {
     return {
       subject: {},
       classRooms: [],
+      teachers: [],
 
       formData: {
         name: "",
@@ -71,6 +82,7 @@ export default {
   created() {
     this.getSubject();
     this.getClassRooms();
+    this.getSubjectTeachers();
   },
   methods: {
     getSubject() {
@@ -79,6 +91,14 @@ export default {
         console.log(this.subject);
         this.formData.name = this.subject.name;
         this.formData.abbr = this.subject.abbr;
+      });
+    },
+
+    getSubjectTeachers(){
+      this.$api.get(`/teacher-class-room-subjects/?subject=${this.$route.params.id}`)
+      .then((response) => {
+        this.teachers = response.data
+        console.log(response.data);
       });
     },
 

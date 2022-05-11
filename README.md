@@ -1,6 +1,6 @@
-# wex-results (wex-results)
+# Wex Reults (wex-results)
 
-Wex application for managing student results
+Client app for results wex-erp
 
 ## Install the dependencies
 ```bash

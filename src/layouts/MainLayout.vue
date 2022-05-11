@@ -63,11 +63,6 @@ const linksList = [
     link: '/levels'
   },
   {
-    title: 'Class Rooms',
-    icon: 'class',
-    link: '/class-rooms'
-  },
-  {
     title: 'Subjects',
     icon: 'subject',
     link: '/subjects'
@@ -76,6 +71,11 @@ const linksList = [
     title: 'Teachers',
     icon: 'supervisor_account',
     link: '/teachers'
+  },
+  {
+    title: 'Class Rooms',
+    icon: 'class',
+    link: '/class-rooms'
   },
   {
     title: 'Students',

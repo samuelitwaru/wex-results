@@ -13,7 +13,11 @@
         </q-card-section>
 
         <q-card-section class="q-pt-none">
-          <q-form @submit="createAssessment" class="q-gutter-md">
+          <q-form
+            @submit="createAssessment"
+            @reset="resetForm"
+            class="q-gutter-md"
+          >
             <div>
               <label class="text-grey-8">Date</label>
               <div
@@ -144,6 +148,7 @@ export default {
       this.$api.post(`/assessments/`, this.formData).then((response) => {
         this.$emit("addAssessment", response.data);
         this.medium = false;
+        this.resetForm();
       });
     },
 
@@ -163,6 +168,14 @@ export default {
       this.$api.get(`/class-rooms/`).then((response) => {
         this.classRooms = response.data;
       });
+    },
+
+    resetForm() {
+      this.formData.date = null;
+      this.formData.term = null;
+      this.formData.class_room = null;
+      this.formData.subject = null;
+      this.formData.teacher = null;
     },
   },
 };

@@ -8,9 +8,9 @@ import axios from 'axios'
 // "export default () => {}" function below (which runs individually
 // for each client)
 
-var baseURL = 'http://192.168.1.155:8000/api'
+// var baseURL = 'http://192.168.1.155:8000/api'
+// var baseURL = 'https://wex-erp.herokuapp.com/api'
 var baseURL = 'http://127.0.0.1:8000/api'
-var baseURL = 'https://wex-erp.herokuapp.com/api'
 
 const api = axios.create({ baseURL: baseURL })
 

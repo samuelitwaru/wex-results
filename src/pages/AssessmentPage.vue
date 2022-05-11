@@ -36,12 +36,12 @@
 </template>
 
 <script>
-import ConfirmDialog from 'src/components/ConfirmDialog.vue'
+import ConfirmDialog from "src/components/ConfirmDialog.vue";
 export default {
   components: { ConfirmDialog },
-  data () {
+  data() {
     return {
-      assessment: null
+      assessment: null,
       // teachers: [],
       // levels: [],
       // subjects: [],
@@ -52,26 +52,26 @@ export default {
       //   term: null,
       //   subject: null,
       // },
-    }
+    };
   },
-  created () {
-    this.getAssessment()
+  created() {
+    this.getAssessment();
     // this.getTeachers();
     // this.getLevels();
     // this.getSubjects();
   },
   methods: {
-    getAssessment () {
+    getAssessment() {
       this.$api
         .get(`/assessments/${this.$route.params.id}/`)
         .then((response) => {
-          this.assessment = response.data
+          this.assessment = response.data;
           // this.formData.date = this.assessment.date;
           // this.formData.level = this.assessment.level;
           // this.formData.subject = this.assessment.subject;
           // this.formData.teacher = this.assessment.teacher;
           // this.formData.term = this.assessment.term;
-        })
+        });
     },
 
     // updateAssessment() {
@@ -84,23 +84,23 @@ export default {
     //     });
     // },
 
-    deleteAssessment (id) {
+    deleteAssessment(id) {
       this.$refs.confirmDialog
         .show({
-          title: 'Hello',
+          title: "Hello",
           message: `Are you sure you want to delete the assessment "${id}"?`,
-          okButton: 'Yes, delete'
+          okButton: "Yes, delete",
         })
         .then((res) => {
           if (res) {
             this.$api.delete(`/assessments/${id}/`).then((response) => {
               if (response.status == 204) {
-                this.$router.push('/assessments')
+                this.$router.push("/assessments");
               }
-            })
+            });
           }
-        })
-    }
+        });
+    },
 
     // getTeachers() {
     //   this.$api.get(`/teachers/`).then((response) => {
@@ -119,8 +119,8 @@ export default {
     //     this.levels = response.data;
     //   });
     // },
-  }
-}
+  },
+};
 </script>
 
 <style>

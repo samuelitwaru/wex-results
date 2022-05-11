@@ -3,8 +3,8 @@
     <confirm-dialog ref="confirmDialog" />
     <q-card class="my-card no-borders" flat>
       <q-card-section horizontal>
-        <q-card-section class="q-pt-xs">
-          <div class="text-h5 q-mt-sm q-mb-xs">
+        <q-card-section class="q-pa-sm">
+          <div class="text-h5">
             {{ level.name }}
           </div>
           <div>{{ level.description }}</div>
@@ -49,6 +49,25 @@
             </div>
           </q-form>
         </div>
+        <div class="q-pa-sm">
+          <!-- <strong>Subjects</strong> -->
+          <q-markup-table>
+            <thead>
+              <tr>
+                <th class="text-left">Level Subjects</th>
+                <th class="text-right">
+                  <add-level-subjects-modal :level='level' :subjects='subjects' @updateLevel='level=$event' />
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for='subject in level.subjects' :key='subject.id'>
+                <td class="text-left">{{subject.name}}</td>
+                <td class="text-right">{{subject.abbr }}</td>
+              </tr>
+            </tbody>
+          </q-markup-table>
+        </div>
       </div>
     </q-card>
   </q-page>
@@ -56,13 +75,14 @@
 
 <script>
 import ConfirmDialog from "src/components/ConfirmDialog.vue";
+import AddLevelSubjectsModal from 'src/components/AddLevelSubjectsModal.vue';
 export default {
-  components: { ConfirmDialog },
+  components: { ConfirmDialog, AddLevelSubjectsModal },
   data() {
     return {
       level: {},
-      levels: [],
       teachers: [],
+      subjects: [],
 
       formData: {
         rank: "",
@@ -73,15 +93,30 @@ export default {
   },
   created() {
     this.getLevel();
+    this.getSubjects()
   },
   methods: {
     getLevel() {
       this.$api.get(`/levels/${this.$route.params.id}/`).then((response) => {
         this.level = response.data;
-        console.log(this.level);
         this.formData.name = this.level.name;
         this.formData.rank = this.level.rank;
         this.formData.description = this.level.description;
+      });
+    },
+
+    addLevelSubjects() {
+      this.$api.put(`/levels/${this.$route.params.id}/subjects/`, [1,2])
+      .then((response) => {
+        this.level = response.data
+        console.log(response.data);
+      });
+    },
+
+    getSubjects(){
+      this.$api.get(`/subjects/`)
+      .then((response) => {
+        this.subjects = response.data
       });
     },
 
@@ -90,7 +125,6 @@ export default {
         .put(`/levels/${this.level.id}/`, this.formData)
         .then((response) => {
           this.level = response.data;
-          console.log(response.data);
         });
     },
 
@@ -110,12 +144,6 @@ export default {
             });
           }
         });
-    },
-
-    getLevels() {
-      this.$api.get(`/levels/`).then((response) => {
-        this.classRooms = response.data;
-      });
     },
   },
 };

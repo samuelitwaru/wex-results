@@ -13,11 +13,15 @@
         </q-card-section>
 
         <q-card-section class="q-pt-none">
-          <q-form @submit="createSubject" class="q-gutter-md">
+          <q-form
+            @submit="createSubject"
+            @reset="resetForm"
+            class="q-gutter-md"
+          >
             <q-input
               v-model="formData.name"
               type="text"
-              label="Last Name"
+              label="Name"
               required
             />
             <q-input v-model="formData.abbr" type="text" label="Abbreviation" />
@@ -45,16 +49,13 @@ export default {
   props: ["subjects"],
   setup() {
     return {
-      small: ref(false),
       medium: ref(false),
-      fullWidth: ref(false),
-      fullHeight: ref(false),
     };
   },
   data() {
     return {
       formData: {
-        name: "Science",
+        name: "",
         abbr: "",
       },
     };
@@ -68,6 +69,7 @@ export default {
       this.$api.post(`/subjects/`, this.formData).then((response) => {
         this.$emit("addSubject", response.data);
         this.medium = false;
+        this.resetForm();
       });
     },
 
@@ -75,6 +77,11 @@ export default {
       this.$api.get(`/class-rooms/`).then((response) => {
         this.classRooms = response.data;
       });
+    },
+
+    resetForm() {
+      this.formData.name = null;
+      this.formData.abbr = null;
     },
   },
 };

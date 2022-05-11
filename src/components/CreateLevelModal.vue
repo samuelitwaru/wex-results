@@ -12,7 +12,7 @@
           <div class="text-h6">New Level</div>
         </q-card-section>
         <q-card-section class="q-pt-none">
-          <q-form @submit="createLevel" class="q-gutter-md">
+          <q-form @submit="createLevel" @reset="resetForm" class="q-gutter-md">
             <q-input
               v-model="formData.rank"
               type="number"
@@ -54,10 +54,7 @@ import { ref } from "vue";
 export default {
   setup() {
     return {
-      small: ref(false),
       medium: ref(false),
-      fullWidth: ref(false),
-      fullHeight: ref(false),
     };
   },
   data() {
@@ -79,6 +76,7 @@ export default {
       this.$api.post(`/levels/`, this.formData).then((response) => {
         this.$emit("addLevel", response.data);
         this.medium = false;
+        this.resetForm();
       });
     },
 
@@ -92,6 +90,12 @@ export default {
       this.$api.get(`/teachers/`).then((response) => {
         this.teachers = response.data;
       });
+    },
+
+    resetForm() {
+      this.formData.name = null;
+      this.formData.rank = null;
+      this.formData.description = null;
     },
   },
 };

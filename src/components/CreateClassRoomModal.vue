@@ -13,7 +13,11 @@
         </q-card-section>
 
         <q-card-section class="q-pt-none">
-          <q-form @submit="createClassRoom" class="q-gutter-md">
+          <q-form
+            @submit="createClassRoom"
+            @reset="resetForm"
+            class="q-gutter-md"
+          >
             <q-input
               v-model="formData.name"
               type="text"
@@ -65,10 +69,7 @@ export default {
   props: ["class_rooms"],
   setup() {
     return {
-      small: ref(false),
       medium: ref(false),
-      fullWidth: ref(false),
-      fullHeight: ref(false),
     };
   },
   data() {
@@ -76,8 +77,10 @@ export default {
       levels: [],
       teachers: [],
       formData: {
-        name: "",
-        stream: "",
+        name: null,
+        stream: null,
+        level: null,
+        teacher: null,
       },
     };
   },
@@ -87,10 +90,10 @@ export default {
   },
   methods: {
     createClassRoom() {
-      console.log(this.formData);
       this.$api.post(`/class-rooms/`, this.formData).then((response) => {
         this.$emit("addClassRoom", response.data);
         this.medium = false;
+        this.resetForm();
       });
     },
 
@@ -104,6 +107,13 @@ export default {
       this.$api.get(`/teachers/`).then((response) => {
         this.teachers = response.data;
       });
+    },
+
+    resetForm() {
+      this.formData.name = null;
+      this.formData.stream = null;
+      this.formData.level = null;
+      this.formData.teacher = null;
     },
   },
 };

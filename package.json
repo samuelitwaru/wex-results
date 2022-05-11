@@ -1,8 +1,8 @@
 {
   "name": "wex-results",
   "version": "0.0.1",
-  "description": "Wex application for managing student results",
-  "productName": "wex-results",
+  "description": "Client app for results wex-erp",
+  "productName": "Wex Reults",
   "author": "samuelitwaru <samuelitwaru@gmail.com>",
   "private": true,
   "scripts": {
