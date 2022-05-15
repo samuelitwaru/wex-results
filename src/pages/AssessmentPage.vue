@@ -5,7 +5,13 @@
       <q-card-section horizontal>
         <q-card-section class="q-pt-xs">
           <div class="text-h5 q-mt-sm q-mb-xs">
-            {{ assessment.subject_detail.name }} Assessment
+            {{ assessment.paper_detail.subject_name }} Assessment
+          </div>
+          <div>
+            Paper {{ assessment.paper_detail.number }}
+            <span v-if="assessment.paper_detail.description">
+              ({{ assessment.paper_detail.description }})
+            </span>
           </div>
           <div>{{ assessment.teacher_detail.name }}</div>
           <div>{{ assessment.date }}</div>
@@ -66,23 +72,8 @@ export default {
         .get(`/assessments/${this.$route.params.id}/`)
         .then((response) => {
           this.assessment = response.data;
-          // this.formData.date = this.assessment.date;
-          // this.formData.level = this.assessment.level;
-          // this.formData.subject = this.assessment.subject;
-          // this.formData.teacher = this.assessment.teacher;
-          // this.formData.term = this.assessment.term;
         });
     },
-
-    // updateAssessment() {
-    //   console.log(this.formData);
-    //   this.$api
-    //     .put(`/assessments/${this.assessment.id}/`, this.formData)
-    //     .then((response) => {
-    //       this.assessment = response.data;
-    //       console.log(response.data);
-    //     });
-    // },
 
     deleteAssessment(id) {
       this.$refs.confirmDialog
@@ -101,24 +92,6 @@ export default {
           }
         });
     },
-
-    // getTeachers() {
-    //   this.$api.get(`/teachers/`).then((response) => {
-    //     this.teachers = response.data;
-    //   });
-    // },
-
-    // getSubjects() {
-    //   this.$api.get(`/subjects/`).then((response) => {
-    //     this.subjects = response.data;
-    //   });
-    // },
-
-    // getLevels() {
-    //   this.$api.get(`/levels/`).then((response) => {
-    //     this.levels = response.data;
-    //   });
-    // },
   },
 };
 </script>

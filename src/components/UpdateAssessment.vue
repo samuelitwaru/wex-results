@@ -40,11 +40,15 @@
           </div>
         </div>
       </div>
-      <q-input
-        v-model.number="formData.term"
-        type="number"
-        label="Term"
-        required
+      <q-select
+        outlined
+        v-model="formData.period"
+        option-label="name"
+        option-value="id"
+        :options="periods"
+        label="Period"
+        emit-value
+        map-options
       />
       <q-select
         outlined
@@ -58,11 +62,11 @@
       />
       <q-select
         outlined
-        v-model="formData.subject"
-        option-label="name"
+        v-model="formData.paper"
+        :option-label="(item) => `${item.subject_name}/${item.number}`"
         option-value="id"
-        :options="subjects"
-        label="Subject"
+        :options="papers"
+        label="Subject Paper"
         emit-value
         map-options
       />
@@ -93,13 +97,14 @@ export default {
       assessment: null,
       teachers: [],
       classRooms: [],
-      subjects: [],
+      papers: [],
+      periods: [],
       formData: {
         date: null,
         teacher: null,
         class_room: null,
-        term: null,
-        subject: null,
+        period: null,
+        paper: null,
       },
     };
   },
@@ -107,7 +112,8 @@ export default {
     this.getAssessment();
     this.getTeachers();
     this.getClassRooms();
-    this.getSubjects();
+    this.getPapers();
+    this.getPeriods();
   },
   methods: {
     getAssessment() {
@@ -117,13 +123,14 @@ export default {
           this.assessment = response.data;
           this.formData.date = this.assessment.date;
           this.formData.class_room = this.assessment.class_room;
-          this.formData.subject = this.assessment.subject;
+          this.formData.paper = this.assessment.paper;
           this.formData.teacher = this.assessment.teacher;
-          this.formData.term = this.assessment.term;
+          this.formData.period = this.assessment.period;
         });
     },
 
     updateAssessment() {
+      console.log(this.formData);
       this.$api
         .put(`/assessments/${this.assessment.id}/`, this.formData)
         .then((response) => {
@@ -132,15 +139,21 @@ export default {
         });
     },
 
+    getPeriods() {
+      this.$api.get(`/periods/`).then((response) => {
+        this.periods = response.data;
+      });
+    },
+
     getTeachers() {
       this.$api.get(`/teachers/`).then((response) => {
         this.teachers = response.data;
       });
     },
 
-    getSubjects() {
-      this.$api.get(`/subjects/`).then((response) => {
-        this.subjects = response.data;
+    getPapers() {
+      this.$api.get(`/papers/`).then((response) => {
+        this.papers = response.data;
       });
     },
 

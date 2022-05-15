@@ -23,14 +23,14 @@
             >
               <q-btn color="primary" icon-right="edit" no-caps flat dense />
             </router-link>
-            <q-btn
+            <!-- <q-btn
               color="negative"
               icon-right="delete"
               no-caps
               flat
               dense
               @click="deleteGradingSystem(props.key)"
-            />
+            /> -->
           </q-td>
         </template>
       </q-table>
@@ -69,25 +69,25 @@ export default {
         console.log(this.grading_systems);
       });
     },
-    deleteGradingSystem(id) {
-      this.$refs.confirmDialog
-        .show({
-          title: "Hello",
-          message: `Are you sure you want to delete the class room "${id}"?`,
-          okButton: "Yes, delete",
-        })
-        .then((res) => {
-          if (res) {
-            this.$api.delete(`/grading-systems/${id}/`).then((response) => {
-              if (response.status == 204) {
-                this.grading_systems = this.grading_systems.filter(
-                  (grading_system) => grading_system.id != id
-                );
-              }
-            });
-          }
-        });
-    },
+    // deleteGradingSystem(id) {
+    //   this.$refs.confirmDialog
+    //     .show({
+    //       title: "Hello",
+    //       message: `Are you sure you want to delete the class room "${id}"?`,
+    //       okButton: "Yes, delete",
+    //     })
+    //     .then((res) => {
+    //       if (res) {
+    //         this.$api.delete(`/grading-systems/${id}/`).then((response) => {
+    //           if (response.status == 204) {
+    //             this.grading_systems = this.grading_systems.filter(
+    //               (grading_system) => grading_system.id != id
+    //             );
+    //           }
+    //         });
+    //       }
+    //     });
+    // },
   },
 };
 </script>

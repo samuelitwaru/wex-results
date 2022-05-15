@@ -79,11 +79,11 @@
             />
             <q-select
               outlined
-              v-model="formData.subject"
-              option-label="name"
+              v-model="formData.paper"
+              :option-label="(item) => `${item.subject_name}/${item.number}`"
               option-value="id"
-              :options="subjects"
-              label="Subject"
+              :options="papers"
+              label="Subject Paper"
               emit-value
               map-options
             />
@@ -129,12 +129,13 @@ export default {
       teachers: [],
       classRooms: [],
       subjects: [],
+      papers: [],
       formData: {
         date: null,
         teacher: null,
         class_room: null,
         term: null,
-        subject: null,
+        paper: null,
       },
     };
   },
@@ -142,6 +143,7 @@ export default {
     this.getTeachers();
     this.getClassRooms();
     this.getSubjects();
+    this.getPapers();
   },
   methods: {
     createAssessment() {
@@ -164,6 +166,12 @@ export default {
       });
     },
 
+    getPapers() {
+      this.$api.get(`/papers/`).then((response) => {
+        this.papers = response.data;
+      });
+    },
+
     getClassRooms() {
       this.$api.get(`/class-rooms/`).then((response) => {
         this.classRooms = response.data;
@@ -174,7 +182,7 @@ export default {
       this.formData.date = null;
       this.formData.term = null;
       this.formData.class_room = null;
-      this.formData.subject = null;
+      this.formData.paper = null;
       this.formData.teacher = null;
     },
   },

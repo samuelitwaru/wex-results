@@ -1,36 +1,25 @@
 <template>
   <div>
-    <q-btn
-      label="New Subject"
-      icon="add"
-      color="primary"
-      @click="medium = true"
-    />
+    <q-btn dense flat icon="add" color="primary" @click="medium = true" />
     <q-dialog v-model="medium">
       <q-card style="width: 700px; max-width: 80vw">
         <q-card-section>
-          <div class="text-h6">New Subject</div>
+          <div class="text-h6">New Paper for "{{ subject.name }}"</div>
         </q-card-section>
 
         <q-card-section class="q-pt-none">
-          <q-form
-            @submit="createSubject"
-            @reset="resetForm"
-            class="q-gutter-md"
-          >
+          <q-form @submit="createPaper" @reset="resetForm" class="q-gutter-md">
             <q-input
-              v-model="formData.code"
-              type="code"
-              label="Code"
+              v-model="formData.number"
+              type="number"
+              label="Number"
               required
             />
             <q-input
-              v-model="formData.name"
+              v-model="formData.description"
               type="text"
-              label="Name"
-              required
+              label="Description"
             />
-            <q-input v-model="formData.abbr" type="text" label="Abbreviation" />
 
             <div class="flex justify-between">
               <div>
@@ -52,7 +41,7 @@
 import { ref } from "vue";
 
 export default {
-  props: ["subjects"],
+  props: ["subject"],
   setup() {
     return {
       medium: ref(false),
@@ -61,33 +50,25 @@ export default {
   data() {
     return {
       formData: {
-        code: "",
-        name: "",
-        abbr: "",
+        number: "",
+        description: "",
       },
     };
   },
-  created() {
-    this.getClassRooms();
-  },
+  created() {},
   methods: {
-    createSubject() {
-      this.$api.post(`/subjects/`, this.formData).then((response) => {
-        this.$emit("addSubject", response.data);
+    createPaper() {
+      this.formData.subject = this.$route.params.id;
+      this.$api.post(`/papers/`, this.formData).then((response) => {
+        this.$emit("addPaper", response.data);
         this.medium = false;
         this.resetForm();
       });
     },
 
-    getClassRooms() {
-      this.$api.get(`/class-rooms/`).then((response) => {
-        this.classRooms = response.data;
-      });
-    },
-
     resetForm() {
-      this.formData.name = null;
-      this.formData.abbr = null;
+      this.formData.number = null;
+      this.formData.description = null;
     },
   },
 };

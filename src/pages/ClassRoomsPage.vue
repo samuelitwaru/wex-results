@@ -18,14 +18,14 @@
             <router-link class="text-white" :to="`/class-rooms/${props.key}`">
               <q-btn color="primary" icon-right="edit" no-caps flat dense />
             </router-link>
-            <q-btn
+            <!-- <q-btn
               color="negative"
               icon-right="delete"
               no-caps
               flat
               dense
               @click="deleteClassRoom(props.key)"
-            />
+            /> -->
           </q-td>
         </template>
       </q-table>
@@ -42,8 +42,20 @@ export default {
   data() {
     return {
       columns: [
-        { name: "name", label: "Name", field: 'name', format: (data, row)=>`${data} ${row.stream}`, align: "left" },
-        { name: "teacher", label: "Teacher", field: 'teacher_detail', format: (data, row)=>`${data.name}`, align: "left" },
+        {
+          name: "name",
+          label: "Name",
+          field: "name",
+          format: (data, row) => `${data} ${row.stream}`,
+          align: "left",
+        },
+        {
+          name: "teacher",
+          label: "Teacher",
+          field: "teacher_detail",
+          format: (data, row) => `${data.name}`,
+          align: "left",
+        },
         { name: "action", label: "Action", field: "action", align: "left" },
       ],
       class_rooms: [],
@@ -58,25 +70,25 @@ export default {
         this.class_rooms = response.data;
       });
     },
-    deleteClassRoom(id) {
-      this.$refs.confirmDialog
-        .show({
-          title: "Hello",
-          message: `Are you sure you want to delete the class room "${id}"?`,
-          okButton: "Yes, delete",
-        })
-        .then((res) => {
-          if (res) {
-            this.$api.delete(`/class-rooms/${id}/`).then((response) => {
-              if (response.status == 204) {
-                this.class_rooms = this.class_rooms.filter(
-                  (class_room) => class_room.id != id
-                );
-              }
-            });
-          }
-        });
-    },
+    // deleteClassRoom(id) {
+    //   this.$refs.confirmDialog
+    //     .show({
+    //       title: "Hello",
+    //       message: `Are you sure you want to delete the class room "${id}"?`,
+    //       okButton: "Yes, delete",
+    //     })
+    //     .then((res) => {
+    //       if (res) {
+    //         this.$api.delete(`/class-rooms/${id}/`).then((response) => {
+    //           if (response.status == 204) {
+    //             this.class_rooms = this.class_rooms.filter(
+    //               (class_room) => class_room.id != id
+    //             );
+    //           }
+    //         });
+    //       }
+    //     });
+    // },
   },
 };
 </script>

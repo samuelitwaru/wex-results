@@ -48,71 +48,71 @@
 </template>
 
 <script>
-import { defineComponent, ref } from 'vue'
+import { defineComponent, ref } from "vue";
 // import EssentialLink from "components/EssentialLink.vue";
 
 const linksList = [
   {
-    title: 'Home',
-    icon: 'home',
-    link: '/'
+    title: "Home",
+    icon: "home",
+    link: "/",
   },
   {
-    title: 'Levels',
-    icon: 'signal_cellular_alt',
-    link: '/levels'
+    title: "Levels",
+    icon: "signal_cellular_alt",
+    link: "/levels",
   },
   {
-    title: 'Subjects',
-    icon: 'subject',
-    link: '/subjects'
+    title: "Teachers",
+    icon: "supervisor_account",
+    link: "/teachers",
   },
   {
-    title: 'Teachers',
-    icon: 'supervisor_account',
-    link: '/teachers'
+    title: "Class Rooms",
+    icon: "class",
+    link: "/class-rooms",
   },
   {
-    title: 'Class Rooms',
-    icon: 'class',
-    link: '/class-rooms'
+    title: "Subjects",
+    icon: "subject",
+    link: "/subjects",
   },
   {
-    title: 'Students',
-    icon: 'school',
-    link: '/students'
+    title: "Students",
+    icon: "school",
+    link: "/students",
   },
   {
-    title: 'Grading Systems',
-    icon: 'stars',
-    link: '/grading-systems'
+    title: "Grading Systems",
+    icon: "stars",
+    link: "/grading-systems",
   },
   {
-    title: 'Assessments',
-    icon: 'assessment',
-    link: '/assessments'
-  }
-]
+    title: "Assessments",
+    icon: "assessment",
+    link: "/assessments",
+  },
+];
 
 export default defineComponent({
-  name: 'MainLayout',
+  name: "MainLayout",
 
   components: {
     // EssentialLink,
   },
 
-  setup () {
-    const leftDrawerOpen = ref(false)
+  setup() {
+    const leftDrawerOpen = ref(false);
 
     return {
       essentialLinks: linksList,
       leftDrawerOpen,
-      toggleLeftDrawer () {
-        leftDrawerOpen.value = !leftDrawerOpen.value
-      }
-    }
-  }
-})
+      toggleLeftDrawer() {
+        leftDrawerOpen.value = !leftDrawerOpen.value;
+      },
+    };
+  },
+});
 </script>
 
 <style>

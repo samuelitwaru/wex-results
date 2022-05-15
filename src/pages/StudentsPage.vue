@@ -18,14 +18,20 @@
             <router-link class="text-white" :to="`/students/${props.key}`">
               <q-btn color="primary" icon-right="edit" no-caps flat dense />
             </router-link>
-            <q-btn
+            <router-link
+              class="text-white"
+              :to="`/students/${props.key}/report`"
+            >
+              <q-btn color="primary" icon-right="book" no-caps flat dense />
+            </router-link>
+            <!-- <q-btn
               color="negative"
               icon-right="delete"
               no-caps
               flat
               dense
               @click="deleteStudent(props.key)"
-            />
+            /> -->
           </q-td>
         </template>
       </q-table>
@@ -76,25 +82,25 @@ export default {
         this.students = response.data;
       });
     },
-    deleteStudent(id) {
-      this.$refs.confirmDialog
-        .show({
-          title: "Hello",
-          message: `Are you sure you want to delete the student "${id}"?`,
-          okButton: "Yes, delete",
-        })
-        .then((res) => {
-          if (res) {
-            this.$api.delete(`/students/${id}/`).then((response) => {
-              if (response.status == 204) {
-                this.students = this.students.filter(
-                  (student) => student.id != id
-                );
-              }
-            });
-          }
-        });
-    },
+    // deleteStudent(id) {
+    //   this.$refs.confirmDialog
+    //     .show({
+    //       title: "Hello",
+    //       message: `Are you sure you want to delete the student "${id}"?`,
+    //       okButton: "Yes, delete",
+    //     })
+    //     .then((res) => {
+    //       if (res) {
+    //         this.$api.delete(`/students/${id}/`).then((response) => {
+    //           if (response.status == 204) {
+    //             this.students = this.students.filter(
+    //               (student) => student.id != id
+    //             );
+    //           }
+    //         });
+    //       }
+    //     });
+    // },
   },
 };
 </script>

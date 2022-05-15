@@ -18,14 +18,14 @@
             <router-link class="text-white" :to="`/subjects/${props.key}`">
               <q-btn color="primary" icon-right="edit" no-caps flat dense />
             </router-link>
-            <q-btn
+            <!-- <q-btn
               color="negative"
               icon-right="delete"
               no-caps
               flat
               dense
               @click="deleteSubject(props.key)"
-            />
+            /> -->
           </q-td>
         </template>
       </q-table>
@@ -62,25 +62,25 @@ export default {
         this.subjects = response.data;
       });
     },
-    deleteSubject(id) {
-      this.$refs.confirmDialog
-        .show({
-          title: "Hello",
-          message: `Are you sure you want to delete the subject "${id}"?`,
-          okButton: "Yes, delete",
-        })
-        .then((res) => {
-          if (res) {
-            this.$api.delete(`/subjects/${id}/`).then((response) => {
-              if (response.status == 204) {
-                this.subjects = this.subjects.filter(
-                  (subject) => subject.id != id
-                );
-              }
-            });
-          }
-        });
-    },
+    // deleteSubject(id) {
+    //   this.$refs.confirmDialog
+    //     .show({
+    //       title: "Hello",
+    //       message: `Are you sure you want to delete the subject "${id}"?`,
+    //       okButton: "Yes, delete",
+    //     })
+    //     .then((res) => {
+    //       if (res) {
+    //         this.$api.delete(`/subjects/${id}/`).then((response) => {
+    //           if (response.status == 204) {
+    //             this.subjects = this.subjects.filter(
+    //               (subject) => subject.id != id
+    //             );
+    //           }
+    //         });
+    //       }
+    //     });
+    // },
   },
 };
 </script>

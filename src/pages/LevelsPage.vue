@@ -18,14 +18,14 @@
             <router-link class="text-white" :to="`/levels/${props.key}`">
               <q-btn color="primary" icon-right="edit" no-caps flat dense />
             </router-link>
-            <q-btn
+            <!-- <q-btn
               color="negative"
               icon-right="delete"
               no-caps
               flat
               dense
               @click="deleteLevel(props.key)"
-            />
+            /> -->
           </q-td>
         </template>
       </q-table>
@@ -59,23 +59,23 @@ export default {
         console.log(this.levels);
       });
     },
-    deleteLevel(id) {
-      this.$refs.confirmDialog
-        .show({
-          title: "Hello",
-          message: `Are you sure you want to delete the class room "${id}"?`,
-          okButton: "Yes, delete",
-        })
-        .then((res) => {
-          if (res) {
-            this.$api.delete(`/levels/${id}/`).then((response) => {
-              if (response.status == 204) {
-                this.levels = this.levels.filter((level) => level.id != id);
-              }
-            });
-          }
-        });
-    },
+    // deleteLevel(id) {
+    //   this.$refs.confirmDialog
+    //     .show({
+    //       title: "Hello",
+    //       message: `Are you sure you want to delete the class room "${id}"?`,
+    //       okButton: "Yes, delete",
+    //     })
+    //     .then((res) => {
+    //       if (res) {
+    //         this.$api.delete(`/levels/${id}/`).then((response) => {
+    //           if (response.status == 204) {
+    //             this.levels = this.levels.filter((level) => level.id != id);
+    //           }
+    //         });
+    //       }
+    //     });
+    // },
   },
 };
 </script>

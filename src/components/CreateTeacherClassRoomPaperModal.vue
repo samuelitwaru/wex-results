@@ -1,6 +1,6 @@
 <template>
   <div>
-    <q-btn icon="add" color="primary" @click="medium = true" />
+    <q-btn icon="add" flat color="primary" dense @click="medium = true" />
     <q-dialog v-model="medium">
       <q-card style="width: 700px; max-width: 80vw">
         <q-card-section>
@@ -10,7 +10,11 @@
         </q-card-section>
 
         <q-card-section class="q-pt-none">
-          <q-form @submit="createTeacherClassRoomSubject" class="q-gutter-md">
+          <q-form
+            @submit="createTeacherClassRoomPaper"
+            @reset="resetForm"
+            class="q-gutter-md"
+          >
             <q-select
               outlined
               v-model="formData.class_room"
@@ -20,18 +24,30 @@
               label="Class"
               emit-value
               map-options
+              required
             />
-
             <q-select
               outlined
-              v-model="formData.subject"
-              option-label="name"
+              v-model="formData.paper"
+              :option-label="(item) => `${item.subject_name}/${item.number}`"
               option-value="id"
-              :options="subjects"
-              label="Subject"
+              :options="papers"
+              label="Subject Paper"
               emit-value
               map-options
+              required
             />
+
+            <!-- <div v-if="formData.subject">
+              <strong>Select papers that apply</strong>
+              <q-option-group
+                v-model="formData.papers"
+                :options="paperOptions"
+                type="checkbox"
+                checked
+                required
+              />
+            </div> -->
 
             <div class="flex justify-between">
               <div>
@@ -62,16 +78,19 @@ export default {
   data() {
     return {
       classRooms: [],
-      subjects: [],
+      papers: [],
+      // paperOptions: [],
       formData: {
         class_room: null,
-        subject: null,
+        // subject: null,
+        paper: null,
       },
     };
   },
+  computed: {},
   created() {
     this.getClassRooms();
-    this.getSubjects();
+    this.getPapers();
   },
   methods: {
     getClassRooms() {
@@ -79,20 +98,38 @@ export default {
         this.classRooms = response.data;
       });
     },
-    getSubjects() {
-      this.$api.get(`/subjects/`).then((response) => {
-        this.subjects = response.data;
+    getPapers() {
+      this.$api.get(`/papers/`).then((response) => {
+        this.papers = response.data;
       });
     },
-    createTeacherClassRoomSubject() {
+    createTeacherClassRoomPaper() {
       this.formData.teacher = this.teacher.id;
-      console.log(this.formData);
       this.$api
-        .post(`/teacher-class-room-subjects/`, this.formData)
+        .post(`/teacher-class-room-papers/`, this.formData)
         .then((response) => {
-          this.$emit("addTeacherClassRoomSubject", response.data);
+          this.$emit("addTeacherClassRoomPaper", response.data);
           this.medium = false;
+          this.resetForm();
         });
+    },
+
+    setPaperOptions(val) {
+      this.paperOptions = [{ label: "hello", value: "1" }];
+      var subject = this.subjects.find((subject) => subject.id == val);
+      this.formData.papers = [];
+      this.paperOptions = subject.papers.map((paper) => {
+        paper.label = `${paper.subject_name}/${paper.number}`;
+        paper.value = paper.id;
+        this.formData.papers.push(paper.value);
+        return paper;
+      });
+    },
+
+    resetForm() {
+      this.formData.class_room = null;
+      this.formData.subject = null;
+      this.formData.papers = [];
     },
   },
 };

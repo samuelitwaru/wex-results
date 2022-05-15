@@ -3,6 +3,9 @@
     <confirm-dialog ref="confirmDialog" />
     <q-card class="my-card no-borders" flat>
       <q-card-section horizontal>
+        <q-card-section class="q-my-aut">
+          <q-icon name="signal_cellular_alt" size="xl" />
+        </q-card-section>
         <q-card-section class="q-pa-sm">
           <div class="text-h5">
             {{ level.name }}
@@ -49,21 +52,48 @@
             </div>
           </q-form>
         </div>
-        <div class="q-pa-sm">
-          <!-- <strong>Subjects</strong> -->
+        <!-- <div class="q-pa-sm">
           <q-markup-table>
             <thead>
               <tr>
                 <th class="text-left">Level Subjects</th>
                 <th class="text-right">
-                  <add-level-subjects-modal :level='level' :subjects='subjects' @updateLevel='level=$event' />
+                  <add-level-subjects-modal
+                    :level="level"
+                    :subjects="subjects"
+                    @updateLevel="level = $event"
+                  />
                 </th>
               </tr>
             </thead>
             <tbody>
-              <tr v-for='subject in level.subjects' :key='subject.id'>
-                <td class="text-left">{{subject.name}}</td>
-                <td class="text-right">{{subject.abbr }}</td>
+              <tr v-for="subject in level.subjects" :key="subject.id">
+                <td class="text-left">{{ subject.name }}</td>
+                <td class="text-right">{{ subject.abbr }}</td>
+              </tr>
+            </tbody>
+          </q-markup-table>
+        </div> -->
+        <div class="q-pa-sm">
+          <q-markup-table>
+            <thead>
+              <tr>
+                <th class="text-left">Papers done in "{{ level.name }}"</th>
+                <th class="text-right">
+                  <add-level-papers-modal
+                    :level="level"
+                    :papers="papers"
+                    @updateLevel="level = $event"
+                  />
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="paper in level.papers" :key="paper.id">
+                <td class="text-left">
+                  {{ paper.subject_name }}/{{ paper.number }}
+                </td>
+                <td class="text-right">{{ paper.description }}</td>
               </tr>
             </tbody>
           </q-markup-table>
@@ -75,14 +105,16 @@
 
 <script>
 import ConfirmDialog from "src/components/ConfirmDialog.vue";
-import AddLevelSubjectsModal from 'src/components/AddLevelSubjectsModal.vue';
+import AddLevelSubjectsModal from "src/components/AddLevelSubjectsModal.vue";
+import AddLevelPapersModal from "src/components/AddLevelPapersModal.vue";
 export default {
-  components: { ConfirmDialog, AddLevelSubjectsModal },
+  components: { ConfirmDialog, AddLevelSubjectsModal, AddLevelPapersModal },
   data() {
     return {
       level: {},
       teachers: [],
       subjects: [],
+      papers: [],
 
       formData: {
         rank: "",
@@ -93,7 +125,8 @@ export default {
   },
   created() {
     this.getLevel();
-    this.getSubjects()
+    this.getSubjects();
+    this.getPapers();
   },
   methods: {
     getLevel() {
@@ -106,17 +139,23 @@ export default {
     },
 
     addLevelSubjects() {
-      this.$api.put(`/levels/${this.$route.params.id}/subjects/`, [1,2])
-      .then((response) => {
-        this.level = response.data
-        console.log(response.data);
+      this.$api
+        .put(`/levels/${this.$route.params.id}/subjects/`, [1, 2])
+        .then((response) => {
+          this.level = response.data;
+          console.log(response.data);
+        });
+    },
+
+    getSubjects() {
+      this.$api.get(`/subjects/`).then((response) => {
+        this.subjects = response.data;
       });
     },
 
-    getSubjects(){
-      this.$api.get(`/subjects/`)
-      .then((response) => {
-        this.subjects = response.data
+    getPapers() {
+      this.$api.get(`/papers/`).then((response) => {
+        this.papers = response.data;
       });
     },
 

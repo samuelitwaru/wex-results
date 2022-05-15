@@ -3,13 +3,13 @@
     <q-btn
       color="primary"
       icon-right="edit"
-      @click="updateTeacherClassRoomSubjectModal = true"
+      @click="updateTeacherClassRoomPaperModal = true"
       no-caps
       flat
       dense
     />
 
-    <q-dialog v-model="updateTeacherClassRoomSubjectModal">
+    <q-dialog v-model="updateTeacherClassRoomPaperModal">
       <q-card style="width: 700px; max-width: 80vw">
         <q-card-section>
           <div class="text-h6">
@@ -22,7 +22,7 @@
             <q-select
               outlined
               v-model="formData.class_room"
-              option-label="name"
+              :option-label="(item) => `${item.name} ${item.stream}`"
               option-value="id"
               :options="classRooms"
               label="Class Room"
@@ -32,11 +32,11 @@
 
             <q-select
               outlined
-              v-model="formData.subject"
-              option-label="name"
+              v-model="formData.paper"
+              :option-label="(item) => `${item.subject_name}/${item.number}`"
               option-value="id"
-              :options="subjects"
-              label="Subject"
+              :options="papers"
+              label="Subject Paper"
               emit-value
               map-options
             />
@@ -60,19 +60,19 @@
 import { ref } from "vue";
 
 export default {
-  props: ["teacherClassRoomSubject", "teacher"],
+  props: ["teacherClassRoomPaper", "teacher"],
   setup() {
     return {
-      updateTeacherClassRoomSubjectModal: ref(false),
+      updateTeacherClassRoomPaperModal: ref(false),
     };
   },
   data() {
     return {
       classRooms: [],
-      subjects: [],
+      papers: [],
       formData: {
-        class_room: this.teacherClassRoomSubject.class_room,
-        subject: this.teacherClassRoomSubject.subject,
+        class_room: this.teacherClassRoomPaper.class_room,
+        paper: this.teacherClassRoomPaper.paper,
       },
     };
   },
@@ -87,8 +87,8 @@ export default {
       });
     },
     getSubjects() {
-      this.$api.get(`/subjects/`).then((response) => {
-        this.subjects = response.data;
+      this.$api.get(`/papers/`).then((response) => {
+        this.papers = response.data;
       });
     },
     updateClassRoomSubject() {
@@ -96,12 +96,12 @@ export default {
       console.log(this.formData);
       this.$api
         .put(
-          `/teacher-class-room-subjects/${this.teacherClassRoomSubject.id}/`,
+          `/teacher-class-room-papers/${this.teacherClassRoomPaper.id}/`,
           this.formData
         )
         .then((response) => {
-          this.$emit("replaceTeacherClassRoomSubject", response.data);
-          this.updateTeacherClassRoomSubjectModal = false;
+          this.$emit("replaceTeacherClassRoomPaper", response.data);
+          this.updateTeacherClassRoomPaperModal = false;
         });
     },
   },

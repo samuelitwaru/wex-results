@@ -9,10 +9,12 @@ import axios from "axios";
 // for each client)
 
 // var baseURL = 'http://192.168.1.155:8000/api'
-var baseURL = "http://127.0.0.1:8000/api";
-var baseURL = "https://wex-erp.herokuapp.com/api";
+var hostURL = "https://wex-erp.herokuapp.com";
+var hostURL = "http://127.0.0.1:8000";
+var apiURL = `${hostURL}/api`;
+var mediaURL = `${hostURL}/media`;
 
-const api = axios.create({ baseURL: baseURL });
+const api = axios.create({ baseURL: apiURL });
 
 export default boot(({ app }) => {
   // for use inside Vue files (Options API) through this.$axios and this.$api
@@ -24,6 +26,8 @@ export default boot(({ app }) => {
   app.config.globalProperties.$api = api;
   // ^ ^ ^ this will allow you to use this.$api (for Vue Options API form)
   //       so you can easily perform requests against your app's API
+  app.config.globalProperties.$apiURL = apiURL;
+  app.config.globalProperties.$mediaURL = mediaURL;
 });
 
 export { api };

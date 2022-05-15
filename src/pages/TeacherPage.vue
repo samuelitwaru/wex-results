@@ -3,11 +3,19 @@
     <confirm-dialog ref="confirmDialog" />
     <q-card class="my-card no-borders" flat>
       <q-card-section horizontal>
-        <q-card-section class="col-3 flex flex-center">
+        <q-card-section style="min-width: 100px; height: 100px">
           <q-img
-            class="rounded-borders"
-            src="~/assets/profile-placeholder.jpg"
+            v-if="teacher.picture"
+            class="rounded-borders hoverImg"
+            alt="~/assets/profile-placeholder.jpg"
+            :src="`${teacher.picture}?r=${Math.random()}`"
             style="width: 100px; hieght: 100px"
+            @error="imgLoadFailed"
+          />
+          <q-icon v-else name="person" size="xl" />
+          <upload-image-modal
+            :url="`${$apiURL}/teachers/${$route.params.id}/picture/upload/`"
+            @updateObject="teacher = $event"
           />
         </q-card-section>
         <q-card-section class="q-pt-xs">
@@ -46,26 +54,24 @@
         <div class="col-12 q-pa-sm">
           <div class="flex justify-between q-py-sm">
             <strong class="q-my-auto">Class Subject Allocations</strong>
-            <create-teacher-class-room-subject-modal
+            <create-teacher-class-room-paper-modal
               :teacher="teacher"
-              @addTeacherClassRoomSubject="
-                teacherClassRoomSubjects.push($event)
-              "
+              @addTeacherClassRoomPaper="teacherClassRoomPapers.push($event)"
             />
           </div>
           <q-table
-            :rows="teacherClassRoomSubjects"
+            :rows="teacherClassRoomPapers"
             :columns="columns"
             row-key="id"
             :rows-per-page-options="[50]"
           >
             <template v-slot:body-cell-action="props">
               <q-td :props="props">
-                <update-teacher-class-room-subject-modal
-                  :teacherClassRoomSubject="props.row"
+                <update-teacher-class-room-paper-modal
+                  :teacherClassRoomPaper="props.row"
                   :teacher="teacher"
-                  @replaceTeacherClassRoomSubject="
-                    this.replaceTeacherClassRoomSubject($event)
+                  @replaceTeacherClassRoomPaper="
+                    this.replaceTeacherClassRoomPaper($event)
                   "
                 />
                 <q-btn
@@ -74,7 +80,7 @@
                   no-caps
                   flat
                   dense
-                  @click="deleteTeacherClassRoomSubject(props.key)"
+                  @click="deleteTeacherClassRoomPaper(props.key)"
                 />
               </q-td>
             </template>
@@ -90,18 +96,20 @@
 
 <script>
 import ConfirmDialog from "src/components/ConfirmDialog.vue";
-import UpdateTeacherClassRoomSubjectModal from "src/components/UpdateTeacherClassRoomSubjectModal.vue";
-import CreateTeacherClassRoomSubjectModal from "src/components/CreateTeacherClassRoomSubjectModal.vue";
+import UpdateTeacherClassRoomPaperModal from "src/components/UpdateTeacherClassRoomPaperModal.vue";
+import CreateTeacherClassRoomPaperModal from "src/components/CreateTeacherClassRoomPaperModal.vue";
+import UploadImageModal from "src/components/UploadImageModal.vue";
 export default {
   components: {
     ConfirmDialog,
-    UpdateTeacherClassRoomSubjectModal,
-    CreateTeacherClassRoomSubjectModal,
+    UpdateTeacherClassRoomPaperModal,
+    CreateTeacherClassRoomPaperModal,
+    UploadImageModal,
   },
   data() {
     return {
       teacher: {},
-      teacherClassRoomSubjects: [],
+      teacherClassRoomPapers: [],
       formData: {
         name: "",
       },
@@ -118,10 +126,10 @@ export default {
         },
         {
           name: "subject",
-          field: "subject_detail",
+          field: "paper_detail",
           label: "Subject",
           align: "left",
-          format: (data, row) => data.name,
+          format: (data, row) => `${data.subject_name} / ${data.number}`,
         },
         {
           name: "action",
@@ -132,7 +140,7 @@ export default {
   },
   created() {
     this.getTeacher();
-    this.getTeacherClassRoomSubjects();
+    this.getTeacherClassRoomPapers();
   },
   methods: {
     getTeacher() {
@@ -168,15 +176,15 @@ export default {
         });
     },
 
-    getTeacherClassRoomSubjects() {
+    getTeacherClassRoomPapers() {
       this.$api
-        .get(`/teacher-class-room-subjects/?teacher=${this.$route.params.id}`)
+        .get(`/teacher-class-room-papers/?teacher=${this.$route.params.id}`)
         .then((response) => {
-          this.teacherClassRoomSubjects = response.data;
+          this.teacherClassRoomPapers = response.data;
         });
     },
 
-    deleteTeacherClassRoomSubject(id) {
+    deleteTeacherClassRoomPaper(id) {
       this.$refs.confirmDialog
         .show({
           title: "Delete Class Subject Allocation",
@@ -186,25 +194,27 @@ export default {
         .then((res) => {
           if (res) {
             this.$api
-              .delete(`/teacher-class-room-subjects/${id}/`)
+              .delete(`/teacher-class-room-papers/${id}/`)
               .then((response) => {
                 if (response.status == 204) {
                   console.log(response.data);
-                  this.teacherClassRoomSubjects =
-                    this.teacherClassRoomSubjects.filter(
-                      (item) => item.id != id
-                    );
+                  this.teacherClassRoomPapers =
+                    this.teacherClassRoomPapers.filter((item) => item.id != id);
                 }
               });
           }
         });
     },
 
-    replaceTeacherClassRoomSubject(teacherClassRoomSubject) {
-      var index = this.teacherClassRoomSubjects.findIndex(
-        (item) => item.id == teacherClassRoomSubject.id
+    replaceTeacherClassRoomPaper(teacherClassRoomPaper) {
+      var index = this.teacherClassRoomPapers.findIndex(
+        (item) => item.id == teacherClassRoomPaper.id
       );
-      this.teacherClassRoomSubjects[index] = teacherClassRoomSubject;
+      this.teacherClassRoomPapers[index] = teacherClassRoomPaper;
+    },
+
+    imgLoadFailed(src) {
+      this.teacher = null;
     },
   },
 };

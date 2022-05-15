@@ -18,14 +18,14 @@
             <router-link class="text-white" :to="`/teachers/${props.key}`">
               <q-btn color="primary" icon-right="edit" no-caps flat dense />
             </router-link>
-            <q-btn
+            <!-- <q-btn
               color="negative"
               icon-right="delete"
               no-caps
               flat
               dense
               @click="deleteTeacher(props.key)"
-            />
+            /> -->
           </q-td>
         </template>
       </q-table>
@@ -64,25 +64,25 @@ export default {
         this.teachers = response.data;
       });
     },
-    deleteTeacher(id) {
-      this.$refs.confirmDialog
-        .show({
-          title: "Hello",
-          message: `Are you sure you want to delete the teacher "${id}"?`,
-          okButton: "Yes, delete",
-        })
-        .then((res) => {
-          if (res) {
-            this.$api.delete(`/teachers/${id}/`).then((response) => {
-              if (response.status == 204) {
-                this.teachers = this.teachers.filter(
-                  (teacher) => teacher.id != id
-                );
-              }
-            });
-          }
-        });
-    },
+    // deleteTeacher(id) {
+    //   this.$refs.confirmDialog
+    //     .show({
+    //       title: "Hello",
+    //       message: `Are you sure you want to delete the teacher "${id}"?`,
+    //       okButton: "Yes, delete",
+    //     })
+    //     .then((res) => {
+    //       if (res) {
+    //         this.$api.delete(`/teachers/${id}/`).then((response) => {
+    //           if (response.status == 204) {
+    //             this.teachers = this.teachers.filter(
+    //               (teacher) => teacher.id != id
+    //             );
+    //           }
+    //         });
+    //       }
+    //     });
+    // },
   },
 };
 </script>

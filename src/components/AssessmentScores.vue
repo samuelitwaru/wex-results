@@ -21,14 +21,13 @@
               {{ student.middle_name }}
             </td>
             <td class="text-right">
-              <!-- {{ student }} -->
               <input
                 type="number"
                 min="0"
                 max="100"
                 :name="student.id"
                 :value="student.score.mark"
-                :onchange="createOrUpdateStudentScore"
+                :onchange="createOrUpdateOrDeleteStudentScore"
               />
             </td>
           </tr>
@@ -57,14 +56,11 @@ export default {
         .get(`/scores/?assessment=${this.$route.params.id}`)
         .then((response) => {
           this.scores = response.data;
-          console.log(this.scores);
           this.getStudents();
         });
     },
 
-    createOrUpdateStudentScore(event) {
-      console.log(event.target.value);
-      console.log(event.target.name);
+    createOrUpdateOrDeleteStudentScore(event) {
       var formData = {
         mark: parseInt(event.target.value),
         assessment: this.assessment.id,
@@ -74,14 +70,21 @@ export default {
       var currentScore = this.getStudentScore(formData.student);
       console.log(Boolean(currentScore.mark));
       if (currentScore.mark) {
-        this.$api
-          .put(`/scores/${currentScore.id}/`, formData)
-          .then((response) => {
+        if (isNaN) {
+          this.removeStudentScore(formData.student);
+          this.$api.delete(`/scores/${currentScore.id}/`).then((response) => {
             console.log(response.data);
           });
+        } else {
+          this.$api
+            .put(`/scores/${currentScore.id}/`, formData)
+            .then((response) => {
+              console.log(response.data);
+            });
+        }
       } else {
         this.$api.post(`/scores/`, formData).then((response) => {
-          console.log(response.data);
+          this.scores.push(response.data);
         });
       }
     },
@@ -100,11 +103,14 @@ export default {
     },
 
     getStudentScore(studentId) {
-      var scoreList = this.scores.filter((score) => studentId == score.student);
-      if (scoreList.length) {
-        return scoreList[0];
+      var index = this.scores.findIndex((score) => score.student == studentId);
+      if (index >= 0) {
+        return this.scores[index];
       }
       return { mark: null };
+    },
+    removeStudentScore(studentId) {
+      this.scores = this.scores.filter((score) => score.student != studentId);
     },
   },
 };

@@ -3,11 +3,19 @@
     <confirm-dialog ref="confirmDialog" />
     <q-card class="my-card no-borders" flat>
       <q-card-section horizontal>
-        <q-card-section class="col-3 flex flex-center">
+        <q-card-section style="min-width: 100px; height: 100px">
           <q-img
-            class="rounded-borders"
-            src="~/assets/profile-placeholder.jpg"
+            v-if="student.picture"
+            class="rounded-borders hoverImg"
+            alt="~/assets/profile-placeholder.jpg"
+            :src="`${student.picture}?r=${Math.random()}`"
             style="width: 100px; hieght: 100px"
+            @error="imgLoadFailed"
+          />
+          <q-icon v-else name="person" size="xl" />
+          <upload-image-modal
+            :url="`${$apiURL}/students/${$route.params.id}/picture/upload/`"
+            @updateObject="student = $event"
           />
         </q-card-section>
         <q-card-section class="q-pt-xs">
@@ -43,10 +51,14 @@
 
 <script>
 import ConfirmDialog from "src/components/ConfirmDialog.vue";
+import UploadImageModal from "src/components/UploadImageModal.vue";
+import myUpload from "vue-image-crop-upload";
 export default {
-  components: { ConfirmDialog },
+  components: { ConfirmDialog, UploadImageModal, myUpload },
   data() {
     return {
+      show: false,
+      imgDataUrl: null,
       student: {},
     };
   },
@@ -55,7 +67,7 @@ export default {
     deleteStudent(id) {
       this.$refs.confirmDialog
         .show({
-          title: "Hello",
+          title: "Delete Student",
           message: `Are you sure you want to delete the student "${id}"?`,
           okButton: "Yes, delete",
         })
@@ -69,9 +81,11 @@ export default {
           }
         });
     },
+
+    imgLoadFailed(src) {
+      console.log(src);
+      this.student.picture = null;
+    },
   },
 };
 </script>
-
-<style>
-</style>

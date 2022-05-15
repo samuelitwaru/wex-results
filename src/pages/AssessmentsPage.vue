@@ -18,14 +18,17 @@
             <router-link class="text-white" :to="`/assessments/${props.key}`">
               <q-btn color="primary" icon-right="edit" no-caps flat dense />
             </router-link>
-            <q-btn
+            <router-link :to="`/assessments/${props.key}/scores`">
+              <q-btn color="primary" label="scores" no-caps flat dense />
+            </router-link>
+            <!-- <q-btn
               color="negative"
               icon-right="delete"
               no-caps
               flat
               dense
               @click="deleteAssessment(props.key)"
-            />
+            /> -->
           </q-td>
         </template>
       </q-table>
@@ -48,7 +51,13 @@ export default {
           field: "date",
           align: "left",
         },
-        { name: "term", label: "Term", field: "term", align: "left" },
+        {
+          name: "paper",
+          label: "Paper",
+          field: "paper_detail",
+          format: (data, row) => `${data.subject_name}/${data.number}`,
+          align: "left",
+        },
         {
           name: "class_room",
           label: "Class",
@@ -86,25 +95,25 @@ export default {
         console.log(this.assessments);
       });
     },
-    deleteAssessment(id) {
-      this.$refs.confirmDialog
-        .show({
-          title: "Hello",
-          message: `Are you sure you want to delete the assessment "${id}"?`,
-          okButton: "Yes, delete",
-        })
-        .then((res) => {
-          if (res) {
-            this.$api.delete(`/assessments/${id}/`).then((response) => {
-              if (response.status == 204) {
-                this.assessments = this.assessments.filter(
-                  (assessment) => assessment.id != id
-                );
-              }
-            });
-          }
-        });
-    },
+    // deleteAssessment(id) {
+    //   this.$refs.confirmDialog
+    //     .show({
+    //       title: "Hello",
+    //       message: `Are you sure you want to delete the assessment "${id}"?`,
+    //       okButton: "Yes, delete",
+    //     })
+    //     .then((res) => {
+    //       if (res) {
+    //         this.$api.delete(`/assessments/${id}/`).then((response) => {
+    //           if (response.status == 204) {
+    //             this.assessments = this.assessments.filter(
+    //               (assessment) => assessment.id != id
+    //             );
+    //           }
+    //         });
+    //       }
+    //     });
+    // },
   },
 };
 </script>

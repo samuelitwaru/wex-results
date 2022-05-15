@@ -3,7 +3,7 @@
     <h6 class="q-my-sm q-px-sm flex justify-between">
       Student Info
       <router-link :to="`/students/${$route.params.id}/report`">
-        <q-btn color="primary" label="Report" no-caps flat dense />
+        <q-btn color="primary" label="Student Report" no-caps flat dense />
       </router-link>
     </h6>
     <q-form @submit="updateStudent" class="q-gutter-md q-pa-sm">
@@ -58,10 +58,10 @@
       <q-select
         outlined
         v-model="formData.class_room"
-        option-label="name"
+        :option-label="(item) => `${item.name} ${item.stream}`"
         option-value="id"
         :options="classRooms"
-        label="Class Room"
+        label="Class"
         emit-value
         map-options
       />
