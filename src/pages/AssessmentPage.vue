@@ -78,7 +78,7 @@ export default {
     deleteAssessment(id) {
       this.$refs.confirmDialog
         .show({
-          title: "Hello",
+          title: "Delete Assignment",
           message: `Are you sure you want to delete the assessment "${id}"?`,
           okButton: "Yes, delete",
         })

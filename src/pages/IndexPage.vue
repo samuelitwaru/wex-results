@@ -1,26 +1,34 @@
 <template>
   <q-page class="flex-center">
-    <q-card class="my-card" flat>
+    <q-card class="my-card" flat v-if="entity">
       <q-card-section horizontal>
-        <q-card-section class="col-5 flex flex-center">
+        <q-card-section style="min-width: 100px; height: 100px">
           <q-img
-            class="rounded-borders"
-            src="~/assets/string.png"
-            :ratio="1"
-            style="width: 120px; hieght: 120px"
+            v-if="entity.logo"
+            class="rounded-borders hoverImg"
+            :src="`${entity.logo}?r=${Math.random()}`"
+            style="width: 100px; hieght: 100px"
+            @error="imgLoadFailed"
+          />
+          <q-icon v-else name="image" size="xl" />
+          <upload-image-modal
+            :url="`${$apiURL}/entities/${entity.id}/logo/upload/`"
+            @updateObject="entity = $event"
           />
         </q-card-section>
         <q-card-section class="q-pt-xs">
-          <div class="text-overline">Results App</div>
-          <div class="text-h5 q-mt-sm q-mb-xs">Entity</div>
-          <div class="text-caption text-grey">Location</div>
+          <!-- <div class="text-overline">Results App</div> -->
+          <div class="text-h5 q-mt-sm q-mb-xs">{{ entity.name }}</div>
+          <div class="text-caption">{{ entity.location }}</div>
+          <div class="text-caption text-grey">{{ entity.telephone }}</div>
+          <div class="text-caption text-grey">{{ entity.email }}</div>
         </q-card-section>
       </q-card-section>
 
       <q-separator />
-      <div class="row q-pa-sm">
+      <div class="row q-pa-sm" v-if="periodLoaded">
         <div v-if="currentPeriod" class="col-12">
-          <div class="text-h6">Academic Period</div>
+          <!-- <div class="text-h7">Academic Period</div> -->
           <q-card class="my-card" flat bordered>
             <q-card-section>
               <div class="text-h6">{{ currentPeriod.name }}</div>
@@ -51,13 +59,13 @@
 
                 <div class="row">
                   <div class="col-6">
-                    <small>Levels</small> <br />
+                    <small class="text-grey">Levels</small> <br />
                     <router-link to="levels">
                       <div>{{ levelCount }} level(s)</div>
                     </router-link>
                   </div>
                   <div class="col-6">
-                    <small>Teachers</small> <br />
+                    <small class="text-grey">Teachers</small> <br />
                     <router-link to="teachers">
                       <div>{{ teacherCount }} teacher(s)</div>
                     </router-link>
@@ -66,13 +74,13 @@
 
                 <div class="row">
                   <div class="col-6">
-                    <small>Class rooms</small> <br />
+                    <small class="text-grey">Class rooms</small> <br />
                     <router-link to="class-rooms">
                       <div>{{ classRoomCount }} class room(s)</div>
                     </router-link>
                   </div>
                   <div class="col-6">
-                    <small>Subjects</small> <br />
+                    <small class="text-grey">Subjects</small> <br />
                     <router-link to="subjects">
                       <div>{{ subjectCount }} subject(s)</div>
                     </router-link>
@@ -81,13 +89,13 @@
 
                 <div class="row">
                   <div class="col-6">
-                    <small>Students</small> <br />
+                    <small class="text-grey">Students</small> <br />
                     <router-link to="levels">
                       <div>{{ studentCount }} student(s)</div>
                     </router-link>
                   </div>
                   <div class="col-6">
-                    <small>Grading systems</small> <br />
+                    <small class="text-grey">Grading systems</small> <br />
                     <router-link to="grading-systems">
                       <div>{{ gradingSystemCount }} grading system(s)</div>
                     </router-link>
@@ -96,7 +104,7 @@
 
                 <div class="row">
                   <div class="col-6">
-                    <small>Assessments</small> <br />
+                    <small class="text-grey">Assessments</small> <br />
                     <router-link to="assessments">
                       <div>{{ assessmentCount }} assessment(s)</div>
                     </router-link>
@@ -106,8 +114,9 @@
             </q-card-section>
           </q-card>
         </div>
-        <div v-else class="col-12">
-          <create-period-modal />
+        <div v-else class="col-12" align="center">
+          <p class="q-my-lg text-grey">No period was found</p>
+          <create-period-modal @addPeriod="periods.unshift($event)" />
         </div>
 
         <div class="col-12"></div>
@@ -121,14 +130,16 @@
 <script>
 import CreatePeriodModal from "src/components/CreatePeriodModal.vue";
 import UpdatePeriodModal from "src/components/UpdatePeriodModal.vue";
+import UploadImageModal from "src/components/UploadImageModal.vue";
 import { defineComponent } from "vue";
 
 export default defineComponent({
-  components: { CreatePeriodModal, UpdatePeriodModal },
+  components: { CreatePeriodModal, UpdatePeriodModal, UploadImageModal },
   name: "IndexPage",
 
   data() {
     return {
+      entity: null,
       periods: [],
       levelCount: 0,
       teacherCount: 0,
@@ -137,9 +148,11 @@ export default defineComponent({
       studentCount: 0,
       gradingSystemCount: 0,
       assessmentCount: 0,
+      periodLoaded: false,
     };
   },
   created() {
+    this.getEntity();
     this.getPeriods();
     this.getModelCounts();
   },
@@ -159,9 +172,17 @@ export default defineComponent({
     },
   },
   methods: {
+    getEntity() {
+      this.$api.get(`/entities/`).then((response) => {
+        if (response.data.length) {
+          this.entity = response.data[0];
+        }
+      });
+    },
     getPeriods() {
       this.$api.get(`/periods/`).then((response) => {
         this.periods = response.data;
+        this.periodLoaded = true;
       });
     },
     getPeriodAssessments(period) {
@@ -195,6 +216,9 @@ export default defineComponent({
       //   .then((response) => {
       //     this.assessmentCount = response.data.count;
       //   });
+    },
+    imgLoadFailed(src) {
+      this.entity.logo = null;
     },
   },
 });

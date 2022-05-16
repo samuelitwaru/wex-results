@@ -61,12 +61,6 @@
                 </div>
               </div>
             </div>
-            <q-input
-              v-model.number="formData.term"
-              type="number"
-              label="Term"
-              required
-            />
             <q-select
               outlined
               v-model="formData.class_room"
@@ -134,7 +128,6 @@ export default {
         date: null,
         teacher: null,
         class_room: null,
-        term: null,
         paper: null,
       },
     };
