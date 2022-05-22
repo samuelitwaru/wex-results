@@ -11,7 +11,13 @@
             :src="`${teacher.picture}?r=${Math.random()}`"
             style="width: 100px; hieght: 100px"
             @error="imgLoadFailed"
-          />
+          >
+            <template v-slot:loading>
+              <div>
+                <q-spinner-ios />
+              </div>
+            </template>
+          </q-img>
           <q-icon v-else name="person" size="xl" />
           <upload-image-modal
             :url="`${$apiURL}/teachers/${$route.params.id}/picture/upload/`"

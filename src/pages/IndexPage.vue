@@ -9,7 +9,13 @@
             :src="`${entity.logo}?r=${Math.random()}`"
             style="width: 100px; hieght: 100px"
             @error="imgLoadFailed"
-          />
+          >
+            <template v-slot:loading>
+              <div>
+                <q-spinner-ios />
+              </div>
+            </template>
+          </q-img>
           <q-icon v-else name="image" size="xl" />
           <upload-image-modal
             :url="`${$apiURL}/entities/${entity.id}/logo/upload/`"
@@ -17,7 +23,6 @@
           />
         </q-card-section>
         <q-card-section class="q-pt-xs">
-          <!-- <div class="text-overline">Results App</div> -->
           <div class="text-h5 q-mt-sm q-mb-xs">{{ entity.name }}</div>
           <div class="text-caption">{{ entity.location }}</div>
           <div class="text-caption text-grey">{{ entity.telephone }}</div>
@@ -27,20 +32,19 @@
 
       <q-separator />
       <div class="row q-pa-sm" v-if="periodLoaded">
-        <div v-if="currentPeriod" class="col-12">
-          <!-- <div class="text-h7">Academic Period</div> -->
+        <div v-if="period.name" class="col-12">
           <q-card class="my-card" flat bordered>
             <q-card-section>
-              <div class="text-h6">{{ currentPeriod.name }}</div>
+              <div class="text-h6">{{ period.name }}</div>
               <div class="text-subtitle2">
                 <div class="row">
                   <div class="col-4">
                     <small>Starts</small> <br />
-                    <div>{{ currentPeriod.start }}</div>
+                    <div>{{ period.start }}</div>
                   </div>
                   <div class="col-4">
                     <small>Ends</small> <br />
-                    <div>{{ currentPeriod.start }}</div>
+                    <div>{{ period.stop }}</div>
                   </div>
                   <div class="col-4">
                     <small>Duration</small> <br />
@@ -50,12 +54,13 @@
 
                 <q-card-section align="right">
                   <update-period-modal
-                    :period="currentPeriod"
-                    @updatePeriod="periods[0] = $event"
+                    :period="period"
+                    @updatePeriod="period = $event"
                   />
                 </q-card-section>
 
                 <q-separator spaced />
+                <div class="text-h6">Registry</div>
 
                 <div class="row">
                   <div class="col-6">
@@ -116,7 +121,7 @@
         </div>
         <div v-else class="col-12" align="center">
           <p class="q-my-lg text-grey">No period was found</p>
-          <create-period-modal @addPeriod="periods.unshift($event)" />
+          <create-period-modal @updatePeriod="period = $event" />
         </div>
 
         <div class="col-12"></div>
@@ -124,6 +129,11 @@
 
       <q-card-actions> </q-card-actions>
     </q-card>
+    <div>
+      <q-inner-loading :showing="!entity">
+        <q-spinner-ios size="50px" color="primary" />
+      </q-inner-loading>
+    </div>
   </q-page>
 </template>
 
@@ -140,7 +150,7 @@ export default defineComponent({
   data() {
     return {
       entity: null,
-      periods: [],
+      period: null,
       levelCount: 0,
       teacherCount: 0,
       classRoomCount: 0,
@@ -153,21 +163,12 @@ export default defineComponent({
   },
   created() {
     this.getEntity();
-    this.getPeriods();
+    this.getLatestPeriod();
     this.getModelCounts();
   },
   computed: {
-    currentPeriod() {
-      if (this.periods.length) {
-        var period = this.periods[0];
-        this.getPeriodAssessments(period);
-        return period;
-      }
-      return null;
-    },
     duration() {
-      var diff =
-        new Date(this.currentPeriod.stop) - new Date(this.currentPeriod.start);
+      var diff = new Date(this.period.stop) - new Date(this.period.start);
       return `${diff / 1000 / 60 / 60 / 24} days`;
     },
   },
@@ -179,18 +180,19 @@ export default defineComponent({
         }
       });
     },
-    getPeriods() {
-      this.$api.get(`/periods/`).then((response) => {
-        this.periods = response.data;
+    getLatestPeriod() {
+      this.$api.get(`/periods/latest/`).then((response) => {
+        this.period = response.data;
         this.periodLoaded = true;
+        this.getAssessmentCount();
       });
     },
-    getPeriodAssessments(period) {
-      if (period) {
-        this.$api.get(`/assessments/?period=${period.id}`).then((response) => {
+    getAssessmentCount() {
+      this.$api
+        .get(`/assessments/?period=${this.period.id}`)
+        .then((response) => {
           this.assessmentCount = response.data.length;
         });
-      }
     },
     getModelCounts() {
       this.$api.get(`/levels/count/`).then((response) => {
@@ -211,11 +213,6 @@ export default defineComponent({
       this.$api.get(`/grading-systems/count/`).then((response) => {
         this.gradingSystemCount = response.data.count;
       });
-      // this.$api
-      //   .get(`/assessments/count/?period=${this.currentPeriod.id}`)
-      //   .then((response) => {
-      //     this.assessmentCount = response.data.count;
-      //   });
     },
     imgLoadFailed(src) {
       this.entity.logo = null;

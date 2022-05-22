@@ -6,13 +6,25 @@
         <label class="text-h4">Students</label>
         <create-student-modal @addStudent="students.push($event)" />
       </div>
+      <div class="flex justify-between q-py-sm">
+        <filter-students-form
+          @updateStudents="students = $event"
+          @setLoading="loading = $event"
+        />
+      </div>
 
       <q-table
         :rows="students"
         :columns="columns"
         row-key="id"
         :rows-per-page-options="[50]"
+        :loading="loading"
       >
+        <template v-slot:loading>
+          <q-inner-loading showing color="primary">
+            <q-spinner-ios size="50px" color="primary" />
+          </q-inner-loading>
+        </template>
         <template v-slot:body-cell-action="props">
           <q-td :props="props">
             <router-link class="text-white" :to="`/students/${props.key}`">
@@ -24,14 +36,6 @@
             >
               <q-btn color="primary" icon-right="book" no-caps flat dense />
             </router-link>
-            <!-- <q-btn
-              color="negative"
-              icon-right="delete"
-              no-caps
-              flat
-              dense
-              @click="deleteStudent(props.key)"
-            /> -->
           </q-td>
         </template>
       </q-table>
@@ -42,8 +46,9 @@
 <script>
 import CreateStudentModal from "src/components/CreateStudentModal.vue";
 import ConfirmDialog from "src/components/ConfirmDialog.vue";
+import FilterStudentsForm from "../components/FilterStudentsForm.vue";
 export default {
-  components: { CreateStudentModal, ConfirmDialog },
+  components: { CreateStudentModal, ConfirmDialog, FilterStudentsForm },
   name: "StudentsPage",
   data() {
     return {
@@ -71,6 +76,7 @@ export default {
         { name: "action", label: "Action", field: "action", align: "left" },
       ],
       students: [],
+      loading: true,
     };
   },
   created() {
@@ -78,29 +84,12 @@ export default {
   },
   methods: {
     getStudents() {
+      this.loading = true;
       this.$api.get("/students/").then((response) => {
         this.students = response.data;
+        this.loading = false;
       });
     },
-    // deleteStudent(id) {
-    //   this.$refs.confirmDialog
-    //     .show({
-    //       title: "Hello",
-    //       message: `Are you sure you want to delete the student "${id}"?`,
-    //       okButton: "Yes, delete",
-    //     })
-    //     .then((res) => {
-    //       if (res) {
-    //         this.$api.delete(`/students/${id}/`).then((response) => {
-    //           if (response.status == 204) {
-    //             this.students = this.students.filter(
-    //               (student) => student.id != id
-    //             );
-    //           }
-    //         });
-    //       }
-    //     });
-    // },
   },
 };
 </script>

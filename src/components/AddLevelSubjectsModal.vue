@@ -1,12 +1,6 @@
 <template>
   <div>
-    <q-btn
-      icon="add"
-      color="primary"
-      flat
-      dense
-      @click="modal = true"
-    />
+    <q-btn icon="add" color="primary" flat dense @click="modal = true" />
     <q-dialog v-model="modal">
       <q-card style="width: 700px; max-width: 80vw">
         <div class="q-pa-md">
@@ -19,17 +13,38 @@
               </tr>
             </thead>
             <tbody>
-              <tr v-for='subject in subjects' :key=subject.id>
-                <td class="text-left">{{subject.name}}</td>
+              <tr v-for="subject in subjects" :key="subject.id">
+                <td class="text-left">{{ subject.name }}</td>
                 <td class="text-right">
-                  <input type="checkbox" @change="addOrRemoveSubject" :name='subject.id' :checked='level.subjects.findIndex(item=>item.id==subject.id) != -1' />
+                  <div class="flex justify-end">
+                    <div
+                      class="q-my-auto"
+                      style="padding-right: 2px"
+                      v-for="paper in subject.papers"
+                      :key="paper.id"
+                    >
+                      <input
+                        type="checkbox"
+                        @change="addOrRemovePaper"
+                        :name="paper.id"
+                        :id="`check${paper.id}`"
+                        :checked="
+                          level.papers.findIndex((item) => item == paper.id) !=
+                          -1
+                        "
+                      />
+                      <label :for="`check${paper.id}`">
+                        P{{ paper.number }}
+                      </label>
+                    </div>
+                  </div>
                 </td>
               </tr>
             </tbody>
           </q-markup-table>
 
-          <div class='q-pt-md' align='right'>
-            <q-btn label="OK" @click='modal=false' color="primary"/>
+          <div class="q-pt-md" align="right">
+            <q-btn label="OK" @click="modal = false" color="primary" />
           </div>
         </div>
       </q-card>
@@ -39,37 +54,48 @@
 
 <script>
 export default {
-  props: ['subjects', 'level'],
+  props: ["level"],
   data() {
     return {
       modal: false,
-      levelSubjects: []
-    }
+      subjects: [],
+      levelPapers: [],
+    };
   },
 
-  created () {
+  created() {
+    this.getSubjects();
   },
 
   methods: {
-    addOrRemoveSubject(event) {
-      console.log(event.target.name);
-      if (event.target.checked){
-        this.$api.put(`/levels/${this.$route.params.id}/subjects/add/`, [event.target.name])
-        .then((response) => {
-          this.$emit('updateLevel', response.data)
-        });
-      }else{
+    getSubjects() {
+      this.$api.get(`/subjects/`).then((response) => {
+        this.subjects = response.data;
+      });
+    },
+    addOrRemovePaper(event) {
+      if (event.target.checked) {
+        this.$api
+          .put(`/levels/${this.$route.params.id}/papers/add/`, [
+            event.target.name,
+          ])
+          .then((response) => {
+            this.$emit("updateLevel", response.data);
+          });
+      } else {
         // remove
-        this.$api.put(`/levels/${this.$route.params.id}/subjects/remove/`, [event.target.name])
-        .then((response) => {
-          this.$emit('updateLevel', response.data)
-        });
+        this.$api
+          .put(`/levels/${this.$route.params.id}/papers/remove/`, [
+            event.target.name,
+          ])
+          .then((response) => {
+            this.$emit("updateLevel", response.data);
+          });
       }
-    }
+    },
   },
-}
+};
 </script>
 
 <style>
-
 </style>

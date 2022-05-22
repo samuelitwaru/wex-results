@@ -9,7 +9,7 @@ import axios from "axios";
 // for each client)
 
 // var baseURL = 'http://192.168.1.155:8000/api'
-// var hostURL = "https://wex-erp.herokuapp.com";
+var hostURL = "https://wex-erp.herokuapp.com";
 var hostURL = "http://127.0.0.1:8000";
 var apiURL = `${hostURL}/api`;
 var mediaURL = `${hostURL}/media`;

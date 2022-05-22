@@ -19,8 +19,7 @@
           map-options
         />
       </div>
-
-      <q-markup-table flat bordered separator="cell" square>
+      <q-markup-table flat bordered separator="cell" square dense>
         <thead>
           <tr>
             <th class="text-left"></th>
@@ -29,7 +28,7 @@
           </tr>
           <tr>
             <th class="text-left">SUBJECTS</th>
-            <th class="text-right">SCORES</th>
+            <th class="text-left">SCORES</th>
             <th class="text-right">Total</th>
             <th class="text-right">AVERAGE</th>
             <th class="text-right">AGGREGATES</th>
@@ -37,8 +36,81 @@
           </tr>
         </thead>
         <tbody>
+          <tr v-for="subject in level.subjects" :key="subject.id">
+            <td class="text-left">{{ subject.name }}</td>
+            <td class="text-right">
+              <table>
+                <tbody>
+                  <tr
+                    class="q-pa-none"
+                    v-for="paper in subject.papers"
+                    :key="paper.id"
+                  >
+                    <td>P{{ paper.number }}</td>
+                    <td>
+                      <q-btn
+                        v-for="assessment in paper.assessments"
+                        :key="assessment.id"
+                        class="q-px-sm"
+                        :label="assessment.markLabel"
+                        outline
+                        style="margin-left: 4px"
+                        :class="{
+                          active: assessment.active,
+                          inactive: !assessment.active,
+                        }"
+                        @click="assessment.active = !assessment.active"
+                      />
+                    </td>
+                    <td>
+                      {{ getTotal(paper.assessments) }}
+                    </td>
+                    <td>
+                      {{ getAverage(paper.assessments) }}
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+              <!-- <q-btn
+                v-for="paper in subject.papers"
+                :key="assessment.id"
+                class="q-px-sm"
+                :label="assessment.markLabel"
+                outline
+                style="margin-left: 4px"
+                :class="{
+                  active: assessment.active,
+                  inactive: !assessment.active,
+                }"
+                @click="assessment.active = !assessment.active"
+              /> -->
+            </td>
+            <td class="text-right">
+              <!-- {{ getTotal(paper.assessments) }} -->
+            </td>
+            <td class="text-right">
+              <!-- {{ getAverage(paper.assessments) }} -->
+            </td>
+            <td class="text-right"></td>
+            <td class="text-right"></td>
+          </tr>
+          <tr v-if="!papers.length">
+            <td colspan="6">
+              <p class="q-pa-md q-my-auto" align="center">No papers to show</p>
+            </td>
+          </tr>
+          <tr v-if="papers.length">
+            <td><strong>TOTAL</strong></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+        </tbody>
+        <!-- <tbody>
           <tr v-for="paper in papers" :key="paper.id">
-            <td class="text-left">{{ paper.name }}</td>
+            <td class="text-left">{{ paper.subject_name }}</td>
             <td class="text-right">
               <q-btn
                 v-for="assessment in paper.assessments"
@@ -76,7 +148,7 @@
             <td></td>
             <td></td>
           </tr>
-        </tbody>
+        </tbody> -->
       </q-markup-table>
     </div>
   </div>
@@ -89,6 +161,7 @@ export default {
       student: {},
       level: {},
       papers: [],
+      subjects: [],
       gradingSystems: [],
       gradingSystem: null,
     };
@@ -112,6 +185,9 @@ export default {
           .then((response) => {
             this.level = response.data;
             this.papers = this.level.papers;
+            // this.subjects = Object.entries(
+            //   this.$groupBy(this.papers, "subject_name")
+            // );
             this.getPaperAssessments();
           });
       }
@@ -122,30 +198,32 @@ export default {
       });
     },
     getPaperAssessments() {
-      this.papers.forEach((paper) => {
-        this.$api
-          .get(
-            `/assessments/?paper=${paper.id}&class_room=${this.student.class_room}`
-          )
-          .then((response) => {
-            paper.assessments = response.data.map((assessment) => {
-              assessment.active = true;
-              var filtered = assessment.scores.filter(
-                (score) => score.student == this.$route.params.id
-              );
-              if (filtered.length) {
-                assessment.score = filtered[0];
-                assessment.mark = assessment.score.mark;
-                assessment.markLabel = assessment.score.mark;
-              } else {
-                assessment.score = null;
-                assessment.mark = 0;
-                assessment.markLabel = "--";
-              }
-              return assessment;
+      this.level.subjects.forEach((subject) => {
+        subject.papers.forEach((paper) => {
+          this.$api
+            .get(
+              `/assessments/?paper=${paper.id}&class_room=${this.student.class_room}`
+            )
+            .then((response) => {
+              paper.assessments = response.data.map((assessment) => {
+                assessment.active = true;
+                var filtered = assessment.scores.filter(
+                  (score) => score.student == this.$route.params.id
+                );
+                if (filtered.length) {
+                  assessment.score = filtered[0];
+                  assessment.mark = assessment.score.mark;
+                  assessment.markLabel = assessment.score.mark;
+                } else {
+                  assessment.score = null;
+                  assessment.mark = 0;
+                  assessment.markLabel = "--";
+                }
+                return assessment;
+              });
+              console.log(this.level);
             });
-            console.log(paper);
-          });
+        });
       });
     },
 
@@ -181,11 +259,4 @@ export default {
 </script>
 
 <style>
-.inactive {
-  color: #dddddd;
-}
-
-.active {
-  color: #1976d2;
-}
 </style>

@@ -1,11 +1,6 @@
 <template>
   <div>
-    <q-btn
-      label="New Student"
-      icon="add"
-      color="primary"
-      @click="medium = true"
-    />
+    <q-btn icon="add" color="primary" @click="medium = true" dense />
     <q-dialog v-model="medium">
       <q-card style="width: 700px; max-width: 80vw">
         <q-card-section>

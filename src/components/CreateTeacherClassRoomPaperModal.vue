@@ -82,7 +82,6 @@ export default {
       // paperOptions: [],
       formData: {
         class_room: null,
-        // subject: null,
         paper: null,
       },
     };
@@ -128,8 +127,8 @@ export default {
 
     resetForm() {
       this.formData.class_room = null;
-      this.formData.subject = null;
-      this.formData.papers = [];
+      this.formData.paper = null;
+      // this.formData.papers = [];
     },
   },
 };

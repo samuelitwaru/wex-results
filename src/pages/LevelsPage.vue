@@ -12,20 +12,18 @@
         :columns="columns"
         row-key="id"
         :rows-per-page-options="[50]"
+        :loading="loading"
       >
+        <template v-slot:loading>
+          <q-inner-loading showing color="primary">
+            <q-spinner-ios size="50px" color="primary" />
+          </q-inner-loading>
+        </template>
         <template v-slot:body-cell-action="props">
           <q-td :props="props">
             <router-link class="text-white" :to="`/levels/${props.key}`">
               <q-btn color="primary" icon-right="edit" no-caps flat dense />
             </router-link>
-            <!-- <q-btn
-              color="negative"
-              icon-right="delete"
-              no-caps
-              flat
-              dense
-              @click="deleteLevel(props.key)"
-            /> -->
           </q-td>
         </template>
       </q-table>
@@ -47,6 +45,7 @@ export default {
         { name: "action", label: "Action", field: "action", align: "left" },
       ],
       levels: [],
+      loading: false,
     };
   },
   created() {
@@ -54,28 +53,12 @@ export default {
   },
   methods: {
     getLevels() {
+      this.loading = true;
       this.$api.get("/levels/").then((response) => {
         this.levels = response.data;
-        console.log(this.levels);
+        this.loading = false;
       });
     },
-    // deleteLevel(id) {
-    //   this.$refs.confirmDialog
-    //     .show({
-    //       title: "Hello",
-    //       message: `Are you sure you want to delete the class room "${id}"?`,
-    //       okButton: "Yes, delete",
-    //     })
-    //     .then((res) => {
-    //       if (res) {
-    //         this.$api.delete(`/levels/${id}/`).then((response) => {
-    //           if (response.status == 204) {
-    //             this.levels = this.levels.filter((level) => level.id != id);
-    //           }
-    //         });
-    //       }
-    //     });
-    // },
   },
 };
 </script>

@@ -137,7 +137,7 @@ export default {
   methods: {
     createPeriod() {
       this.$api.post(`/periods/`, this.formData).then((response) => {
-        this.$emit("addPeriod", response.data);
+        this.$emit("updatePeriod", response.data);
         this.medium = false;
         this.resetForm();
       });

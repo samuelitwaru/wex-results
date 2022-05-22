@@ -12,20 +12,18 @@
         :columns="columns"
         row-key="id"
         :rows-per-page-options="[50]"
+        :loading="loading"
       >
+        <template v-slot:loading>
+          <q-inner-loading showing color="primary">
+            <q-spinner-ios size="50px" color="primary" />
+          </q-inner-loading>
+        </template>
         <template v-slot:body-cell-action="props">
           <q-td :props="props">
             <router-link class="text-white" :to="`/teachers/${props.key}`">
               <q-btn color="primary" icon-right="edit" no-caps flat dense />
             </router-link>
-            <!-- <q-btn
-              color="negative"
-              icon-right="delete"
-              no-caps
-              flat
-              dense
-              @click="deleteTeacher(props.key)"
-            /> -->
           </q-td>
         </template>
       </q-table>
@@ -47,12 +45,11 @@ export default {
           label: "Name",
           field: "name",
           align: "left",
-          // format: (data, row) =>
-          // `${data} ${row.last_name} ${row.middle_name || ""}`,
         },
         { name: "action", label: "Action", field: "action", align: "left" },
       ],
       teachers: [],
+      loading: false,
     };
   },
   created() {
@@ -60,29 +57,12 @@ export default {
   },
   methods: {
     getTeachers() {
+      this.loading = true;
       this.$api.get("/teachers/").then((response) => {
         this.teachers = response.data;
+        this.loading = false;
       });
     },
-    // deleteTeacher(id) {
-    //   this.$refs.confirmDialog
-    //     .show({
-    //       title: "Hello",
-    //       message: `Are you sure you want to delete the teacher "${id}"?`,
-    //       okButton: "Yes, delete",
-    //     })
-    //     .then((res) => {
-    //       if (res) {
-    //         this.$api.delete(`/teachers/${id}/`).then((response) => {
-    //           if (response.status == 204) {
-    //             this.teachers = this.teachers.filter(
-    //               (teacher) => teacher.id != id
-    //             );
-    //           }
-    //         });
-    //       }
-    //     });
-    // },
   },
 };
 </script>

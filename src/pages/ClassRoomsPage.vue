@@ -12,20 +12,18 @@
         :columns="columns"
         row-key="id"
         :rows-per-page-options="[50]"
+        :loading="loading"
       >
+        <template v-slot:loading>
+          <q-inner-loading showing color="primary">
+            <q-spinner-ios size="50px" color="primary" />
+          </q-inner-loading>
+        </template>
         <template v-slot:body-cell-action="props">
           <q-td :props="props">
             <router-link class="text-white" :to="`/class-rooms/${props.key}`">
               <q-btn color="primary" icon-right="edit" no-caps flat dense />
             </router-link>
-            <!-- <q-btn
-              color="negative"
-              icon-right="delete"
-              no-caps
-              flat
-              dense
-              @click="deleteClassRoom(props.key)"
-            /> -->
           </q-td>
         </template>
       </q-table>
@@ -59,6 +57,7 @@ export default {
         { name: "action", label: "Action", field: "action", align: "left" },
       ],
       class_rooms: [],
+      loading: false,
     };
   },
   created() {
@@ -66,29 +65,12 @@ export default {
   },
   methods: {
     getClassRooms() {
+      this.loading = true;
       this.$api.get("/class-rooms/").then((response) => {
         this.class_rooms = response.data;
+        this.loading = false;
       });
     },
-    // deleteClassRoom(id) {
-    //   this.$refs.confirmDialog
-    //     .show({
-    //       title: "Hello",
-    //       message: `Are you sure you want to delete the class room "${id}"?`,
-    //       okButton: "Yes, delete",
-    //     })
-    //     .then((res) => {
-    //       if (res) {
-    //         this.$api.delete(`/class-rooms/${id}/`).then((response) => {
-    //           if (response.status == 204) {
-    //             this.class_rooms = this.class_rooms.filter(
-    //               (class_room) => class_room.id != id
-    //             );
-    //           }
-    //         });
-    //       }
-    //     });
-    // },
   },
 };
 </script>

@@ -7,28 +7,34 @@
         <create-assessment-modal @addAssessment="assessments.push($event)" />
       </div>
 
+      <div class="flex justify-between q-py-sm">
+        <filter-assessments-form
+          @updateAssessments="assessments = $event"
+          @setLoading="loading = $event"
+        />
+      </div>
+
       <q-table
         :rows="assessments"
         :columns="columns"
         row-key="id"
         :rows-per-page-options="[50]"
+        :loading="loading"
       >
+        <template v-slot:loading>
+          <q-inner-loading showing color="primary">
+            <q-spinner-ios size="50px" color="primary" />
+          </q-inner-loading>
+        </template>
         <template v-slot:body-cell-action="props">
           <q-td :props="props">
             <router-link class="text-white" :to="`/assessments/${props.key}`">
               <q-btn color="primary" icon-right="edit" no-caps flat dense />
             </router-link>
+            |
             <router-link :to="`/assessments/${props.key}/scores`">
-              <q-btn color="primary" label="scores" no-caps flat dense />
+              <q-btn color="primary" label="SCORES" no-caps flat dense />
             </router-link>
-            <!-- <q-btn
-              color="negative"
-              icon-right="delete"
-              no-caps
-              flat
-              dense
-              @click="deleteAssessment(props.key)"
-            /> -->
           </q-td>
         </template>
       </q-table>
@@ -39,8 +45,9 @@
 <script>
 import CreateAssessmentModal from "src/components/CreateAssessmentModal.vue";
 import ConfirmDialog from "src/components/ConfirmDialog.vue";
+import FilterAssessmentsForm from "src/components/FilterAssessmentsForm.vue";
 export default {
-  components: { CreateAssessmentModal, ConfirmDialog },
+  components: { CreateAssessmentModal, ConfirmDialog, FilterAssessmentsForm },
   name: "AssessmentsPage",
   data() {
     return {
@@ -50,6 +57,17 @@ export default {
           label: "Date",
           field: "date",
           align: "left",
+        },
+        {
+          name: "period",
+          label: "Period",
+          field: "period_detail",
+          align: "left",
+          format: (data, row) => {
+            if (data) {
+              return `${data.name}`;
+            }
+          },
         },
         {
           name: "paper",
@@ -83,6 +101,7 @@ export default {
         { name: "action", label: "Action", field: "action", align: "left" },
       ],
       assessments: [],
+      loading: false,
     };
   },
   created() {
@@ -90,30 +109,12 @@ export default {
   },
   methods: {
     getAssessments() {
+      this.loading = true;
       this.$api.get("/assessments/").then((response) => {
         this.assessments = response.data;
-        console.log(this.assessments);
+        this.loading = false;
       });
     },
-    // deleteAssessment(id) {
-    //   this.$refs.confirmDialog
-    //     .show({
-    //       title: "Hello",
-    //       message: `Are you sure you want to delete the assessment "${id}"?`,
-    //       okButton: "Yes, delete",
-    //     })
-    //     .then((res) => {
-    //       if (res) {
-    //         this.$api.delete(`/assessments/${id}/`).then((response) => {
-    //           if (response.status == 204) {
-    //             this.assessments = this.assessments.filter(
-    //               (assessment) => assessment.id != id
-    //             );
-    //           }
-    //         });
-    //       }
-    //     });
-    // },
   },
 };
 </script>

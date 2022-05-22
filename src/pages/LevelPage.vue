@@ -52,7 +52,7 @@
             </div>
           </q-form>
         </div>
-        <!-- <div class="q-pa-sm">
+        <div class="q-pa-sm">
           <q-markup-table>
             <thead>
               <tr>
@@ -70,30 +70,6 @@
               <tr v-for="subject in level.subjects" :key="subject.id">
                 <td class="text-left">{{ subject.name }}</td>
                 <td class="text-right">{{ subject.abbr }}</td>
-              </tr>
-            </tbody>
-          </q-markup-table>
-        </div> -->
-        <div class="q-pa-sm">
-          <q-markup-table>
-            <thead>
-              <tr>
-                <th class="text-left">Papers done in "{{ level.name }}"</th>
-                <th class="text-right">
-                  <add-level-papers-modal
-                    :level="level"
-                    :papers="papers"
-                    @updateLevel="level = $event"
-                  />
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr v-for="paper in level.papers" :key="paper.id">
-                <td class="text-left">
-                  {{ paper.subject_name }}/{{ paper.number }}
-                </td>
-                <td class="text-right">{{ paper.description }}</td>
               </tr>
             </tbody>
           </q-markup-table>
