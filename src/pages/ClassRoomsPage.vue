@@ -44,7 +44,7 @@ export default {
           name: "name",
           label: "Name",
           field: "name",
-          format: (data, row) => `${data} ${row.stream}`,
+          format: (data, row) => `${data} ${row.stream || ""}`,
           align: "left",
         },
         {

@@ -45,6 +45,18 @@ export default {
           label: "Name",
           field: "name",
           align: "left",
+          format: (data, row) => {
+            return `${row.code} - ${data}`;
+          },
+        },
+        {
+          name: "papers",
+          label: "Papers",
+          field: "papers",
+          align: "left",
+          format: (data, row) => {
+            return `${data.length}`;
+          },
         },
         { name: "action", label: "Action", field: "action", align: "left" },
       ],

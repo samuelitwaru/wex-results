@@ -18,8 +18,9 @@
           color="negative"
           label="Delete"
           no-caps
+          flat
           dense
-          @click="deleteLevel(level.id)"
+          @click="deleteLevel(level)"
         />
       </div>
 
@@ -143,16 +144,16 @@ export default {
         });
     },
 
-    deleteLevel(id) {
+    deleteLevel(level) {
       this.$refs.confirmDialog
         .show({
           title: "Hello",
-          message: `Are you sure you want to delete the level "${id}"?`,
+          message: `Are you sure you want to delete the level "${level.name}"?`,
           okButton: "Yes, delete",
         })
         .then((res) => {
           if (res) {
-            this.$api.delete(`/levels/${id}/`).then((response) => {
+            this.$api.delete(`/levels/${level.id}/`).then((response) => {
               if (response.status == 204) {
                 this.$router.push("/levels");
               }

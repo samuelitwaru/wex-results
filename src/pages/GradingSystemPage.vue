@@ -15,8 +15,9 @@
           color="negative"
           label="Delete"
           no-caps
+          flat
           dense
-          @click="deleteGradingSystem(grading_system.id)"
+          @click="deleteGradingSystem(grading_system)"
         />
       </div>
 
@@ -146,20 +147,22 @@ export default {
         });
     },
 
-    deleteGradingSystem(id) {
+    deleteGradingSystem(gradingSystem) {
       this.$refs.confirmDialog
         .show({
           title: "Hello",
-          message: `Are you sure you want to delete the grading system "${id}"?`,
+          message: `Are you sure you want to delete the grading system "${gradingSystem.name}"?`,
           okButton: "Yes, delete",
         })
         .then((res) => {
           if (res) {
-            this.$api.delete(`/grading-systems/${id}/`).then((response) => {
-              if (response.status == 204) {
-                this.$router.push("/grading-systems");
-              }
-            });
+            this.$api
+              .delete(`/grading-systems/${gradingSystem.id}/`)
+              .then((response) => {
+                if (response.status == 204) {
+                  this.$router.push("/grading-systems");
+                }
+              });
           }
         });
     },
@@ -168,7 +171,7 @@ export default {
       this.$refs.confirmDialog
         .show({
           title: "Delete Grade",
-          message: `Are you sure you want to delete the grade "${id}"?`,
+          message: `Are you sure you want to delete this grade?`,
           okButton: "Yes, delete",
         })
         .then((res) => {

@@ -7,9 +7,7 @@
           <q-icon name="book" size="xl" />
         </q-card-section>
         <q-card-section class="q-pa-sm">
-          <div class="text-h5">
-            {{ subject.name }}
-          </div>
+          <div class="text-h5">{{ subject.code }} - {{ subject.name }}</div>
           <div class="subtitle q-mt-sm q-mb-xs">
             {{ subject.abbr }}
           </div>
@@ -21,8 +19,9 @@
           color="negative"
           label="Delete"
           no-caps
+          flat
           dense
-          @click="deleteSubject(subject.id)"
+          @click="deleteSubject(subject)"
         />
       </div>
 
@@ -79,7 +78,7 @@
                   no-caps
                   flat
                   dense
-                  @click="deletePaper(props.key)"
+                  @click="deletePaper(props.row)"
                 />
               </q-td>
             </template>
@@ -169,16 +168,16 @@ export default {
         });
     },
 
-    deleteSubject(id) {
+    deleteSubject(subject) {
       this.$refs.confirmDialog
         .show({
           title: "Hello",
-          message: `Are you sure you want to delete the subject "${id}"?`,
+          message: `Are you sure you want to delete the subject "${subject.name}"?`,
           okButton: "Yes, delete",
         })
         .then((res) => {
           if (res) {
-            this.$api.delete(`/subjects/${id}/`).then((response) => {
+            this.$api.delete(`/subjects/${subject.id}/`).then((response) => {
               if (response.status == 204) {
                 this.$router.push("/subjects");
               }
@@ -187,19 +186,19 @@ export default {
         });
     },
 
-    deletePaper(id) {
+    deletePaper(paper) {
       this.$refs.confirmDialog
         .show({
           title: "Delete Paper",
-          message: `Are you sure you want to delete the paper "${id}"?`,
+          message: `Are you sure you want to delete the paper "${paper.number}"?`,
           okButton: "Yes, delete",
         })
         .then((res) => {
           if (res) {
-            this.$api.delete(`/papers/${id}/`).then((response) => {
+            this.$api.delete(`/papers/${paper.id}/`).then((response) => {
               if (response.status == 204) {
                 this.subject.papers = this.subject.papers.filter(
-                  (paper) => paper.id != id
+                  (item) => item.id != paper.id
                 );
               }
             });

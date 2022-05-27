@@ -3,7 +3,7 @@
     <h6 class="q-my-sm flex justify-between">
       Scores
       <router-link :to="`/assessments/${$route.params.id}`">
-        <q-btn color="primary" label="Detials" no-caps flat />
+        <q-btn color="primary" label="Detials" no-caps flat dense />
       </router-link>
     </h6>
     <div bordered>
@@ -66,11 +66,9 @@ export default {
         assessment: this.assessment.id,
         student: parseInt(event.target.name),
       };
-      console.log(formData);
       var currentScore = this.getStudentScore(formData.student);
-      console.log(Boolean(currentScore.mark));
       if (currentScore.mark) {
-        if (isNaN) {
+        if (isNaN(formData.mark)) {
           this.removeStudentScore(formData.student);
           this.$api.delete(`/scores/${currentScore.id}/`).then((response) => {
             console.log(response.data);

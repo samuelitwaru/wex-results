@@ -26,8 +26,9 @@
           color="negative"
           label="Delete"
           no-caps
+          flat
           dense
-          @click="deleteAssessment(assessment.id)"
+          @click="deleteAssessment(assessment)"
         />
       </q-card-actions>
 
@@ -48,23 +49,10 @@ export default {
   data() {
     return {
       assessment: null,
-      // teachers: [],
-      // levels: [],
-      // subjects: [],
-      // formData: {
-      //   date: null,
-      //   teacher: null,
-      //   level: null,
-      //   term: null,
-      //   subject: null,
-      // },
     };
   },
   created() {
     this.getAssessment();
-    // this.getTeachers();
-    // this.getLevels();
-    // this.getSubjects();
   },
   methods: {
     getAssessment() {
@@ -75,20 +63,22 @@ export default {
         });
     },
 
-    deleteAssessment(id) {
+    deleteAssessment(assessment) {
       this.$refs.confirmDialog
         .show({
           title: "Delete Assignment",
-          message: `Are you sure you want to delete the assessment "${id}"?`,
+          message: `Are you sure you want to delete the assessment "${assessment.name}"?`,
           okButton: "Yes, delete",
         })
         .then((res) => {
           if (res) {
-            this.$api.delete(`/assessments/${id}/`).then((response) => {
-              if (response.status == 204) {
-                this.$router.push("/assessments");
-              }
-            });
+            this.$api
+              .delete(`/assessments/${assessment.id}/`)
+              .then((response) => {
+                if (response.status == 204) {
+                  this.$router.push("/assessments");
+                }
+              });
           }
         });
     },

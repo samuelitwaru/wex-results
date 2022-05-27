@@ -1,11 +1,6 @@
 <template>
   <div>
-    <q-btn
-      label="New ClassRoom"
-      icon="add"
-      color="primary"
-      @click="medium = true"
-    />
+    <q-btn icon="add" dense color="primary" @click="medium = true" />
     <q-dialog v-model="medium">
       <q-card style="width: 700px; max-width: 80vw">
         <q-card-section>

@@ -3,7 +3,7 @@
     <h6 class="q-my-sm flex justify-between">
       Assessment
       <router-link :to="`/assessments/${$route.params.id}/scores`">
-        <q-btn color="primary" label="Scores" no-caps flat />
+        <q-btn color="primary" label="Scores" no-caps flat dense />
       </router-link>
     </h6>
     <q-form @submit="updateAssessment" class="q-gutter-md">

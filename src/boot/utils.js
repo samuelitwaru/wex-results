@@ -1,6 +1,8 @@
 import { boot } from "quasar/wrappers";
+import VueSimpleAlert from "vue-simple-alert";
 
 export default boot(({ app }) => {
+  app.config.globalProperties.$notify = VueSimpleAlert;
   app.config.globalProperties.$groupBy = (array, field) => {
     return array.reduce((r, a) => {
       r[a[field]] = r[field] || [];

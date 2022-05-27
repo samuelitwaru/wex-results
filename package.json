@@ -17,6 +17,7 @@
     "vue": "^3.0.0",
     "vue-image-crop-upload": "^3.0.3",
     "vue-router": "^4.0.0",
+    "vue3-simple-alert": "^1.0.4",
     "vuex": "^4.0.1"
   },
   "devDependencies": {

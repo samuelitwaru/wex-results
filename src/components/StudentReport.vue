@@ -62,33 +62,46 @@
                         @click="assessment.active = !assessment.active"
                       />
                     </td>
+                    <!-- <td>
+                      {{ getTotal(paper.assessments) }}
+                    </td>
+                    <td>
+                      {{ getAverage(paper.assessments) }}
+                    </td> -->
+                  </tr>
+                </tbody>
+              </table>
+            </td>
+            <td class="text-right">
+              <table>
+                <tbody>
+                  <tr
+                    class="q-pa-none"
+                    v-for="paper in subject.papers"
+                    :key="paper.id"
+                  >
                     <td>
                       {{ getTotal(paper.assessments) }}
                     </td>
+                  </tr>
+                </tbody>
+              </table>
+              <!-- {{ getTotal(paper.assessments) }} -->
+            </td>
+            <td class="text-right">
+              <table>
+                <tbody>
+                  <tr
+                    class="q-pa-none"
+                    v-for="paper in subject.papers"
+                    :key="paper.id"
+                  >
                     <td>
                       {{ getAverage(paper.assessments) }}
                     </td>
                   </tr>
                 </tbody>
               </table>
-              <!-- <q-btn
-                v-for="paper in subject.papers"
-                :key="assessment.id"
-                class="q-px-sm"
-                :label="assessment.markLabel"
-                outline
-                style="margin-left: 4px"
-                :class="{
-                  active: assessment.active,
-                  inactive: !assessment.active,
-                }"
-                @click="assessment.active = !assessment.active"
-              /> -->
-            </td>
-            <td class="text-right">
-              <!-- {{ getTotal(paper.assessments) }} -->
-            </td>
-            <td class="text-right">
               <!-- {{ getAverage(paper.assessments) }} -->
             </td>
             <td class="text-right"></td>
@@ -221,7 +234,6 @@ export default {
                 }
                 return assessment;
               });
-              console.log(this.level);
             });
         });
       });

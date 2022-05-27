@@ -91,7 +91,6 @@ export default {
   },
   created() {
     this.getClassRooms();
-    // this.setFormData();
     this.getStudent();
   },
   methods: {

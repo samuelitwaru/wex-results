@@ -35,8 +35,9 @@
           color="negative"
           label="Delete"
           no-caps
+          flat
           dense
-          @click="deleteTeacher(teacher.id)"
+          @click="deleteTeacher(teacher)"
         />
       </div>
       <q-separator />
@@ -164,16 +165,16 @@ export default {
         });
     },
 
-    deleteTeacher(id) {
+    deleteTeacher(teacher) {
       this.$refs.confirmDialog
         .show({
           title: "Delete Teacher",
-          message: `Are you sure you want to delete the teacher "${id}"?`,
+          message: `Are you sure you want to delete the teacher "${teacher.name}"?`,
           okButton: "Yes, delete",
         })
         .then((res) => {
           if (res) {
-            this.$api.delete(`/teachers/${id}/`).then((response) => {
+            this.$api.delete(`/teachers/${teacher.id}/`).then((response) => {
               if (response.status == 204) {
                 this.$router.push("/teachers");
               }
@@ -194,7 +195,7 @@ export default {
       this.$refs.confirmDialog
         .show({
           title: "Delete Class Subject Allocation",
-          message: `Are you sure you want to delete the Allocation "${id}"?`,
+          message: `Are you sure you want to delete this Allocation?`,
           okButton: "Yes, delete",
         })
         .then((res) => {

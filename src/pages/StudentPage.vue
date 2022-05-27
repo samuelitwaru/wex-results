@@ -43,8 +43,9 @@
           color="negative"
           label="Delete"
           no-caps
+          flat
           dense
-          @click="deleteStudent(student.id)"
+          @click="deleteStudent(student)"
         />
       </q-card-actions>
 
@@ -70,16 +71,16 @@ export default {
   },
   created() {},
   methods: {
-    deleteStudent(id) {
+    deleteStudent(student) {
       this.$refs.confirmDialog
         .show({
           title: "Delete Student",
-          message: `Are you sure you want to delete the student "${id}"?`,
+          message: `Are you sure you want to delete the student "${student.first_name} ${student.last_name}"?`,
           okButton: "Yes, delete",
         })
         .then((res) => {
           if (res) {
-            this.$api.delete(`/students/${id}/`).then((response) => {
+            this.$api.delete(`/students/${student.id}/`).then((response) => {
               if (response.status == 204) {
                 this.$router.push("/students");
               }
@@ -89,7 +90,6 @@ export default {
     },
 
     imgLoadFailed(src) {
-      console.log(src);
       this.student.picture = null;
     },
   },

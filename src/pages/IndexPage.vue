@@ -95,7 +95,7 @@
                 <div class="row">
                   <div class="col-6">
                     <small class="text-grey">Students</small> <br />
-                    <router-link to="levels">
+                    <router-link to="students">
                       <div>{{ studentCount }} student(s)</div>
                     </router-link>
                   </div>

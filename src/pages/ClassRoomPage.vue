@@ -8,7 +8,9 @@
             {{ class_room.name }}
           </div>
           <div>{{ class_room.stream }}</div>
-          <div v-if='class_room.teacher'>{{ class_room.teacher_detail.name }}</div>
+          <div v-if="class_room.teacher">
+            {{ class_room.teacher_detail.name }}
+          </div>
         </q-card-section>
       </q-card-section>
 
@@ -17,8 +19,9 @@
           color="negative"
           label="Delete"
           no-caps
+          flat
           dense
-          @click="deleteClassRoom(class_room.id)"
+          @click="deleteClassRoom(class_room)"
         />
       </div>
 
@@ -126,20 +129,24 @@ export default {
         });
     },
 
-    deleteClassRoom(id) {
+    deleteClassRoom(classRoom) {
       this.$refs.confirmDialog
         .show({
-          title: "Hello",
-          message: `Are you sure you want to delete the class room "${id}"?`,
+          title: "Delete Class Room",
+          message: `Are you sure you want to delete the class room "${
+            classRoom.name
+          } ${classRoom.stream || ""}"?`,
           okButton: "Yes, delete",
         })
         .then((res) => {
           if (res) {
-            this.$api.delete(`/class-rooms/${id}/`).then((response) => {
-              if (response.status == 204) {
-                this.$router.push("/class-rooms");
-              }
-            });
+            this.$api
+              .delete(`/class-rooms/${classRoom.id}/`)
+              .then((response) => {
+                if (response.status == 204) {
+                  this.$router.push("/class-rooms");
+                }
+              });
           }
         });
     },

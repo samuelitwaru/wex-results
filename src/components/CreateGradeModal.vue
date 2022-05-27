@@ -3,6 +3,8 @@
     <q-btn
       label="New Grade"
       icon="add"
+      flat
+      dense
       color="primary"
       @click="medium = true"
     />
