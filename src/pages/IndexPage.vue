@@ -22,8 +22,8 @@
             @updateObject="entity = $event"
           />
         </q-card-section>
-        <q-card-section class="q-pt-xs">
-          <div class="text-h5 q-mt-sm q-mb-xs">{{ entity.name }}</div>
+        <q-card-section class="q-mx-sm">
+          <div class="text-h5">{{ entity.name }}</div>
           <div class="text-caption">{{ entity.location }}</div>
           <div class="text-caption text-grey">{{ entity.telephone }}</div>
           <div class="text-caption text-grey">{{ entity.email }}</div>
@@ -165,6 +165,7 @@ export default defineComponent({
     this.getEntity();
     this.getLatestPeriod();
     this.getModelCounts();
+    // this.$store.commit("results/updateLoadingState", false);
   },
   computed: {
     duration() {

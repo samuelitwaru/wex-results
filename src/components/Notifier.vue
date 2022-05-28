@@ -1,25 +1,32 @@
-
 <template>
   <div class="q-pa-md">
-    <q-btn color="purple" @click="showNotif" label="Show Notification" />
+    <div class="row q-gutter-sm">
+      <q-btn color="purple" @click="showDefault" label="Default spinner" />
+      <q-btn color="purple" @click="showCustom" label="Custom spinner" />
+    </div>
   </div>
 </template>
 
 <script>
-import { useQuasar } from "quasar";
+import { QSpinnerGears } from "quasar";
 
 export default {
-  setup() {
-    const $q = useQuasar();
+  methods: {
+    showDefault() {
+      this.$q.notify({
+        spinner: true,
+        message: "Please wait...",
+        timeout: 2000,
+      });
+    },
 
-    return {
-      showNotif() {
-        $q.notify({
-          message: "Jim pinged you.",
-          icon: "announcement",
-        });
-      },
-    };
+    showCustom() {
+      this.$q.notify({
+        spinner: QSpinnerGears,
+        message: "Working...",
+        timeout: 2000,
+      });
+    },
   },
 };
 </script>
