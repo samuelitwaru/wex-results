@@ -1,5 +1,6 @@
 import { boot } from "quasar/wrappers";
 import axios from "axios";
+import axiosRetry from "axios-retry";
 
 // Be careful when using SSR for cross-request state pollution
 // due to creating a Singleton instance here;
@@ -9,12 +10,13 @@ import axios from "axios";
 // for each client)
 
 // var baseURL = 'http://192.168.1.155:8000/api'
-var hostURL = "http://127.0.0.1:8000";
 var hostURL = "https://wex-erp.herokuapp.com";
+var hostURL = "http://127.0.0.1:8000";
 var apiURL = `${hostURL}/api`;
 var mediaURL = `${hostURL}/media`;
 
 const api = axios.create({ baseURL: apiURL });
+axiosRetry(api, { retries: 10 });
 
 export default boot(({ app }) => {
   // for use inside Vue files (Options API) through this.$axios and this.$api
