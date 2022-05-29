@@ -51,9 +51,10 @@
                       <q-btn
                         v-for="assessment in paper.assessments"
                         :key="assessment.id"
-                        class="q-px-sm"
+                        class="q-py-none"
                         :label="assessment.markLabel"
                         outline
+                        dense
                         style="margin-left: 4px"
                         :class="{
                           active: assessment.active,

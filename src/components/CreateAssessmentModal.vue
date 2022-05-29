@@ -135,10 +135,12 @@ export default {
   },
   methods: {
     createAssessment() {
+      this.$setLoading(this, true);
       this.$api.post(`/assessments/`, this.formData).then((response) => {
         this.$emit("addAssessment", response.data);
         this.medium = false;
         this.resetForm();
+        this.$setLoading(this, false);
       });
     },
 

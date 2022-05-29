@@ -1,6 +1,6 @@
 <template>
   <div>
-    <q-dialog v-model="loading" persistent>
+    <q-dialog v-model="loading">
       <q-spinner-ios color="primary" size="3rem" :thickness="5" />
     </q-dialog>
   </div>

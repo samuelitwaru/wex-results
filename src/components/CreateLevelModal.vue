@@ -73,10 +73,12 @@ export default {
   },
   methods: {
     createLevel() {
+      this.$setLoading(this, true);
       this.$api.post(`/levels/`, this.formData).then((response) => {
         this.$emit("addLevel", response.data);
         this.medium = false;
         this.resetForm();
+        this.$setLoading(this, false);
       });
     },
 

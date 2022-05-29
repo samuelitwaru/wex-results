@@ -127,10 +127,12 @@ export default {
   },
   methods: {
     createStudent() {
+      this.$setLoading(this, true);
       this.$api.post(`/students/`, this.formData).then((response) => {
         this.$emit("addStudent", response.data);
         this.medium = false;
         this.resetForm();
+        this.$setLoading(this, false);
       });
     },
 

@@ -106,11 +106,13 @@ export default {
       });
     },
     updateStudent() {
+      this.$setLoading(this, true);
       this.$api
         .put(`/students/${this.student.id}/`, this.formData)
         .then((response) => {
           this.student = response.data;
           this.$emit("updateStudent", response.data);
+          this.$setLoading(this, false);
         });
     },
 

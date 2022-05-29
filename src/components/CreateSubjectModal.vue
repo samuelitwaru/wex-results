@@ -72,10 +72,12 @@ export default {
   },
   methods: {
     createSubject() {
+      this.$setLoading(this, true);
       this.$api.post(`/subjects/`, this.formData).then((response) => {
         this.$emit("addSubject", response.data);
         this.medium = false;
         this.resetForm();
+        this.$setLoading(this, false);
       });
     },
 

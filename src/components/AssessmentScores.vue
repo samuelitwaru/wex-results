@@ -28,6 +28,11 @@
                 :name="student.id"
                 :value="student.score.mark"
                 :onchange="createOrUpdateOrDeleteStudentScore"
+                :onfocus="
+                  (event) => {
+                    event.target.select();
+                  }
+                "
               />
             </td>
           </tr>

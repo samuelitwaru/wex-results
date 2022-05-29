@@ -158,10 +158,12 @@ export default {
     },
 
     updateTeacher() {
+      this.$setLoading(this, true);
       this.$api
         .put(`/teachers/${this.teacher.id}/`, this.formData)
         .then((response) => {
           this.teacher = response.data;
+          this.$setLoading(this, false);
         });
     },
 
@@ -174,8 +176,10 @@ export default {
         })
         .then((res) => {
           if (res) {
+            this.$setLoading(this, true);
             this.$api.delete(`/teachers/${teacher.id}/`).then((response) => {
               if (response.status == 204) {
+                this.$setLoading(this, false);
                 this.$router.push("/teachers");
               }
             });
@@ -204,7 +208,6 @@ export default {
               .delete(`/teacher-class-room-papers/${id}/`)
               .then((response) => {
                 if (response.status == 204) {
-                  console.log(response.data);
                   this.teacherClassRoomPapers =
                     this.teacherClassRoomPapers.filter((item) => item.id != id);
                 }

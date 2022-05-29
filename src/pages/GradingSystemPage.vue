@@ -140,10 +140,12 @@ export default {
     },
 
     updateGradingSystem() {
+      this.$setLoading(this, true);
       this.$api
         .put(`/grading-systems/${this.grading_system.id}/`, this.formData)
         .then((response) => {
           this.grading_system = response.data;
+          this.$setLoading(this, false);
         });
     },
 
@@ -156,10 +158,12 @@ export default {
         })
         .then((res) => {
           if (res) {
+            this.$setLoading(this, true);
             this.$api
               .delete(`/grading-systems/${gradingSystem.id}/`)
               .then((response) => {
                 if (response.status == 204) {
+                  this.$setLoading(this, false);
                   this.$router.push("/grading-systems");
                 }
               });

@@ -120,12 +120,12 @@ export default {
     },
 
     updateClassRoom() {
-      console.log(this.formData);
+      this.$setLoading(this, true);
       this.$api
         .put(`/class-rooms/${this.class_room.id}/`, this.formData)
         .then((response) => {
           this.class_room = response.data;
-          console.log(response.data);
+          this.$setLoading(this, false);
         });
     },
 
@@ -140,10 +140,12 @@ export default {
         })
         .then((res) => {
           if (res) {
+            this.$setLoading(this, true);
             this.$api
               .delete(`/class-rooms/${classRoom.id}/`)
               .then((response) => {
                 if (response.status == 204) {
+                  this.$setLoading(this, false);
                   this.$router.push("/class-rooms");
                 }
               });

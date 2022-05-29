@@ -1,9 +1,8 @@
 import { boot } from "quasar/wrappers";
-// import VueSimpleAlert from "vue-simple-alert";
 import { Notify } from "quasar";
+import store from "src/store";
 
 export default boot(({ app }) => {
-  // app.config.globalProperties.$notify = VueSimpleAlert;
   app.config.globalProperties.$groupBy = (array, field) => {
     return array.reduce((r, a) => {
       r[a[field]] = r[field] || [];
@@ -20,5 +19,9 @@ export default boot(({ app }) => {
         }
       })
       .join("&");
+  };
+
+  app.config.globalProperties.$setLoading = (context, loading) => {
+    context.$store.commit("results/updateLoadingState", loading);
   };
 });

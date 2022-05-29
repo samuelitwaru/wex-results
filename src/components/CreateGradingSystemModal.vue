@@ -66,10 +66,12 @@ export default {
   },
   methods: {
     createGradingSystem() {
+      this.$setLoading(this, true);
       this.$api.post(`/grading-systems/`, this.formData).then((response) => {
         this.$emit("addGradingSystem", response.data);
         this.medium = false;
         this.resetForm();
+        this.$setLoading(this, false);
       });
     },
 

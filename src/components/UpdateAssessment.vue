@@ -130,12 +130,13 @@ export default {
     },
 
     updateAssessment() {
-      console.log(this.formData);
+      this.$setLoading(this, true);
       this.$api
         .put(`/assessments/${this.assessment.id}/`, this.formData)
         .then((response) => {
           this.assessment = response.data;
           this.$emit("updateAssessment", this.assessment);
+          this.$setLoading(this, false);
         });
     },
 

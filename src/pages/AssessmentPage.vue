@@ -72,10 +72,12 @@ export default {
         })
         .then((res) => {
           if (res) {
+            this.$setLoading(this, true);
             this.$api
               .delete(`/assessments/${assessment.id}/`)
               .then((response) => {
                 if (response.status == 204) {
+                  this.$setLoading(this, false);
                   this.$router.push("/assessments");
                 }
               });

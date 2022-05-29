@@ -161,10 +161,12 @@ export default {
     },
 
     updateSubject() {
+      this.$setLoading(this, true);
       this.$api
         .put(`/subjects/${this.subject.id}/`, this.formData)
         .then((response) => {
           this.subject = response.data;
+          this.$setLoading(this, false);
         });
     },
 
@@ -177,8 +179,10 @@ export default {
         })
         .then((res) => {
           if (res) {
+            this.$setLoading(this, true);
             this.$api.delete(`/subjects/${subject.id}/`).then((response) => {
               if (response.status == 204) {
+                this.$setLoading(this, false);
                 this.$router.push("/subjects");
               }
             });

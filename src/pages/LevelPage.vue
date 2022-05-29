@@ -137,10 +137,12 @@ export default {
     },
 
     updateLevel() {
+      this.$setLoading(this, true);
       this.$api
         .put(`/levels/${this.level.id}/`, this.formData)
         .then((response) => {
           this.level = response.data;
+          this.$setLoading(this, false);
         });
     },
 
@@ -153,8 +155,10 @@ export default {
         })
         .then((res) => {
           if (res) {
+            this.$setLoading(this, true);
             this.$api.delete(`/levels/${level.id}/`).then((response) => {
               if (response.status == 204) {
+                this.$setLoading(this, false);
                 this.$router.push("/levels");
               }
             });

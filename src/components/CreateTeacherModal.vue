@@ -55,10 +55,12 @@ export default {
   },
   methods: {
     createTeacher() {
+      this.$setLoading(this, true);
       this.$api.post(`/teachers/`, this.formData).then((response) => {
         this.$emit("addTeacher", response.data);
         this.medium = false;
         this.resetForm();
+      this.$setLoading(this, false);
       });
     },
 

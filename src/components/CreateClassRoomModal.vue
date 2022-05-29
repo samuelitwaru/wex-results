@@ -85,10 +85,12 @@ export default {
   },
   methods: {
     createClassRoom() {
+      this.$setLoading(this, true);
       this.$api.post(`/class-rooms/`, this.formData).then((response) => {
         this.$emit("addClassRoom", response.data);
         this.medium = false;
         this.resetForm();
+        this.$setLoading(this, false);
       });
     },
 
