@@ -15,6 +15,12 @@
               label="Name"
               required
             />
+            <q-input
+              v-model="formData.initials"
+              type="text"
+              label="Initials"
+              required
+            />
 
             <div class="flex justify-between">
               <div>
@@ -47,6 +53,7 @@ export default {
       classRooms: [],
       formData: {
         name: "",
+        intials: "",
       },
     };
   },
@@ -60,7 +67,7 @@ export default {
         this.$emit("addTeacher", response.data);
         this.medium = false;
         this.resetForm();
-      this.$setLoading(this, false);
+        this.$setLoading(this, false);
       });
     },
 
@@ -72,6 +79,7 @@ export default {
 
     resetForm() {
       this.formData.name = null;
+      this.formData.intials = null;
     },
   },
 };

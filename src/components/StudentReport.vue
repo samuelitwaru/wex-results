@@ -21,93 +21,119 @@
       </div>
       <q-markup-table flat bordered separator="cell" square dense>
         <thead>
-          <tr>
+          <!-- <tr>
             <th class="text-left"></th>
             <th class="text-left">ASSESSMENTS</th>
             <th class="text-left" colspan="4"></th>
-          </tr>
+          </tr> -->
           <tr>
-            <th class="text-left">SUBJECTS</th>
-            <th class="text-left">SCORES</th>
-            <th class="text-right">Total</th>
+            <th class="text-left">CODE</th>
+            <th class="text-left">SUBJECT</th>
+            <th class="text-left">COMPETENCY</th>
+            <th class="text-left">ASSESSMENTS</th>
+            <th class="text-right">TOTAL</th>
             <th class="text-right">AVERAGE</th>
+            <th class="text-right">SCORE</th>
+            <th class="text-right">DESCRIPTOR</th>
             <th class="text-right">AGGREGATES</th>
             <th class="text-right">POINTS</th>
+            <th class="text-right">GENERAL SKILLS</th>
+            <th class="text-right">GENERAL REMARKS BY CLASS TEACHER</th>
+            <th class="text-right">
+              NAME OF SUBJECT CLASS TEACHER & SIGNATURE
+            </th>
           </tr>
         </thead>
         <tbody>
-          <tr v-for="subject in level.subjects" :key="subject.id">
-            <td class="text-left">{{ subject.name }}</td>
-            <td class="text-right">
-              <table>
-                <tbody>
-                  <tr
-                    class="q-pa-none"
-                    v-for="paper in subject.papers"
-                    :key="paper.id"
-                  >
-                    <td>P{{ paper.number }}</td>
-                    <td>
-                      <q-btn
-                        v-for="assessment in paper.assessments"
-                        :key="assessment.id"
-                        class="q-py-none"
-                        :label="assessment.markLabel"
-                        outline
-                        dense
-                        style="margin-left: 4px"
-                        :class="{
-                          active: assessment.active,
-                          inactive: !assessment.active,
-                        }"
-                        @click="assessment.active = !assessment.active"
-                      />
-                    </td>
-                    <!-- <td>
-                      {{ getTotal(paper.assessments) }}
-                    </td>
-                    <td>
-                      {{ getAverage(paper.assessments) }}
-                    </td> -->
-                  </tr>
-                </tbody>
-              </table>
-            </td>
-            <td class="text-right">
-              <table>
-                <tbody>
-                  <tr
-                    class="q-pa-none"
-                    v-for="paper in subject.papers"
-                    :key="paper.id"
-                  >
-                    <td>
-                      {{ getTotal(paper.assessments) }}
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-              <!-- {{ getTotal(paper.assessments) }} -->
-            </td>
-            <td class="text-right">
-              <table>
-                <tbody>
-                  <tr
-                    class="q-pa-none"
-                    v-for="paper in subject.papers"
-                    :key="paper.id"
-                  >
-                    <td>
-                      {{ getAverage(paper.assessments) }}
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-              <!-- {{ getAverage(paper.assessments) }} -->
-            </td>
-            <td class="text-right"></td>
-            <td class="text-right"></td>
-          </tr>
+          <template v-for="subject in level.subjects" :key="subject.id">
+            <tr>
+              <td class="text-left" :rowspan="subject.papers.length">
+                {{ subject.code }}
+              </td>
+              <td class="text-left" :rowspan="subject.papers.length">
+                {{ subject.name }}
+              </td>
+              <template v-if="subject.papers.length">
+                <td>
+                  P{{ subject.papers[0].number }} -
+                  {{ subject.papers[0].description }}
+                </td>
+                <td>
+                  <q-btn
+                    v-for="assessment in subject.papers[0].assessments"
+                    :key="assessment.id"
+                    class="q-py-none"
+                    :label="assessment.markLabel"
+                    outline
+                    dense
+                    style="margin-left: 4px"
+                    :class="{
+                      active: assessment.active,
+                      inactive: !assessment.active,
+                    }"
+                    @click="assessment.active = !assessment.active"
+                  />
+                </td>
+                <td>
+                  {{ getTotal(subject.papers[0].assessments) }}
+                </td>
+                <td>
+                  {{ getAverage(subject.papers[0].assessments) }}
+                </td>
+                <td>
+                  {{ getScore(subject.papers[0].assessments) }}
+                </td>
+                <td>
+                  {{ getDescriptor(subject.papers[0].assessments) }}
+                </td>
+                <td :rowspan="subject.papers.length"></td>
+                <td :rowspan="subject.papers.length"></td>
+                <td :rowspan="subject.papers.length"></td>
+                <td :rowspan="subject.papers.length"></td>
+                <td :rowspan="subject.papers.length"></td>
+              </template>
+            </tr>
+            <tr v-for="paper in subject.papers.slice(1)" :key="paper.id">
+              <td
+                style="
+                  border-left: 1px solid rgba(0, 0, 0, 0.12);
+                  padding-left: 0.45rem;
+                "
+              >
+                P{{ paper.number }} - {{ paper.description }}
+              </td>
+              <td>
+                <q-btn
+                  v-for="assessment in paper.assessments"
+                  :key="assessment.id"
+                  class="q-py-none"
+                  :label="assessment.markLabel"
+                  outline
+                  dense
+                  style="margin-left: 4px"
+                  :class="{
+                    active: assessment.active,
+                    inactive: !assessment.active,
+                  }"
+                  @click="assessment.active = !assessment.active"
+                />
+              </td>
+              <td>
+                {{ getTotal(paper.assessments) }}
+              </td>
+              <td>
+                {{ getAverage(paper.assessments) }}
+              </td>
+              <td>
+                {{ getScore(paper.assessments) }}
+              </td>
+              <td>
+                {{ getDescriptor(paper.assessments) }}
+              </td>
+              <!-- <td></td>
+              <td></td> -->
+            </tr>
+          </template>
           <tr v-if="!papers.length">
             <td colspan="6">
               <p class="q-pa-md q-my-auto" align="center">No papers to show</p>
@@ -264,7 +290,22 @@ export default {
             total += parseInt(assessment.mark);
           }
         }
-        return total / count || 0;
+        return Math.round(total / count || 0);
+      }
+    },
+
+    getScore(assessments) {
+      var avg = this.getAverage(assessments);
+      return ((avg / 100) * 3).toFixed(1);
+    },
+    getDescriptor(assessments) {
+      var score = this.getScore(assessments);
+      if (score >= 0.9 && score <= 1.49) {
+        return "Basic";
+      } else if (score >= 1.5 && score <= 2.49) {
+        return "Moderate";
+      } else if (score >= 2.5 && score <= 3) {
+        return "Outstanding";
       }
     },
   },

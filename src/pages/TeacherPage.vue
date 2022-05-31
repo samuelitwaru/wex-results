@@ -28,6 +28,7 @@
           <div class="text-h5 q-mt-sm q-mb-xs">
             {{ teacher.name }}
           </div>
+          <div>{{ teacher.initials }}</div>
         </q-card-section>
       </q-card-section>
       <div class="q-pa-sm" align="right">
@@ -50,6 +51,13 @@
               v-model="formData.name"
               type="text"
               label="Name"
+              required
+            />
+
+            <q-input
+              v-model="formData.initials"
+              type="text"
+              label="Initials"
               required
             />
 
@@ -119,6 +127,7 @@ export default {
       teacherClassRoomPapers: [],
       formData: {
         name: "",
+        initials: "",
       },
       formData2: {
         classRoom: "",
@@ -154,6 +163,7 @@ export default {
       this.$api.get(`/teachers/${this.$route.params.id}/`).then((response) => {
         this.teacher = response.data;
         this.formData.name = this.teacher.name;
+        this.formData.initials = this.teacher.initials;
       });
     },
 
