@@ -1,13 +1,30 @@
 const routes = [
   {
+    path: "/login",
+    component: () => import("layouts/IndexLayout.vue"),
+    children: [
+      {
+        path: "",
+        component: () => import("pages/LoginPage.vue"),
+      },
+    ],
+  },
+  {
     path: "/",
     component: () => import("layouts/MainLayout.vue"),
-    children: [{ path: "", component: () => import("pages/IndexPage.vue") }],
+    meta: { loginRequired: true },
+    children: [
+      {
+        path: "",
+        component: () => import("pages/IndexPage.vue"),
+      },
+    ],
   },
 
   {
     path: "/students",
     component: () => import("layouts/MainLayout.vue"),
+    meta: { loginRequired: true },
     children: [
       { path: "", component: () => import("pages/StudentsPage.vue") },
       {
@@ -27,6 +44,7 @@ const routes = [
   {
     path: "/teachers",
     component: () => import("layouts/MainLayout.vue"),
+    meta: { loginRequired: true },
     children: [
       { path: "", component: () => import("pages/TeachersPage.vue") },
       { path: ":id", component: () => import("pages/TeacherPage.vue") },
@@ -36,6 +54,7 @@ const routes = [
   {
     path: "/class-rooms",
     component: () => import("layouts/MainLayout.vue"),
+    meta: { loginRequired: true },
     children: [
       { path: "", component: () => import("pages/ClassRoomsPage.vue") },
       { path: ":id", component: () => import("pages/ClassRoomPage.vue") },
@@ -45,6 +64,7 @@ const routes = [
   {
     path: "/subjects",
     component: () => import("layouts/MainLayout.vue"),
+    meta: { loginRequired: true },
     children: [
       { path: "", component: () => import("pages/SubjectsPage.vue") },
       { path: ":id", component: () => import("pages/SubjectPage.vue") },
@@ -54,6 +74,7 @@ const routes = [
   {
     path: "/levels",
     component: () => import("layouts/MainLayout.vue"),
+    meta: { loginRequired: true },
     children: [
       { path: "", component: () => import("pages/LevelsPage.vue") },
       { path: ":id", component: () => import("pages/LevelPage.vue") },
@@ -63,6 +84,7 @@ const routes = [
   {
     path: "/grading-systems",
     component: () => import("layouts/MainLayout.vue"),
+    meta: { loginRequired: true },
     children: [
       { path: "", component: () => import("pages/GradingSystemsPage.vue") },
       { path: ":id", component: () => import("pages/GradingSystemPage.vue") },
@@ -72,6 +94,7 @@ const routes = [
   {
     path: "/assessments",
     component: () => import("layouts/MainLayout.vue"),
+    meta: { loginRequired: true },
     children: [
       { path: "", component: () => import("pages/AssessmentsPage.vue") },
       {

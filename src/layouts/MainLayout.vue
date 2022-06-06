@@ -14,11 +14,26 @@
 
         <q-toolbar-title> Results App </q-toolbar-title>
 
+        <q-btn
+          color="white"
+          flat
+          dense
+          icon="logout"
+          label="logout"
+          @click="signOut"
+        />
+
         <!-- <div>Quasar v{{ $q.version }}</div> -->
       </q-toolbar>
     </q-header>
 
-    <q-drawer v-model="leftDrawerOpen" show-if-above bordered :width="220">
+    <q-drawer
+      v-model="leftDrawerOpen"
+      class="bg-grey-2"
+      show-if-above
+      bordered
+      :width="220"
+    >
       <q-list>
         <q-img
           src="~/assets/string.png"
@@ -114,6 +129,15 @@ export default defineComponent({
         leftDrawerOpen.value = !leftDrawerOpen.value;
       },
     };
+  },
+  methods: {
+    signOut() {
+      this.$api.get(`/auth/logout/`).then((response) => {
+        console.log(response.data);
+        this.$store.dispatch("results/signOut");
+        this.$router.push("/login");
+      });
+    },
   },
 });
 </script>

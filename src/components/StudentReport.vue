@@ -19,46 +19,54 @@
           map-options
         />
       </div>
+
+      <div class="flex">
+        <span class="q-pa-sm" v-for="k in Object.keys(cv)" :key="k">
+          <input type="checkbox" v-model="cv[k]" /> {{ $camelToNormal(k) }}
+        </span>
+      </div>
+
       <q-markup-table flat bordered separator="cell" square dense>
         <thead>
-          <!-- <tr>
-            <th class="text-left"></th>
-            <th class="text-left">ASSESSMENTS</th>
-            <th class="text-left" colspan="4"></th>
-          </tr> -->
           <tr>
-            <th class="text-left">CODE</th>
-            <th class="text-left">SUBJECT</th>
-            <th class="text-left">COMPETENCY</th>
-            <th class="text-left">ASSESSMENTS</th>
-            <th class="text-right">TOTAL</th>
-            <th class="text-right">AVERAGE</th>
-            <th class="text-right">SCORE</th>
-            <th class="text-right">DESCRIPTOR</th>
-            <th class="text-right">AGGREGATES</th>
-            <th class="text-right">POINTS</th>
-            <th class="text-right">GENERAL SKILLS</th>
-            <th class="text-right">GENERAL REMARKS BY CLASS TEACHER</th>
-            <th class="text-right">
-              NAME OF SUBJECT CLASS TEACHER & SIGNATURE
-            </th>
+            <th class="text-left" v-if="cv.code">CODE</th>
+            <th class="text-left" v-if="cv.subject">SUBJECT</th>
+            <th class="text-left" v-if="cv.competency">COMPETENCY</th>
+            <th class="text-left" v-if="cv.assessments">ASSESSMENTS</th>
+            <th class="text-right" v-if="cv.total">TOTAL</th>
+            <th class="text-right" v-if="cv.average">AVERAGE</th>
+            <th class="text-right" v-if="cv.score">SCORE</th>
+            <th class="text-right" v-if="cv.descriptor">DESCRIPTOR</th>
+            <th class="text-right" v-if="cv.generalSkills">GENERAL SKILLS</th>
+            <th class="text-right" v-if="cv.generalRemarks">GENERAL REMARKS</th>
+            <th class="text-right" v-if="cv.aggregates">AGGREGATES</th>
+            <th class="text-right" v-if="cv.points">POINTS</th>
+            <th class="text-right" v-if="cv.classTeacher">CLASS TEACHER</th>
           </tr>
         </thead>
         <tbody>
           <template v-for="subject in level.subjects" :key="subject.id">
             <tr>
-              <td class="text-left" :rowspan="subject.papers.length">
+              <td
+                class="text-left"
+                :rowspan="subject.papers.length"
+                v-if="cv.code"
+              >
                 {{ subject.code }}
               </td>
-              <td class="text-left" :rowspan="subject.papers.length">
+              <td
+                class="text-left"
+                :rowspan="subject.papers.length"
+                v-if="cv.subject"
+              >
                 {{ subject.name }}
               </td>
               <template v-if="subject.papers.length">
-                <td>
+                <td v-if="cv.competency">
                   P{{ subject.papers[0].number }} -
                   {{ subject.papers[0].description }}
                 </td>
-                <td>
+                <td v-if="cv.assessments">
                   <q-btn
                     v-for="assessment in subject.papers[0].assessments"
                     :key="assessment.id"
@@ -74,27 +82,37 @@
                     @click="assessment.active = !assessment.active"
                   />
                 </td>
-                <td>
+                <td v-if="cv.total">
                   {{ getTotal(subject.papers[0].assessments) }}
                 </td>
-                <td>
+                <td v-if="cv.average">
                   {{ getAverage(subject.papers[0].assessments) }}
                 </td>
-                <td>
+                <td v-if="cv.score">
                   {{ getScore(subject.papers[0].assessments) }}
                 </td>
-                <td>
+                <td v-if="cv.descriptor">
                   {{ getDescriptor(subject.papers[0].assessments) }}
                 </td>
-                <td :rowspan="subject.papers.length"></td>
-                <td :rowspan="subject.papers.length"></td>
-                <td :rowspan="subject.papers.length"></td>
-                <td :rowspan="subject.papers.length"></td>
-                <td :rowspan="subject.papers.length"></td>
+                <td
+                  :rowspan="subject.papers.length"
+                  v-if="cv.generalSkills"
+                ></td>
+                <td
+                  :rowspan="subject.papers.length"
+                  v-if="cv.generalRemarks"
+                ></td>
+                <td
+                  :rowspan="subject.papers.length"
+                  v-if="cv.classTeacher"
+                ></td>
+                <td :rowspan="subject.papers.length" v-if="cv.aggregates"></td>
+                <td :rowspan="subject.papers.length" v-if="cv.points"></td>
               </template>
             </tr>
             <tr v-for="paper in subject.papers.slice(1)" :key="paper.id">
               <td
+                v-if="cv.competency"
                 style="
                   border-left: 1px solid rgba(0, 0, 0, 0.12);
                   padding-left: 0.45rem;
@@ -102,7 +120,7 @@
               >
                 P{{ paper.number }} - {{ paper.description }}
               </td>
-              <td>
+              <td v-if="cv.assessments">
                 <q-btn
                   v-for="assessment in paper.assessments"
                   :key="assessment.id"
@@ -118,20 +136,18 @@
                   @click="assessment.active = !assessment.active"
                 />
               </td>
-              <td>
+              <td v-if="cv.total">
                 {{ getTotal(paper.assessments) }}
               </td>
-              <td>
+              <td v-if="cv.average">
                 {{ getAverage(paper.assessments) }}
               </td>
-              <td>
+              <td v-if="cv.score">
                 {{ getScore(paper.assessments) }}
               </td>
-              <td>
+              <td v-if="cv.descriptor">
                 {{ getDescriptor(paper.assessments) }}
               </td>
-              <!-- <td></td>
-              <td></td> -->
             </tr>
           </template>
           <tr v-if="!papers.length">
@@ -148,47 +164,6 @@
             <td></td>
           </tr>
         </tbody>
-        <!-- <tbody>
-          <tr v-for="paper in papers" :key="paper.id">
-            <td class="text-left">{{ paper.subject_name }}</td>
-            <td class="text-right">
-              <q-btn
-                v-for="assessment in paper.assessments"
-                :key="assessment.id"
-                class="q-px-sm"
-                :label="assessment.markLabel"
-                outline
-                style="margin-left: 4px"
-                :class="{
-                  active: assessment.active,
-                  inactive: !assessment.active,
-                }"
-                @click="assessment.active = !assessment.active"
-              />
-            </td>
-            <td class="text-right">
-              {{ getTotal(paper.assessments) }}
-            </td>
-            <td class="text-right">
-              {{ getAverage(paper.assessments) }}
-            </td>
-            <td class="text-right"></td>
-            <td class="text-right"></td>
-          </tr>
-          <tr v-if="!papers.length">
-            <td colspan="6">
-              <p class="q-pa-md q-my-auto" align="center">No papers to show</p>
-            </td>
-          </tr>
-          <tr v-if="papers.length">
-            <td><strong>TOTAL</strong></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-          </tr>
-        </tbody> -->
       </q-markup-table>
     </div>
   </div>
@@ -204,6 +179,21 @@ export default {
       subjects: [],
       gradingSystems: [],
       gradingSystem: null,
+      cv: {
+        code: true,
+        subject: true,
+        competency: true,
+        assessments: true,
+        total: true,
+        average: true,
+        score: true,
+        descriptor: true,
+        generalSkills: true,
+        generalRemarks: true,
+        aggregates: true,
+        points: true,
+        classTeacher: true,
+      },
     };
   },
   created() {

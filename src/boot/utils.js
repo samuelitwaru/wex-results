@@ -24,4 +24,10 @@ export default boot(({ app }) => {
   app.config.globalProperties.$setLoading = (context, loading) => {
     context.$store.commit("results/updateLoadingState", loading);
   };
+
+  app.config.globalProperties.$camelToNormal = (text) => {
+    var result = text.replace(/([A-Z])/g, " $1");
+    var finalResult = result.charAt(0).toUpperCase() + result.slice(1);
+    return finalResult;
+  };
 });
