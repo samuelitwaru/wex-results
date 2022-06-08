@@ -95,6 +95,7 @@ export default {
   },
   methods: {
     getStudent() {
+      this.$setLoading(this, true);
       this.$api.get(`/students/${this.$route.params.id}/`).then((response) => {
         this.student = response.data;
         this.$emit("updateStudent", response.data);
@@ -103,6 +104,7 @@ export default {
         this.formData.middle_name = this.student.middle_name;
         this.formData.dob = this.student.dob;
         this.formData.class_room = this.student.class_room;
+        this.$setLoading(this, false);
       });
     },
     updateStudent() {

@@ -1,5 +1,6 @@
 <template>
   <q-layout view="hHh Lpr fFf">
+    <loading />
     <q-page-container>
       <q-header elevated>
         <q-toolbar>
@@ -13,8 +14,10 @@
 
 <script>
 import { ref } from "vue";
+import Loading from "src/components/Loading.vue";
 
 export default {
+  components: { Loading },
   // name: 'LayoutName',
 
   setup() {

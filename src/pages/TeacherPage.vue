@@ -103,6 +103,7 @@
         </div>
         <div class="col-12 q-pa-sm">
           <strong>User</strong>
+          <set-user-form :user="teacher.user" />
         </div>
       </div>
     </q-card>
@@ -114,12 +115,14 @@ import ConfirmDialog from "src/components/ConfirmDialog.vue";
 import UpdateTeacherClassRoomPaperModal from "src/components/UpdateTeacherClassRoomPaperModal.vue";
 import CreateTeacherClassRoomPaperModal from "src/components/CreateTeacherClassRoomPaperModal.vue";
 import UploadImageModal from "src/components/UploadImageModal.vue";
+import SetUserForm from "src/components/SetUserForm.vue";
 export default {
   components: {
     ConfirmDialog,
     UpdateTeacherClassRoomPaperModal,
     CreateTeacherClassRoomPaperModal,
     UploadImageModal,
+    SetUserForm,
   },
   data() {
     return {
@@ -160,10 +163,12 @@ export default {
   },
   methods: {
     getTeacher() {
+      this.$setLoading(this, true);
       this.$api.get(`/teachers/${this.$route.params.id}/`).then((response) => {
         this.teacher = response.data;
         this.formData.name = this.teacher.name;
         this.formData.initials = this.teacher.initials;
+        this.$setLoading(this, false);
       });
     },
 

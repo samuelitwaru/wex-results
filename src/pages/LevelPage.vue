@@ -107,11 +107,13 @@ export default {
   },
   methods: {
     getLevel() {
+      this.$setLoading(this, true);
       this.$api.get(`/levels/${this.$route.params.id}/`).then((response) => {
         this.level = response.data;
         this.formData.name = this.level.name;
         this.formData.rank = this.level.rank;
         this.formData.description = this.level.description;
+        this.$setLoading(this, false);
       });
     },
 

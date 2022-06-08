@@ -10,11 +10,12 @@ export default defineComponent({
   beforeCreate() {
     this.$store.dispatch("results/init");
     const token = window.localStorage.getItem("token");
+    console.log(token);
     if (token) {
       this.$api.defaults.headers.common.Authorization = `Token ${token}`;
     } else {
       this.$api.defaults.headers.common.Authorization = "";
-      this.$router.push("/");
+      this.$router.push("/login");
     }
   },
 });

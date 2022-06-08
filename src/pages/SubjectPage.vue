@@ -142,11 +142,13 @@ export default {
   },
   methods: {
     getSubject() {
+      this.$setLoading(this, true);
       this.$api.get(`/subjects/${this.$route.params.id}/`).then((response) => {
         this.subject = response.data;
         this.formData.code = this.subject.code;
         this.formData.name = this.subject.name;
         this.formData.abbr = this.subject.abbr;
+        this.$setLoading(this, false);
       });
     },
 

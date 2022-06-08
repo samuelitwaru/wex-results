@@ -132,10 +132,12 @@ export default defineComponent({
   },
   methods: {
     signOut() {
+      this.$setLoading(this, true);
       this.$api.get(`/auth/logout/`).then((response) => {
         console.log(response.data);
         this.$store.dispatch("results/signOut");
         this.$router.push("/login");
+        this.$setLoading(this, false);
       });
     },
   },

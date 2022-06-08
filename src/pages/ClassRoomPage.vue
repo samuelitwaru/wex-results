@@ -95,15 +95,16 @@ export default {
   },
   methods: {
     getClassRoom() {
+      this.$setLoading(this, true);
       this.$api
         .get(`/class-rooms/${this.$route.params.id}/`)
         .then((response) => {
           this.class_room = response.data;
-          console.log(this.class_room);
           this.formData.name = this.class_room.name;
           this.formData.stream = this.class_room.stream;
           this.formData.level = this.class_room.level;
           this.formData.teacher = this.class_room.teacher;
+          this.$setLoading(this, false);
         });
     },
 

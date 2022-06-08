@@ -129,6 +129,7 @@ export default {
   },
   methods: {
     getGradingSystem() {
+      this.$setLoading(this, true);
       this.$api
         .get(`/grading-systems/${this.$route.params.id}/`)
         .then((response) => {
@@ -136,6 +137,7 @@ export default {
           console.log(this.grading_system);
           this.formData.name = this.grading_system.name;
           this.formData.description = this.grading_system.description;
+          this.$setLoading(this, false);
         });
     },
 

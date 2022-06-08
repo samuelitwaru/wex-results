@@ -56,10 +56,12 @@ export default {
   },
   methods: {
     getAssessment() {
+      this.$setLoading(this, true);
       this.$api
         .get(`/assessments/${this.$route.params.id}/`)
         .then((response) => {
           this.assessment = response.data;
+          this.$setLoading(this, false);
         });
     },
 

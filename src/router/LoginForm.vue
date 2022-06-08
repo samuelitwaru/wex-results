@@ -22,12 +22,14 @@ export default {
   methods: {
     login() {
       var data = this.formData;
+      this.$setLoading(this, true);
       this.$api.post(`/auth/login/`, data).then((response) => {
         console.log(response.data);
         console.log(this.$store);
         this.$store.commit("results/setToken", response.data.token);
         this.$router.push("/");
         this.resetForm();
+        this.$setLoading(this, false);
       });
     },
 
