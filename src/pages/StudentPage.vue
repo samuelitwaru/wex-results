@@ -19,7 +19,7 @@
             </template>
           </q-img>
           <q-icon v-else name="person" size="xl" />
-          <upload-image-modal
+          <crop-image-uploader
             :url="`${$apiURL}/students/${$route.params.id}/picture/upload/`"
             @updateObject="student = $event"
           />
@@ -60,8 +60,9 @@
 import ConfirmDialog from "src/components/ConfirmDialog.vue";
 import UploadImageModal from "src/components/UploadImageModal.vue";
 import myUpload from "vue-image-crop-upload";
+import CropImageUploader from "src/components/CropImageUploader.vue";
 export default {
-  components: { ConfirmDialog, UploadImageModal, myUpload },
+  components: { ConfirmDialog, UploadImageModal, myUpload, CropImageUploader },
   data() {
     return {
       show: false,

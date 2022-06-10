@@ -19,7 +19,7 @@
             </template>
           </q-img>
           <q-icon v-else name="person" size="xl" />
-          <upload-image-modal
+          <crop-image-uploader
             :url="`${$apiURL}/teachers/${$route.params.id}/picture/upload/`"
             @updateObject="teacher = $event"
           />
@@ -116,6 +116,7 @@ import UpdateTeacherClassRoomPaperModal from "src/components/UpdateTeacherClassR
 import CreateTeacherClassRoomPaperModal from "src/components/CreateTeacherClassRoomPaperModal.vue";
 import UploadImageModal from "src/components/UploadImageModal.vue";
 import SetUserForm from "src/components/SetUserForm.vue";
+import CropImageUploader from "src/components/CropImageUploader.vue";
 export default {
   components: {
     ConfirmDialog,
@@ -123,6 +124,7 @@ export default {
     CreateTeacherClassRoomPaperModal,
     UploadImageModal,
     SetUserForm,
+    CropImageUploader,
   },
   data() {
     return {

@@ -17,7 +17,11 @@
             </template>
           </q-img>
           <q-icon v-else name="image" size="xl" />
-          <upload-image-modal
+          <!-- <upload-image-modal
+            :url="`${$apiURL}/entities/${entity.id}/logo/upload/`"
+            @updateObject="entity = $event"
+          /> -->
+          <crop-image-uploader
             :url="`${$apiURL}/entities/${entity.id}/logo/upload/`"
             @updateObject="entity = $event"
           />
@@ -139,12 +143,20 @@
 
 <script>
 import CreatePeriodModal from "src/components/CreatePeriodModal.vue";
+import CropImageUploader from "src/components/CropImageUploader.vue";
+import ImageCropper from "src/components/ImageCropper.vue";
 import UpdatePeriodModal from "src/components/UpdatePeriodModal.vue";
 import UploadImageModal from "src/components/UploadImageModal.vue";
 import { defineComponent } from "vue";
 
 export default defineComponent({
-  components: { CreatePeriodModal, UpdatePeriodModal, UploadImageModal },
+  components: {
+    CreatePeriodModal,
+    UpdatePeriodModal,
+    UploadImageModal,
+    ImageCropper,
+    CropImageUploader,
+  },
   name: "IndexPage",
 
   data() {
