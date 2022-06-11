@@ -31,6 +31,9 @@
               label="Middle Name"
             />
 
+            <q-radio v-model="formData.gender" val="M" label="Male" />
+            <q-radio v-model="formData.gender" val="F" label="Female" />
+
             <div>
               <label class="text-grey-8">Date of Birth</label>
               <div
@@ -117,6 +120,7 @@ export default {
         first_name: null,
         last_name: null,
         middle_name: null,
+        gender: null,
         dob: null,
         class_room: null,
       },
@@ -146,6 +150,7 @@ export default {
       this.formData.first_name = null;
       this.formData.last_name = null;
       this.formData.middle_name = null;
+      this.formData.gender = null;
       this.formData.dob = null;
       this.formData.class_room = null;
     },

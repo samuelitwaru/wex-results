@@ -208,7 +208,6 @@ export default {
     upload() {
       this.cropImage();
       var file = this.dataURLtoFile(this.cropImg, this.filename);
-      console.dir(file);
       const data = new FormData();
       data.append("picture", file, file.name);
 
