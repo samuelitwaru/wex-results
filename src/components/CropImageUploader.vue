@@ -208,7 +208,7 @@ export default {
     upload() {
       this.cropImage();
       var file = this.dataURLtoFile(this.cropImg, this.filename);
-
+      console.dir(file);
       const data = new FormData();
       data.append("picture", file, file.name);
 
@@ -216,8 +216,10 @@ export default {
       const config = {
         headers: { "Content-Type": "multipart/form-data" },
       };
+      this.$setLoading(this, true);
       this.$api.post(`${this.url}`, data, config).then((response) => {
         this.$emit("updateObject", response.data);
+        this.$setLoading(this, false);
       });
     },
   },
@@ -225,6 +227,9 @@ export default {
 </script>
 
 <style>
+input[type="file"] {
+  display: none;
+}
 .editBtn {
   display: none;
 }
