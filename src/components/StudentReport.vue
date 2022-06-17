@@ -43,10 +43,6 @@
       </q-form>
       <div class="q-pb-sm"></div>
 
-      <div>
-        Period: <span v-if="period">{{ period.name }}</span>
-      </div>
-
       <q-markup-table flat bordered separator="cell" square dense>
         <thead>
           <th
@@ -57,7 +53,12 @@
             v-for="k in Object.keys(cv)"
             :key="k"
           >
-            <input type="checkbox" v-model="cv[k]" /> {{ $camelToNormal(k) }}
+            <input
+              type="checkbox"
+              :title="`${$camelToNormal(k)}`"
+              v-model="cv[k]"
+            />
+            {{ $camelToNormal(k) }}
           </th>
         </thead>
         <tbody>
@@ -82,7 +83,7 @@
                 P{{ subjectReport.papers[0].paper.number }} -
                 {{ subjectReport.papers[0].paper.description }}
               </td>
-              <td :class="{ 'mini-col': !cv.asessments }" class="text-right">
+              <td :class="{ 'mini-col': !cv.assessments }" class="text-right">
                 <q-btn
                   v-for="score in subjectReport.papers[0].scores"
                   :key="score"
@@ -105,7 +106,6 @@
               <td :class="{ 'mini-col': !cv.descriptor }">
                 {{ subjectReport.papers[0].descriptor }}
               </td>
-              <!-- <td :rowspan="subjectReport.papers.length"></td> -->
               <td
                 :class="{ 'mini-col': !cv.subjectAverage }"
                 :rowspan="subjectReport.papers.length"
@@ -113,22 +113,22 @@
                 {{ subjectReport.average }}
               </td>
               <td
-                :class="{ 'mini-col': !cv.aggregate }"
+                :class="{ 'mini-col': !cv.aggregates }"
                 :rowspan="subjectReport.papers.length"
               >
                 {{ $wrapAggr(subjectReport.aggregate) }}
+              </td>
+              <td
+                :class="{ 'mini-col': !cv.grade }"
+                :rowspan="subjectReport.papers.length"
+              >
+                {{ subjectReport.letter_grade }}
               </td>
               <td
                 :class="{ 'mini-col': !cv.points }"
                 :rowspan="subjectReport.papers.length"
               >
                 {{ subjectReport.points }}
-              </td>
-              <td
-                :class="{ 'mini-col': !cv.letter_grade }"
-                :rowspan="subjectReport.papers.length"
-              >
-                {{ subjectReport.letter_grade }}
               </td>
               <td
                 :class="{ 'mini-col': !cv.classTeacher }"
@@ -206,124 +206,30 @@
               </td>
             </tr>
           </template>
-        </tbody>
-        <!-- <tbody>
-          <template v-for="subject in report" :key="subject.id">
-            <tr>
-              <td
-                class="text-left"
-                :rowspan="subject.papers.length"
-                v-if="cv.code"
-              >
-                {{ subject.code }}
-              </td>
-              <td
-                class="text-left"
-                :rowspan="subject.papers.length"
-                v-if="cv.subject"
-              >
-                {{ subject.name }}
-              </td>
-              <template v-if="subject.papers.length">
-                <td v-if="cv.competency">
-                  P{{ subject.papers[0].number }} -
-                  {{ subject.papers[0].description }}
-                </td>
-                <td v-if="cv.assessments">
-                  <q-btn
-                    v-for="assessment in subject.papers[0].assessments"
-                    :key="assessment.id"
-                    class="q-py-none"
-                    :label="assessment.markLabel"
-                    outline
-                    dense
-                    style="margin-left: 4px"
-                    :class="{
-                      active: assessment.active,
-                      inactive: !assessment.active,
-                    }"
-                    @click="assessment.active = !assessment.active"
-                  />
-                </td>
-                <td v-if="cv.total">
-                  {{ getTotal(subject.papers[0].assessments) }}
-                </td>
-                <td v-if="cv.average">
-                  {{ getAverage(subject.papers[0].assessments) }}
-                </td>
-                <td v-if="cv.score">
-                  {{ getScore(subject.papers[0].assessments) }}
-                </td>
-                <td v-if="cv.descriptor">
-                  {{ getDescriptor(subject.papers[0].assessments) }}
-                </td>
-                <td
-                  :rowspan="subject.papers.length"
-                  v-if="cv.generalSkills"
-                ></td>
-                <td
-                  :rowspan="subject.papers.length"
-                  v-if="cv.generalRemarks"
-                ></td>
-                <td :rowspan="subject.papers.length" v-if="cv.aggregates">
-                  {{ getAggregate(subject.papers) }}
-                </td>
-                <td :rowspan="subject.papers.length" v-if="cv.points"></td>
-                <td
-                  :rowspan="subject.papers.length"
-                  v-if="cv.classTeacher"
-                ></td>
-              </template>
-            </tr>
-            <tr v-for="paper in subject.papers.slice(1)" :key="paper.id">
-              <td
-                v-if="cv.competency"
-                style="
-                  border-left: 1px solid rgba(0, 0, 0, 0.12);
-                  padding-left: 0.45rem;
-                "
-              >
-                P{{ paper.number }} - {{ paper.description }}
-              </td>
-              <td v-if="cv.assessments">
-                <q-btn
-                  v-for="assessment in paper.assessments"
-                  :key="assessment.id"
-                  class="q-py-none"
-                  :label="assessment.markLabel"
-                  outline
-                  dense
-                  style="margin-left: 4px"
-                  :class="{
-                    active: assessment.active,
-                    inactive: !assessment.active,
-                  }"
-                  @click="assessment.active = !assessment.active"
-                />
-              </td>
-              <td v-if="cv.total">
-                {{ getTotal(paper.assessments) }}
-              </td>
-              <td v-if="cv.average">
-                {{ getAverage(paper.assessments) }}
-              </td>
-              <td v-if="cv.score">
-                {{ getScore(paper.assessments) }}
-              </td>
-              <td v-if="cv.descriptor">
-                {{ getDescriptor(paper.assessments) }}
-              </td>
-            </tr>
-          </template>
-          <tr v-if="papers.length">
-            <td><strong>TOTAL</strong></td>
+          <tr style="height: 5rem; background-color: rgba(0, 0, 0, 0.02">
+            <td colspan="9"></td>
+            <td>
+              <q-btn
+                class="q-py-none"
+                :label="`${totalAggregates} Aggregate(s)`"
+                outline
+                dense
+                style="margin-left: 4px"
+              />
+            </td>
             <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
+            <td>
+              <q-btn
+                class="q-py-none"
+                :label="`${totalPoints} Point(s)`"
+                outline
+                dense
+                style="margin-left: 4px"
+              /><!-- {{ totalPoints }} Point(s) -->
+            </td>
             <td></td>
           </tr>
-        </tbody> -->
+        </tbody>
       </q-markup-table>
 
       <div class="flex">
@@ -348,6 +254,8 @@ export default {
       periods: [],
       report: null,
       teacher: null,
+      totalPoints: 0,
+      totalAggregates: 0,
       formData: {
         period: null,
         grading_system: null,
@@ -365,8 +273,8 @@ export default {
         // generalSkills: true,
         // generalRemarks: true,
         aggregates: true,
-        points: true,
         grade: true,
+        points: true,
         classTeacher: true,
       },
     };
@@ -396,6 +304,9 @@ export default {
         .get(`/reports/computed/${this.$route.params.id}/?${urlQuery}`)
         .then((response) => {
           this.report = response.data;
+          console.log(this.report);
+          this.seTotalPoints();
+          this.setTotalAggregates();
           this.$setLoading(this, false);
         });
     },
@@ -421,6 +332,19 @@ export default {
     getPeriods() {
       this.$api.get(`/periods/`).then((response) => {
         this.periods = response.data;
+      });
+    },
+
+    seTotalPoints() {
+      this.totalPoints = 0;
+      this.report.forEach((subj) => {
+        this.totalPoints += subj.points;
+      });
+    },
+    setTotalAggregates() {
+      this.totalAggregates = 0;
+      this.report.forEach((subj) => {
+        this.totalAggregates += subj.aggregate;
       });
     },
     // getPaperAssessments() {

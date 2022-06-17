@@ -33,9 +33,9 @@
         <q-select
           outlined
           dense
-          v-model="formData.class_teacher_comment_regex"
+          v-model="formData.class_teacher_commented"
           :options="ctCommentedOptions"
-          label="Comment (CT)"
+          label="Commented (CT)"
           :option-label="(item) => `${item.name}`"
           option-value="id"
           emit-value
@@ -46,9 +46,9 @@
         <q-select
           outlined
           dense
-          v-model="formData.head_teacher_comment_regex"
+          v-model="formData.head_teacher_commented"
           :options="htCommentedOptions"
-          label="Comment (HT)"
+          label="Commented (HT)"
           :option-label="(item) => `${item.name}`"
           option-value="id"
           emit-value
@@ -70,12 +70,12 @@ export default {
       classRooms: [{ id: "", name: "All", stream: "" }],
       periods: [{ id: "", name: "All" }],
       htCommentedOptions: [
-        { id: "all", name: "All" },
+        { id: null, name: "All" },
         { id: "yes", name: "Yes" },
         { id: "no", name: "No" },
       ],
       ctCommentedOptions: [
-        { id: "all", name: "All" },
+        { id: null, name: "All" },
         { id: "yes", name: "Yes" },
         { id: "no", name: "No" },
       ],
@@ -83,8 +83,8 @@ export default {
         period: null,
         student: null,
         student__class_room: null,
-        class_teacher_comment_added: null,
-        head_teacher_comment_added: null,
+        class_teacher_commented: null,
+        head_teacher_commented: null,
         result: null,
       },
     };
