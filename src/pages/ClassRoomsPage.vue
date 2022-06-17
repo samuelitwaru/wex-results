@@ -51,7 +51,7 @@ export default {
           name: "teacher",
           label: "Teacher",
           field: "teacher_detail",
-          format: (data, row) => `${data.name}`,
+          format: (data, row) => `${data?.name || ""}`,
           align: "left",
         },
         { name: "action", label: "Action", field: "action", align: "left" },

@@ -20,10 +20,21 @@
               required
             />
 
-            <q-input
+            <!-- <q-input
               v-model="formData.description"
               type="text"
               label="Description"
+            /> -->
+
+            <q-select
+              outlined
+              v-model="formData.level_group"
+              :option-label="(item) => `${item.full} Level`"
+              option-value="id"
+              :options="levelGroups"
+              label="Level"
+              emit-value
+              map-options
             />
 
             <div class="flex justify-between">
@@ -54,15 +65,16 @@ export default {
   data() {
     return {
       grading_systems: [],
+      levelGroups: [],
       formData: {
-        name: "",
-        rank: "",
-        description: "",
+        name: null,
+        level_group: null,
       },
     };
   },
   created() {
     this.getGradingSystems();
+    this.getLevelGroups()
   },
   methods: {
     createGradingSystem() {
@@ -74,7 +86,11 @@ export default {
         this.$setLoading(this, false);
       });
     },
-
+    getLevelGroups() {
+      this.$api.get(`/level-groups/`).then((response) => {
+        this.levelGroups = response.data;
+      });
+    },
     getGradingSystems() {
       this.$api.get(`/grading-systems/`).then((response) => {
         this.grading_systems = response.data;

@@ -9,7 +9,7 @@
           v-model.number="formData.class_room"
           :options="classRooms"
           label="Class Room"
-          :option-label="(item) => `${item.name} ${item.stream}`"
+          :option-label="(item) => `${item.name} ${item.stream || ''}`"
           option-value="id"
           emit-value
           map-options

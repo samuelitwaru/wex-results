@@ -80,6 +80,11 @@ const linksList = [
     link: "/levels",
   },
   {
+    title: "Subjects",
+    icon: "subject",
+    link: "/subjects",
+  },
+  {
     title: "Teachers",
     icon: "supervisor_account",
     link: "/teachers",
@@ -88,11 +93,6 @@ const linksList = [
     title: "Class Rooms",
     icon: "class",
     link: "/class-rooms",
-  },
-  {
-    title: "Subjects",
-    icon: "subject",
-    link: "/subjects",
   },
   {
     title: "Students",
@@ -108,6 +108,11 @@ const linksList = [
     title: "Assessments",
     icon: "assessment",
     link: "/assessments",
+  },
+  {
+    title: "Reports",
+    icon: "book",
+    link: "/reports",
   },
 ];
 

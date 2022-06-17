@@ -114,6 +114,13 @@ const routes = [
     ],
   },
 
+  {
+    path: "/reports",
+    component: () => import("layouts/MainLayout.vue"),
+    meta: { loginRequired: true },
+    children: [{ path: "", component: () => import("pages/ReportsPage.vue") }],
+  },
+
   // Always leave this as last one,
   // but you can also remove it
   {

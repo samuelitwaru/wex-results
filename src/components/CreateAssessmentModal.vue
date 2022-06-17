@@ -59,12 +59,13 @@
             <q-select
               outlined
               v-model="formData.class_room"
-              :option-label="(item) => `${item.name} ${item.stream}`"
+              :option-label="(item) => `${item.name} ${item.stream || ''}`"
               option-value="id"
               :options="classRooms"
               label="Class"
               emit-value
               map-options
+              @update:model-value="onChangeClassRoom"
             />
             <q-select
               outlined
@@ -133,6 +134,15 @@ export default {
     this.getSubjects();
     this.getPapers();
   },
+  // watch: {
+  //   formData: {
+  //     handler(newVal, oldVal) {
+  //       console.log(oldVal.class_room);
+  //       console.log(newVal.class_room);
+  //     },
+  //     deep: true,
+  //   },
+  // },
   methods: {
     createAssessment() {
       this.$setLoading(this, true);
@@ -174,6 +184,21 @@ export default {
       this.formData.class_room = null;
       this.formData.paper = null;
       this.formData.teacher = null;
+    },
+
+    onChangeClassRoom(value) {
+      this.formData.paper = null;
+      var classRoom = this.classRooms.find(
+        (classRoom) => classRoom.id == value
+      );
+      console.log(classRoom);
+      this.$api
+        .get(
+          `/papers/?subject__level_group=${classRoom.level_detail.level_group}`
+        )
+        .then((response) => {
+          this.papers = response.data;
+        });
     },
   },
 };

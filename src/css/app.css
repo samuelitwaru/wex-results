@@ -5,3 +5,14 @@
 .active {
   color: #1976d2;
 }
+
+.spanned-table-row {
+  border-left: 1px solid rgba(0, 0, 0, 0.12);
+  padding-left: 0.45rem;
+}
+
+.mini-col {
+  max-width: 17px !important;
+  padding-left: 2px !important;
+  overflow:hidden;
+}

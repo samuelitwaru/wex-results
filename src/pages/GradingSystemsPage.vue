@@ -46,12 +46,12 @@ export default {
     return {
       columns: [
         { name: "name", label: "Name", field: "name", align: "left" },
-        {
-          name: "description",
-          label: "Description",
-          field: "description",
-          align: "left",
-        },
+        // {
+        //   name: "description",
+        //   label: "Description",
+        //   field: "description",
+        //   align: "left",
+        // },
         { name: "action", label: "Action", field: "action", align: "left" },
       ],
       grading_systems: [],

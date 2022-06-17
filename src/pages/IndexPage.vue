@@ -197,7 +197,10 @@ export default defineComponent({
       this.$api.get(`/periods/latest/`).then((response) => {
         this.period = response.data;
         this.periodLoaded = true;
-        this.getAssessmentCount();
+        console.log(this.period.name);
+        if (this.period.name) {
+          this.getAssessmentCount();
+        }
       });
     },
     getAssessmentCount() {

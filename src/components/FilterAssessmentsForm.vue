@@ -67,7 +67,6 @@ export default {
     filterAssessments() {
       this.$emit("setLoading", true);
       var urlQuery = this.$buildURLQuery(this.formData);
-      console.log(urlQuery);
       this.$api.get(`/assessments/?${urlQuery}`).then((response) => {
         this.$emit("updateAssessments", response.data);
         this.$emit("setLoading", false);

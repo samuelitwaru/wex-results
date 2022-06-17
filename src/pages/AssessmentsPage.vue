@@ -83,7 +83,7 @@ export default {
           align: "left",
           format: (data, row) => {
             if (data) {
-              return `${data.name} ${data.stream}`;
+              return `${data.name} ${data.stream || ""}`;
             }
           },
         },

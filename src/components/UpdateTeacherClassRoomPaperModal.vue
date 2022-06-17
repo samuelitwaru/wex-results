@@ -22,7 +22,7 @@
             <q-select
               outlined
               v-model="formData.class_room"
-              :option-label="(item) => `${item.name} ${item.stream}`"
+              :option-label="(item) => `${item.name} ${item.stream || ''}`"
               option-value="id"
               :options="classRooms"
               label="Class Room"

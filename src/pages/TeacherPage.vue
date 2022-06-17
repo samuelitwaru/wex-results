@@ -143,7 +143,7 @@ export default {
           field: "class_room_detail",
           label: "Class Room",
           align: "left",
-          format: (data, row) => `${data.name} ${data.stream}`,
+          format: (data, row) => `${data.name} ${data.stream || ""}`,
         },
         {
           name: "subject",

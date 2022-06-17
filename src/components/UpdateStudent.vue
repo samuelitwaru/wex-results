@@ -61,7 +61,7 @@
       <q-select
         outlined
         v-model="formData.class_room"
-        :option-label="(item) => `${item.name} ${item.stream}`"
+        :option-label="(item) => `${item.name} ${item.stream || ''}`"
         option-value="id"
         :options="classRooms"
         label="Class"
@@ -73,16 +73,62 @@
         <q-btn label="update" type="submit" color="primary" />
       </div>
     </q-form>
+
+    <div class="q-pa-sm">
+      <div class="text-h6">Subjects</div>
+      <div class="q-py-sm">
+        <q-markup-table>
+          <thead>
+            <tr>
+              <th class="text-left">Selectable Subjects</th>
+              <th class="text-right">
+                <add-student-subjects-modal
+                  :student="student"
+                  :level="level"
+                  @updateStudent="student = $event"
+                />
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="subject in student?.subjects" :key="subject.id">
+              <td class="text-left">{{ subject.name }}</td>
+              <td class="text-right">{{ subject.abbr }}</td>
+            </tr>
+          </tbody>
+        </q-markup-table>
+      </div>
+      <div class="q-py-sm">
+        <q-markup-table>
+          <thead>
+            <tr>
+              <th class="text-left">Compulsory Subjects</th>
+              <th class="text-right"></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="subject in compulsorySubjects" :key="subject.id">
+              <td class="text-left">{{ subject.name }}</td>
+              <td class="text-right">{{ subject.abbr }}</td>
+            </tr>
+          </tbody>
+        </q-markup-table>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
+import AddStudentSubjectsModal from "./AddStudentSubjectsModal.vue";
 export default {
+  components: { AddStudentSubjectsModal },
   // props: ["student"],
   data() {
     return {
       classRooms: [],
-      student: {},
+      student: null,
+      level: null,
+      compulsorySubjects: [],
       formData: {
         first_name: null,
         last_name: null,
@@ -102,20 +148,37 @@ export default {
       this.$setLoading(this, true);
       this.$api.get(`/students/${this.$route.params.id}/`).then((response) => {
         this.student = response.data;
+        console.log(this.student);
         this.$emit("updateStudent", response.data);
-        this.formData.first_name = this.student.first_name;
-        this.formData.last_name = this.student.last_name;
-        this.formData.middle_name = this.student.middle_name;
-        this.formData.gender = this.student.gender;
-        this.formData.dob = this.student.dob;
-        this.formData.class_room = this.student.class_room;
+        this.formData.first_name = this.student?.first_name;
+        this.formData.last_name = this.student?.last_name;
+        this.formData.middle_name = this.student?.middle_name;
+        this.formData.gender = this.student?.gender;
+        this.formData.dob = this.student?.dob;
+        this.formData.class_room = this.student?.class_room;
         this.$setLoading(this, false);
+        this.getLevel();
       });
+    },
+    getLevel() {
+      this.$api
+        .get(`/levels/${this.student.class_room_detail.level}/`)
+        .then((response) => {
+          this.level = response.data;
+          this.getCompulsorySubjects(this.level.level_group);
+        });
+    },
+    getCompulsorySubjects() {
+      this.$api
+        .get(`/subjects/?level_group=${this.level.level_group}&is_selectable=0`)
+        .then((response) => {
+          this.compulsorySubjects = response.data;
+        });
     },
     updateStudent() {
       this.$setLoading(this, true);
       this.$api
-        .put(`/students/${this.student.id}/`, this.formData)
+        .put(`/students/${this.student?.id}/`, this.formData)
         .then((response) => {
           this.student = response.data;
           this.$emit("updateStudent", response.data);

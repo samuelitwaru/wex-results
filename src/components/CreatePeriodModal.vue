@@ -106,6 +106,7 @@
                 </div>
               </div>
             </div>
+
             <div class="flex justify-between">
               <div>
                 <q-btn flat color="primary" label="Cancel" v-close-popup />

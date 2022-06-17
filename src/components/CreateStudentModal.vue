@@ -80,7 +80,7 @@
             <q-select
               outlined
               v-model="formData.class_room"
-              :option-label="(item) => `${item.name} ${item.stream}`"
+              :option-label="(item) => `${item.name} ${item.stream || ''}`"
               option-value="id"
               :options="classRooms"
               label="Class"
@@ -132,6 +132,7 @@ export default {
   methods: {
     createStudent() {
       this.$setLoading(this, true);
+      console.log(this.formData);
       this.$api.post(`/students/`, this.formData).then((response) => {
         this.$emit("addStudent", response.data);
         this.medium = false;

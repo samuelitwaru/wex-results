@@ -8,7 +8,11 @@
         </q-card-section>
 
         <q-card-section class="q-pt-none">
-          <q-form @submit="createTeacher" @reset="restForm" class="q-gutter-md">
+          <q-form
+            @submit="createTeacher"
+            @reset="resetForm"
+            class="q-gutter-md"
+          >
             <q-input
               v-model="formData.name"
               type="text"
@@ -79,7 +83,7 @@ export default {
 
     resetForm() {
       this.formData.name = null;
-      this.formData.intials = null;
+      this.formData.initials = null;
     },
   },
 };

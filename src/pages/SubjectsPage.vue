@@ -4,29 +4,76 @@
     <div class="q-pa-sm">
       <div class="flex justify-between q-py-sm">
         <label class="text-h4">Subjects</label>
-        <create-subject-modal @addSubject="subjects.push($event)" />
+        <q-btn color="primary" icon="add" label="Add Subject">
+          <q-menu
+            fit
+            transition-show="scale"
+            transition-hide="scale"
+            v-model="showing"
+          >
+            <q-list style="min-width: 200px">
+              <create-subject-modal
+                @addSubject="
+                  levelGroups
+                    .find((lg) => lg.id == $event.level_group)
+                    .subjects.push($event)
+                "
+              />
+              <setup-subjects-modal
+                :subjects="subjects"
+                @addSubject="
+                  levelGroups
+                    .find((lg) => lg.id == $event.level_group)
+                    .subjects.push($event)
+                "
+              />
+            </q-list>
+          </q-menu>
+        </q-btn>
       </div>
 
-      <q-table
-        :rows="subjects"
-        :columns="columns"
-        row-key="id"
-        :rows-per-page-options="[50]"
-        :loading="loading"
-      >
-        <template v-slot:loading>
-          <q-inner-loading showing color="primary">
-            <q-spinner-ios size="50px" color="primary" />
-          </q-inner-loading>
-        </template>
-        <template v-slot:body-cell-action="props">
-          <q-td :props="props">
-            <router-link class="text-white" :to="`/subjects/${props.key}`">
-              <q-btn color="primary" icon-right="edit" no-caps flat dense />
-            </router-link>
-          </q-td>
-        </template>
-      </q-table>
+      <q-markup-table flat>
+        <tbody>
+          <template v-for="levelGroup in levelGroups" :key="levelGroup.id">
+            <tr v-if="levelGroup.subjects">
+              <td class="text-left">
+                {{ levelGroup.full }}
+              </td>
+              <td class="text-left">
+                <q-list>
+                  <q-item v-for="subj in levelGroup.subjects" :key="subj.code">
+                    <q-item-section>
+                      <q-item-label
+                        >{{ subj.code }} {{ subj.name }}</q-item-label
+                      >
+                      <q-item-label caption lines="2"
+                        >{{ subj.no_papers }} Paper(s)</q-item-label
+                      >
+                    </q-item-section>
+                    <router-link
+                      class="text-white"
+                      :to="`/subjects/${subj.id}`"
+                    >
+                      <q-btn
+                        color="primary"
+                        icon-right="edit"
+                        no-caps
+                        flat
+                        dense
+                      />
+                    </router-link>
+                  </q-item>
+                  <q-item v-if="levelGroup.subjects.length == 0">
+                    <q-item-section>
+                      <q-item-label caption lines="2">No subjects</q-item-label>
+                    </q-item-section>
+                  </q-item>
+                </q-list>
+              </td>
+            </tr>
+          </template>
+        </tbody>
+      </q-markup-table>
     </div>
   </q-page>
 </template>
@@ -34,45 +81,27 @@
 <script>
 import CreateSubjectModal from "src/components/CreateSubjectModal.vue";
 import ConfirmDialog from "src/components/ConfirmDialog.vue";
+import SetupSubjectsModal from "src/components/SetupSubjectsModal.vue";
 export default {
-  components: { CreateSubjectModal, ConfirmDialog },
+  components: { CreateSubjectModal, ConfirmDialog, SetupSubjectsModal },
   name: "SubjectsPage",
   data() {
     return {
-      columns: [
-        {
-          name: "name",
-          label: "Name",
-          field: "name",
-          align: "left",
-          format: (data, row) => {
-            return `${row.code} - ${data}`;
-          },
-        },
-        {
-          name: "papers",
-          label: "Papers",
-          field: "papers",
-          align: "left",
-          format: (data, row) => {
-            return `${data.length}`;
-          },
-        },
-        { name: "action", label: "Action", field: "action", align: "left" },
-      ],
+      levelGroups: [],
       subjects: [],
       loading: false,
+      showing: false,
     };
   },
   created() {
-    this.getSubjects();
+    this.getLevelGroups();
   },
   methods: {
-    getSubjects() {
-      this.loading = true;
-      this.$api.get("/subjects/").then((response) => {
-        this.subjects = response.data;
-        this.loading = false;
+    getLevelGroups() {
+      this.$setLoading(this, true);
+      this.$api.get(`/level-groups/`).then((response) => {
+        this.levelGroups = response.data;
+        this.$setLoading(this, false);
       });
     },
   },

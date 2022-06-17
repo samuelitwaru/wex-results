@@ -35,10 +35,15 @@
               required
             />
 
-            <q-input
-              v-model="formData.description"
-              type="text"
-              label="Description"
+            <q-select
+              outlined
+              v-model="formData.level_group"
+              :option-label="(item) => `${item.full} Level`"
+              option-value="id"
+              :options="levelGroups"
+              label="Level"
+              emit-value
+              map-options
             />
             <div align="right">
               <q-btn label="update" type="submit" color="primary" />
@@ -48,12 +53,197 @@
         <div class="q-pa-sm col-md-6">
           <div class="q-py-sm flex justify-between">
             <strong class="q-my-auto">Grades</strong>
-            <create-grade-modal
+            <!-- <create-grade-modal
               :grading_system="grading_system"
               @addGrade="this.grading_system.grades.push($event)"
-            />
+            /> -->
           </div>
-          <q-table
+
+          <q-markup-table flat>
+            <tbody>
+              <tr style="background: #2ecc71">
+                <td class="text-left">D1</td>
+                <td class="text-right">
+                  <span>{{ grading_system.D2 + 1 }}</span> -
+                  <input
+                    type="number"
+                    min="0"
+                    max="100"
+                    :onchange="updateGrade"
+                    id="D1"
+                    name="D1"
+                    :onfocus="
+                      (event) => {
+                        event.target.select();
+                      }
+                    "
+                    :value="grading_system.D1"
+                  />
+                </td>
+              </tr>
+              <tr style="background: #58d68d">
+                <td class="text-left">D2</td>
+                <td class="text-right">
+                  <span>{{ grading_system.C3 + 1 }}</span> -
+                  <input
+                    type="number"
+                    min="0"
+                    max="100"
+                    id="D2"
+                    name="D2"
+                    :onchange="updateGrade"
+                    :onfocus="
+                      (event) => {
+                        event.target.select();
+                      }
+                    "
+                    :value="grading_system.D2"
+                  />
+                </td>
+              </tr>
+              <tr style="background: #82e0aa">
+                <td class="text-left">C3</td>
+                <td class="text-right">
+                  <span>{{ grading_system.C4 + 1 }}</span> -
+                  <input
+                    type="number"
+                    min="0"
+                    max="100"
+                    id="C3"
+                    name="C3"
+                    :onchange="updateGrade"
+                    :onfocus="
+                      (event) => {
+                        event.target.select();
+                      }
+                    "
+                    :value="grading_system.C3"
+                  />
+                </td>
+              </tr>
+              <tr style="background: #abebc6">
+                <td class="text-left">C4</td>
+                <td class="text-right">
+                  <span>{{ grading_system.C5 + 1 }}</span> -
+                  <input
+                    type="number"
+                    min="0"
+                    max="100"
+                    id="C4"
+                    name="C4"
+                    :onchange="updateGrade"
+                    :onfocus="
+                      (event) => {
+                        event.target.select();
+                      }
+                    "
+                    :value="grading_system.C4"
+                  />
+                </td>
+              </tr>
+              <tr style="background: #f9e79f">
+                <td class="text-left">C5</td>
+                <td class="text-right">
+                  <span>{{ grading_system.C6 + 1 }}</span> -
+                  <input
+                    type="number"
+                    min="0"
+                    max="100"
+                    id="C5"
+                    name="C5"
+                    :onchange="updateGrade"
+                    :onfocus="
+                      (event) => {
+                        event.target.select();
+                      }
+                    "
+                    :value="grading_system.C5"
+                  />
+                </td>
+              </tr>
+              <tr style="background: #fad7a0">
+                <td class="text-left">C6</td>
+                <td class="text-right">
+                  <span>{{ grading_system.P7 + 1 }}</span> -
+                  <input
+                    type="number"
+                    min="0"
+                    max="100"
+                    id="C6"
+                    name="C6"
+                    :onchange="updateGrade"
+                    :onfocus="
+                      (event) => {
+                        event.target.select();
+                      }
+                    "
+                    :value="grading_system.C6"
+                  />
+                </td>
+              </tr>
+              <tr style="background: #f5cba7">
+                <td class="text-left">P7</td>
+                <td class="text-right">
+                  <span>{{ grading_system.P8 + 1 }}</span> -
+                  <input
+                    type="number"
+                    min="0"
+                    max="100"
+                    id="P7"
+                    name="P7"
+                    :onchange="updateGrade"
+                    :onfocus="
+                      (event) => {
+                        event.target.select();
+                      }
+                    "
+                    :value="grading_system.P7"
+                  />
+                </td>
+              </tr>
+              <tr style="background: #edbb99">
+                <td class="text-left">P8</td>
+                <td class="text-right">
+                  <span>{{ grading_system.F9 + 1 }}</span> -
+                  <input
+                    type="number"
+                    min="0"
+                    max="100"
+                    :onchange="updateGrade"
+                    id="P8"
+                    name="P8"
+                    :onfocus="
+                      (event) => {
+                        event.target.select();
+                      }
+                    "
+                    :value="grading_system.P8"
+                  />
+                </td>
+              </tr>
+              <tr style="background: #e59866">
+                <td class="text-left">F9</td>
+                <td class="text-right">
+                  <span>0</span> -
+                  <input
+                    type="number"
+                    min="0"
+                    max="100"
+                    :onchange="updateGrade"
+                    id="F9"
+                    name="F9"
+                    :onfocus="
+                      (event) => {
+                        event.target.select();
+                      }
+                    "
+                    :value="grading_system.F9"
+                  />
+                </td>
+              </tr>
+            </tbody>
+          </q-markup-table>
+          <!-- <q-table
             :rows="grading_system.grades"
             :columns="columns"
             row-key="id"
@@ -76,7 +266,7 @@
                 />
               </q-td>
             </template>
-          </q-table>
+          </q-table> -->
         </div>
       </div>
     </q-card>
@@ -116,16 +306,17 @@ export default {
       ],
       grading_system: {},
       grading_systems: [],
-      teachers: [],
+      levelGroups: [],
 
       formData: {
-        name: "",
-        description: "",
+        name: null,
+        level_group: null,
       },
     };
   },
   created() {
     this.getGradingSystem();
+    this.getLevelGroups();
   },
   methods: {
     getGradingSystem() {
@@ -136,9 +327,41 @@ export default {
           this.grading_system = response.data;
           console.log(this.grading_system);
           this.formData.name = this.grading_system.name;
-          this.formData.description = this.grading_system.description;
+          this.formData.level_group = this.grading_system.level_group;
           this.$setLoading(this, false);
         });
+    },
+
+    updateGrade(event) {
+      var levels = ["D1", "D2", "C3", "C4", "C5", "C6", "P7", "P8", "F9"];
+      var level = event.target.name;
+      var levelIndex = levels.findIndex((l) => l == level);
+      var newVal = event.target.value;
+      console.log(levelIndex);
+      let beforeLevel;
+      let afterLevel;
+      let minVal;
+      let maxVal;
+      if (levelIndex > 0) {
+        beforeLevel = levels[levelIndex + 1];
+        afterLevel = levels[levelIndex - 1];
+        maxVal = this.grading_system[afterLevel];
+        minVal = this.grading_system[beforeLevel] + 1;
+        if (levelIndex == 8) {
+          minVal = 0;
+        }
+      } else if (levelIndex == 0) {
+        maxVal = 100;
+        beforeLevel = levels[levelIndex + 1];
+        minVal = this.grading_system[beforeLevel] + 1;
+      }
+
+      if (newVal < maxVal && newVal > minVal) {
+        this.formData[level] = newVal;
+        this.updateGradingSystem();
+      } else {
+        event.target.value = this.grading_system[level];
+      }
     },
 
     updateGradingSystem() {
@@ -149,6 +372,12 @@ export default {
           this.grading_system = response.data;
           this.$setLoading(this, false);
         });
+    },
+
+    getLevelGroups() {
+      this.$api.get(`/level-groups/`).then((response) => {
+        this.levelGroups = response.data;
+      });
     },
 
     deleteGradingSystem(gradingSystem) {
@@ -184,7 +413,6 @@ export default {
           if (res) {
             this.$api.delete(`/grades/${id}/`).then((response) => {
               if (response.status == 204) {
-                console.log(response.data);
                 this.grading_system.grades = this.grading_system.grades.filter(
                   (grade) => grade.id != id
                 );

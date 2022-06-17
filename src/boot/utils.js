@@ -21,6 +21,18 @@ export default boot(({ app }) => {
       .join("&");
   };
 
+  app.config.globalProperties.$wrapAggr = (aggr) => {
+    if (aggr <= 2) {
+      return `D${aggr}`;
+    } else if (aggr <= 6) {
+      return `C${aggr}`;
+    } else if (aggr <= 8) {
+      return `D${aggr}`;
+    } else if (aggr == 9) {
+      return `F${aggr}`;
+    }
+  };
+
   app.config.globalProperties.$setLoading = (context, loading) => {
     context.$store.commit("results/updateLoadingState", loading);
   };
