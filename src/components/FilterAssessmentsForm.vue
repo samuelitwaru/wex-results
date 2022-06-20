@@ -19,6 +19,20 @@
         <q-select
           outlined
           dense
+          v-model.number="formData.class_room"
+          :options="classRooms"
+          label="Class Room"
+          :option-label="(item) => `${item.name} ${item.stream || ''}`"
+          option-value="id"
+          emit-value
+          map-options
+        />
+      </div>
+
+      <div class="col q-px-sm">
+        <q-select
+          outlined
+          dense
           v-model.number="formData.paper"
           :options="papers"
           label="Paper"
@@ -43,8 +57,10 @@ export default {
     return {
       periods: [{ id: "", name: "All" }],
       papers: [{ id: "", subject_name: "All", number: 0 }],
+      classRooms: [{ id: "", name: "All", stream: "" }],
       formData: {
         period: "",
+        class_room: "",
         paper: "",
       },
     };
@@ -52,11 +68,17 @@ export default {
   created() {
     this.getPeriods();
     this.getPapers();
+    this.getClassRooms();
   },
   methods: {
     getPeriods() {
       this.$api.get(`/periods/`).then((response) => {
         this.periods = this.periods.concat(response.data);
+      });
+    },
+    getClassRooms() {
+      this.$api.get(`/class-rooms/`).then((response) => {
+        this.classRooms = this.classRooms.concat(response.data);
       });
     },
     getPapers() {

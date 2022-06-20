@@ -47,14 +47,6 @@
 
             <q-input v-model="formData.abbr" type="text" label="Abbreviation" />
 
-            <q-input
-              v-model.number="formData.no_papers"
-              type="number"
-              min="1"
-              max="5"
-              label="Number of Papers"
-            />
-
             <q-checkbox
               v-model="formData.is_selectable"
               label="Selectable Subject"
@@ -116,9 +108,9 @@
           >
             <template v-slot:body-cell-action="props">
               <q-td :props="props">
-                <router-link class="text-white" :to="``">
+                <!-- <router-link class="text-white" :to="``">
                   <q-btn color="primary" icon-right="edit" no-caps flat dense />
-                </router-link>
+                </router-link> -->
                 <q-btn
                   color="negative"
                   icon-right="delete"

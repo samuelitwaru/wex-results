@@ -63,7 +63,7 @@
         </thead>
         <tbody>
           <template
-            v-for="subjectReport in report"
+            v-for="subjectReport in subjectReports"
             :key="subjectReport.subject.id"
           >
             <tr>
@@ -207,11 +207,20 @@
             </tr>
           </template>
           <tr style="height: 5rem; background-color: rgba(0, 0, 0, 0.02">
-            <td colspan="9"></td>
+            <td colspan="8"></td>
             <td>
               <q-btn
                 class="q-py-none"
-                :label="`${totalAggregates} Aggregate(s)`"
+                :label="`${averageMarks}`"
+                outline
+                dense
+                style="margin-left: 4px"
+              />
+            </td>
+            <td>
+              <q-btn
+                class="q-py-none"
+                :label="`${bestOf8} Aggregate(s)`"
                 outline
                 dense
                 style="margin-left: 4px"
@@ -232,11 +241,38 @@
         </tbody>
       </q-markup-table>
 
-      <div class="flex">
-        <span class="q-pa-sm" v-for="k in Object.keys(cv)" :key="k">
-          <input type="checkbox" :id="`check${k}`" v-model="cv[k]" />
-          <label :for="`check${k}`">{{ $camelToNormal(k) }}</label>
-        </span>
+      <div class="q-py-sm">
+        <div class="text-subtitle1">Class Teacher</div>
+        <q-card class="my-card bg-grey-2" flat bordered>
+          <q-card-section>
+            <div>
+              <div v-if="report.class_teacher_comment">
+                {{ report.class_teacher_comment }}
+              </div>
+              <div v-else class="text-grey">No comment</div>
+            </div>
+            <div>
+              <q-input outlined v-model="formData.class_teacher_comment" />
+            </div>
+          </q-card-section>
+        </q-card>
+      </div>
+
+      <div class="q-py-sm">
+        <div class="text-subtitle1">Head Teacher</div>
+        <q-card class="my-card bg-grey-2" flat bordered>
+          <q-card-section>
+            <div>
+              <div v-if="report.head_teacher_comment">
+                {{ report.head_teacher_comment }}
+              </div>
+              <div v-else class="text-grey">No comment</div>
+            </div>
+            <div>
+              <q-input outlined v-model="formData.head_teacher_comment" />
+            </div>
+          </q-card-section>
+        </q-card>
       </div>
     </div>
   </div>
@@ -252,7 +288,8 @@ export default {
       period: null,
       periodLoaded: null,
       periods: [],
-      report: null,
+      report: {},
+      subjectReports: [],
       teacher: null,
       totalPoints: 0,
       totalAggregates: 0,
@@ -261,21 +298,25 @@ export default {
         grading_system: null,
       },
       cv: {
-        code: true,
+        code: false,
         subject: true,
         competency: true,
         assessments: true,
         total: true,
         average: true,
-        score: true,
-        descriptor: true,
+        score: false,
+        descriptor: false,
         subjectAverage: true,
         // generalSkills: true,
         // generalRemarks: true,
         aggregates: true,
         grade: true,
         points: true,
-        classTeacher: true,
+        classTeacher: false,
+      },
+      formData: {
+        class_teacher_comment: null,
+        head_teacher_comment: null,
       },
     };
   },
@@ -285,6 +326,43 @@ export default {
     this.getGradingSystems();
     this.getStudentComputedReport();
     this.getLatestPeriod();
+  },
+  computed: {
+    averageMarks() {
+      if (this.subjectReports.length > 0) {
+        var total = 0;
+        for (let index = 0; index < this.subjectReports.length; index++) {
+          const subj = this.subjectReports[index];
+          total += subj.average;
+        }
+        return (total / this.subjectReports.length).toFixed(1);
+      }
+      return 0;
+    },
+    bestOf8() {
+      var compulsories = this.subjectReports
+        .filter((subj) => subj.subject.is_selectable == false)
+        .map((subj) => subj.aggregate)
+        .sort();
+      // .reduce((a, b) => a + b, 0);
+      var optionals = this.subjectReports
+        .filter((subj) => subj.subject.is_selectable == true)
+        .map((subj) => subj.aggregate)
+        .sort();
+
+      console.log(compulsories);
+      console.log(optionals);
+
+      var best10 = compulsories.concat(optionals.slice(0, 2));
+
+      console.log(best10);
+
+      best10.push(optionals.pop());
+      best10.sort();
+      var best10;
+      console.log(best10);
+      return best10.slice(0, 8).reduce((a, b) => a + b, 0);
+    },
   },
   methods: {
     getStudent() {
@@ -298,28 +376,16 @@ export default {
     getStudentComputedReport() {
       this.$setLoading(this, true);
       var urlQuery = this.$buildURLQuery(this.formData);
-      console.log(urlQuery);
-      console.log(this.formData);
       this.$api
         .get(`/reports/computed/${this.$route.params.id}/?${urlQuery}`)
         .then((response) => {
-          this.report = response.data;
-          console.log(this.report);
+          this.computedReport = response.data;
+          this.report = this.computedReport.report;
+          this.subjectReports = this.computedReport.subject_reports;
           this.seTotalPoints();
-          this.setTotalAggregates();
           this.$setLoading(this, false);
         });
     },
-    // getLevel() {
-    //   this.level = this.student.class_room_detail.level_detail;
-    //   var levelGroupId = this.level.level_group;
-    //   this.$api
-    //     .get(`/subjects/?level_group=${levelGroupId}&is_selectable=0`)
-    //     .then((response) => {
-    //       this.subjects = response.data.concat(this.subjects);
-    //       this.getLatestPeriod();
-    //     });
-    // },
     getLatestPeriod() {
       this.$api.get(`/periods/latest/`).then((response) => {
         this.period = response.data;
@@ -337,106 +403,15 @@ export default {
 
     seTotalPoints() {
       this.totalPoints = 0;
-      this.report.forEach((subj) => {
+      this.subjectReports.forEach((subj) => {
         this.totalPoints += subj.points;
       });
     },
-    setTotalAggregates() {
-      this.totalAggregates = 0;
-      this.report.forEach((subj) => {
-        this.totalAggregates += subj.aggregate;
-      });
-    },
-    // getPaperAssessments() {
-    //   this.subjects.forEach((subject) => {
-    //     subject.scores = [];
-    //     subject.papers.forEach((paper) => {
-    //       this.$api
-    //         .get(
-    //           `/assessments/?paper=${paper.id}&class_room=${this.student.class_room}&period=${this.period.id}`
-    //         )
-    //         .then((response) => {
-    //           paper.assessments = response.data.map((assessment) => {
-    //             assessment.active = true;
-    //             // get student score from assessment scores
-    //             var studentScore = assessment.scores.find(
-    //               (score) => score.student == this.$route.params.id
-    //             );
-    //             if (studentScore) {
-    //               assessment.score = studentScore;
-    //               assessment.mark = assessment.score.mark;
-    //               assessment.markLabel = assessment.score.mark;
-    //             } else {
-    //               assessment.score = null;
-    //               assessment.mark = 0;
-    //               assessment.markLabel = "--";
-    //             }
-    //             return assessment;
-    //           });
-    //           paper.assessmentTotal = 0;
-    //           paper.assessmentAverage = 0;
-    //           paper.assessmentScore = 0;
-    //           paper.assessmentDescriptor = "";
-    //         });
-    //     });
-    //   });
-    // },
     getGradingSystems() {
       this.$api.get(`/grading-systems/`).then((response) => {
         this.gradingSystems = response.data;
       });
     },
-
-    // getTotal(assessments) {
-    //   if (assessments) {
-    //     var total = 0;
-    //     for (let i = 0; i < assessments.length; i++) {
-    //       const assessment = assessments[i];
-    //       if (assessment.active) {
-    //         total += parseInt(assessment.mark);
-    //       }
-    //     }
-    //     return total;
-    //   }
-    // },
-
-    // getAverage(assessments) {
-    //   if (assessments) {
-    //     var total = 0;
-    //     var count = 0;
-    //     for (let i = 0; i < assessments.length; i++) {
-    //       const assessment = assessments[i];
-    //       if (assessment.active) {
-    //         count += 1;
-    //         total += parseInt(assessment.mark);
-    //       }
-    //     }
-    //     return Math.round(total / count || 0);
-    //   }
-    // },
-
-    // getScore(assessments) {
-    //   var avg = this.getAverage(assessments);
-    //   return ((avg / 100) * 3).toFixed(1);
-    // },
-    // getDescriptor(assessments) {
-    //   var score = this.getScore(assessments);
-    //   if (score >= 0.9 && score <= 1.49) {
-    //     return "Basic";
-    //   } else if (score >= 1.5 && score <= 2.49) {
-    //     return "Moderate";
-    //   } else if (score >= 2.5 && score <= 3) {
-    //     return "Outstanding";
-    //   }
-    // },
-    // getAggregate(papers) {
-    //   return papers;
-    // },
-    // getGrade(markList) {
-    //   count = markList.length;
-    //   if (count == 2) {
-    //   }
-    // },
   },
 };
 </script>

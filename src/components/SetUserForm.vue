@@ -34,7 +34,7 @@ export default {
       var data = this.formData;
       this.$setLoading(this, true);
       this.$api
-        .post(`/teachers/${this.$route.params.id}/user/`, data)
+        .post(`/teachers/${this.$route.params.id}/user/?app=results`, data)
         .then((response) => {
           console.log(response.data);
           this.$setLoading(this, false);

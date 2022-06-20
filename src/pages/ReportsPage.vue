@@ -99,9 +99,6 @@
               :disable="formData.reports.length == 0"
             />
           </div>
-
-          <q-separator spaced class="q-my-lg" />
-
           <div class="q-py-sm">
             <div class="text-subtitle1">Head Teacher Comment</div>
             <q-input
@@ -110,6 +107,12 @@
               :disable="formData.reports.length == 0"
             />
           </div>
+
+          <q-checkbox
+            v-model="formData.overwrite"
+            label="Overwrite existing comments"
+            :disable="formData.reports.length == 0"
+          />
 
           <div class="q-pt-s" align="right">
             <q-btn
@@ -134,9 +137,12 @@ export default {
   data() {
     return {
       reports: [],
+      CTOverwrites: 0,
+      HTOverwrites: 0,
       formData: {
         class_teacher_comment: "",
         head_teacher_comment: "",
+        overwrite: false,
         reports: [],
       },
     };
@@ -172,7 +178,6 @@ export default {
     },
 
     saveComment() {
-      console.log(this.formData);
       this.$setLoading(this, true);
       this.$api.put(`/reports/comment/`, this.formData).then((response) => {
         this.reports = response.data;
@@ -185,6 +190,7 @@ export default {
       this.formData.reports = [];
       this.formData.class_teacher_comment = "";
       this.formData.head_teacher_comment = "";
+      this.formData.overwrite = false;
     },
   },
 };

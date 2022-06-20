@@ -27,7 +27,7 @@ export default boot(({ app }) => {
     } else if (aggr <= 6) {
       return `C${aggr}`;
     } else if (aggr <= 8) {
-      return `D${aggr}`;
+      return `P${aggr}`;
     } else if (aggr == 9) {
       return `F${aggr}`;
     }
