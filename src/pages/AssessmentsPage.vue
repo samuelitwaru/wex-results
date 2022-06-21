@@ -4,7 +4,7 @@
     <div class="q-pa-sm">
       <div class="flex justify-between q-py-sm">
         <label class="text-h4">Assessments</label>
-        <create-assessment-modal @addAssessment="assessments.push($event)" />
+        <create-assessment-modal @addAssessment="assessments.unshift($event)" />
       </div>
 
       <div class="flex justify-between q-py-sm">

@@ -208,7 +208,7 @@
           </template>
           <tr style="height: 5rem; background-color: rgba(0, 0, 0, 0.02">
             <td colspan="8"></td>
-            <td>
+            <td :class="{ 'mini-col': !cv.subjectAverage }">
               <q-btn
                 class="q-py-none"
                 :label="`${averageMarks}`"
@@ -217,8 +217,9 @@
                 style="margin-left: 4px"
               />
             </td>
-            <td>
+            <td :class="{ 'mini-col': !cv.aggregates }">
               <q-btn
+                v-if="levelGroup && levelGroup.name == 'O'"
                 class="q-py-none"
                 :label="`${bestOf8} Aggregate(s)`"
                 outline
@@ -227,53 +228,58 @@
               />
             </td>
             <td></td>
-            <td>
+            <td :class="{ 'mini-col': !cv.points }">
               <q-btn
+                v-if="levelGroup && levelGroup.name == 'A'"
                 class="q-py-none"
                 :label="`${totalPoints} Point(s)`"
                 outline
                 dense
                 style="margin-left: 4px"
-              /><!-- {{ totalPoints }} Point(s) -->
+              />
             </td>
             <td></td>
           </tr>
         </tbody>
       </q-markup-table>
-
-      <div class="q-py-sm">
-        <div class="text-subtitle1">Class Teacher</div>
-        <q-card class="my-card bg-grey-2" flat bordered>
-          <q-card-section>
-            <div>
-              <div v-if="report.class_teacher_comment">
-                {{ report.class_teacher_comment }}
+      <q-form @submit="saveComment" class="q-gutter-md">
+        <div class="q-py-sm">
+          <div class="text-subtitle1">Class Teacher</div>
+          <q-card class="my-card bg-grey-2" flat bordered>
+            <q-card-section>
+              <div>
+                <div v-if="report.class_teacher_comment">
+                  {{ report.class_teacher_comment }}
+                </div>
+                <div v-else class="text-grey">No comment</div>
               </div>
-              <div v-else class="text-grey">No comment</div>
-            </div>
-            <div>
-              <q-input outlined v-model="formData.class_teacher_comment" />
-            </div>
-          </q-card-section>
-        </q-card>
-      </div>
-
-      <div class="q-py-sm">
-        <div class="text-subtitle1">Head Teacher</div>
-        <q-card class="my-card bg-grey-2" flat bordered>
-          <q-card-section>
-            <div>
-              <div v-if="report.head_teacher_comment">
-                {{ report.head_teacher_comment }}
+              <div>
+                <q-input outlined v-model="formData.class_teacher_comment" />
               </div>
-              <div v-else class="text-grey">No comment</div>
-            </div>
-            <div>
-              <q-input outlined v-model="formData.head_teacher_comment" />
-            </div>
-          </q-card-section>
-        </q-card>
-      </div>
+            </q-card-section>
+          </q-card>
+        </div>
+
+        <div class="q-py-sm">
+          <div class="text-subtitle1">Head Teacher</div>
+          <q-card class="my-card bg-grey-2" flat bordered>
+            <q-card-section>
+              <div>
+                <div v-if="report.head_teacher_comment">
+                  {{ report.head_teacher_comment }}
+                </div>
+                <div v-else class="text-grey">No comment</div>
+              </div>
+              <div>
+                <q-input outlined v-model="formData.head_teacher_comment" />
+              </div>
+            </q-card-section>
+          </q-card>
+        </div>
+        <div class="q-pt-s" align="right">
+          <q-btn color="primary" label="submit" type="submit" />
+        </div>
+      </q-form>
     </div>
   </div>
 </template>
@@ -283,6 +289,7 @@ export default {
   data() {
     return {
       student: {},
+      levelGroup: null,
       gradingSystems: [],
       gradingSystem: null,
       period: null,
@@ -315,8 +322,10 @@ export default {
         classTeacher: false,
       },
       formData: {
-        class_teacher_comment: null,
-        head_teacher_comment: null,
+        class_teacher_comment: "",
+        head_teacher_comment: "",
+        overwrite: true,
+        reports: [],
       },
     };
   },
@@ -350,17 +359,11 @@ export default {
         .map((subj) => subj.aggregate)
         .sort();
 
-      console.log(compulsories);
-      console.log(optionals);
-
       var best10 = compulsories.concat(optionals.slice(0, 2));
-
-      console.log(best10);
 
       best10.push(optionals.pop());
       best10.sort();
       var best10;
-      console.log(best10);
       return best10.slice(0, 8).reduce((a, b) => a + b, 0);
     },
   },
@@ -371,7 +374,17 @@ export default {
         this.subjects = this.student.subjects;
         this.$emit("updateStudent", response.data);
         this.teacher = this.student.class_room_detail.teacher_detail;
+        this.getLevelGroup();
       });
+    },
+    getLevelGroup() {
+      this.$api
+        .get(
+          `/level-groups/${this.student.class_room_detail.level_detail.level_group}/`
+        )
+        .then((response) => {
+          this.levelGroup = response.data;
+        });
     },
     getStudentComputedReport() {
       this.$setLoading(this, true);
@@ -381,6 +394,10 @@ export default {
         .then((response) => {
           this.computedReport = response.data;
           this.report = this.computedReport.report;
+          this.formData.class_teacher_comment =
+            this.report.class_teacher_comment;
+          this.formData.head_teacher_comment = this.report.head_teacher_comment;
+          this.formData.reports.push(this.report.id);
           this.subjectReports = this.computedReport.subject_reports;
           this.seTotalPoints();
           this.$setLoading(this, false);
@@ -410,6 +427,13 @@ export default {
     getGradingSystems() {
       this.$api.get(`/grading-systems/`).then((response) => {
         this.gradingSystems = response.data;
+      });
+    },
+    saveComment() {
+      this.$setLoading(this, true);
+      this.$api.put(`/reports/comment/`, this.formData).then((response) => {
+        this.report = response.data[0];
+        this.$setLoading(this, false);
       });
     },
   },
