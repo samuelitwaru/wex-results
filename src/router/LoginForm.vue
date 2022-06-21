@@ -1,7 +1,17 @@
 <template>
   <q-form @submit="login" @reset="resetForm" class="q-gutter-md">
-    <q-input v-model="formData.username" type="text" label="Username" />
-    <q-input v-model="formData.password" type="password" label="Password" />
+    <q-input
+      v-model="formData.username"
+      type="text"
+      label="Username"
+      required
+    />
+    <q-input
+      v-model="formData.password"
+      type="password"
+      label="Password"
+      required
+    />
     <div>
       <q-btn label="Signin" type="submit" color="primary" />
     </div>

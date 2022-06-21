@@ -32,6 +32,13 @@ export default boot(({ app, router, store }) => {
             if (error.response.status == 403) {
                 store.dispatch("results/signOut");
                 router.push("/login");
+            } else if (error.response.status == 400) {
+                store.commit("results/updateLoadingState", false);
+                store.commit("results/updateAlertState", true);
+                store.commit(
+                    "results/updateAlertMsg",
+                    "Bad request. Please check your input data."
+                );
             }
         }
     );

@@ -1,6 +1,7 @@
 <template>
   <q-layout view="lHh Lpr lFf">
     <loading />
+    <alert />
     <q-header elevated>
       <q-toolbar>
         <q-btn
@@ -64,6 +65,7 @@
 </template>
 
 <script>
+import Alert from "src/components/Alert.vue";
 import Loading from "src/components/Loading.vue";
 import { defineComponent, ref } from "vue";
 // import EssentialLink from "components/EssentialLink.vue";
@@ -121,6 +123,7 @@ export default defineComponent({
 
   components: {
     Loading,
+    Alert,
     // EssentialLink,
   },
 

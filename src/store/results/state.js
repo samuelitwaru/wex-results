@@ -1,7 +1,9 @@
-export default function () {
-  return {
-    loading: false,
-    isAuthenticated: false,
-    token: null,
-  };
+export default function() {
+    return {
+        loading: false,
+        show: false,
+        msg: "",
+        isAuthenticated: false,
+        token: null,
+    };
 }

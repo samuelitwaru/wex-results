@@ -40,7 +40,37 @@
                 {{ report.student.class_room_detail.name }}
                 {{ report.student.class_room_detail.stream || "" }}
               </td>
-              <td class="text-right" rowspan="2">18</td>
+              <td rowspan="2">
+                <q-list>
+                  <q-item>
+                    <q-item-section>
+                      <q-item-label>Average Mark</q-item-label>
+                    </q-item-section>
+
+                    <q-item-section side>
+                      <q-item-label>{{ report.average }}</q-item-label>
+                    </q-item-section>
+                  </q-item>
+                  <!-- <q-item>
+                    <q-item-section>
+                      <q-item-label>Points</q-item-label>
+                    </q-item-section>
+
+                    <q-item-section side>
+                      <q-item-label>{{ report.points }}</q-item-label>
+                    </q-item-section>
+                  </q-item>
+                  <q-item>
+                    <q-item-section>
+                      <q-item-label>Aggregates</q-item-label>
+                    </q-item-section>
+
+                    <q-item-section side>
+                      <q-item-label>{{ report.aggregates }}</q-item-label>
+                    </q-item-section>
+                  </q-item> -->
+                </q-list>
+              </td>
               <td>CT</td>
               <td>{{ report.class_teacher_comment }}</td>
               <td rowspan="2">
@@ -156,6 +186,19 @@ export default {
       this.$api.get("/reports/").then((response) => {
         this.reports = response.data;
         this.$setLoading(this, false);
+        this.getComputedReports();
+      });
+    },
+
+    getComputedReports() {
+      this.reports.forEach((report) => {
+        this.$api
+          .get(`/reports/computed/${report.student.id}/`)
+          .then((reponse) => {
+            report.average = reponse.data.average;
+            report.points = reponse.data.points;
+            report.aggregates = reponse.data.aggregates;
+          });
       });
     },
 
