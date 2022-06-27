@@ -43,18 +43,18 @@
           spinner-color="primary"
           spinner-size="82px"
         />
-
-        <router-link
-          v-for="link in essentialLinks"
-          :to="link.link"
-          :key="link.title"
-          v-bind="link"
-          block
-        >
-          <q-btn class="full-width" align="left" :icon="link.icon" flat>
-            <span class="q-px-md">{{ link.title }}</span>
-          </q-btn>
-        </router-link>
+        <div v-for="link in essentialLinks" :key="link.title">
+          <router-link
+            v-if="$userHasAnyGroups(link.userGroups)"
+            :to="link.link"
+            v-bind="link"
+            block
+          >
+            <q-btn class="full-width" align="left" :icon="link.icon" flat>
+              <span class="q-px-md">{{ link.title }}</span>
+            </q-btn>
+          </router-link>
+        </div>
       </q-list>
     </q-drawer>
 
@@ -75,46 +75,67 @@ const linksList = [
     title: "Home",
     icon: "home",
     link: "/",
+    userGroups: ["dos"],
   },
   {
     title: "Levels",
     icon: "signal_cellular_alt",
     link: "/levels",
+    userGroups: ["dos"],
   },
   {
     title: "Subjects",
     icon: "subject",
     link: "/subjects",
+    userGroups: ["dos"],
   },
   {
     title: "Teachers",
     icon: "supervisor_account",
     link: "/teachers",
+    userGroups: ["dos"],
   },
   {
     title: "Class Rooms",
-    icon: "class",
+    icon: "home",
     link: "/class-rooms",
+    userGroups: ["dos"],
   },
   {
     title: "Students",
     icon: "school",
     link: "/students",
+    userGroups: ["dos"],
   },
   {
     title: "Grading Systems",
     icon: "stars",
     link: "/grading-systems",
+    userGroups: ["dos"],
   },
   {
     title: "Assessments",
-    icon: "assessment",
+    icon: "fa fa-line-chart",
     link: "/assessments",
+    userGroups: ["dos", "teacher"],
+  },
+  {
+    title: "Activities",
+    icon: "fa fa-lightbulb",
+    link: "/activities",
+    userGroups: ["teacher"],
   },
   {
     title: "Reports",
     icon: "book",
     link: "/reports",
+    userGroups: ["dos", "teacher"],
+  },
+  {
+    title: "Users",
+    icon: "fa fa-users",
+    link: "/users",
+    userGroups: ["dos"],
   },
 ];
 

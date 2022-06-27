@@ -37,10 +37,6 @@
           </tr>
         </tbody>
       </q-markup-table>
-
-      <div class="q-pt-md" align="right">
-        <q-btn label="OK" @click="modal = false" color="primary" />
-      </div>
     </div>
     <!-- </q-card> -->
   </div>

@@ -17,6 +17,14 @@ export const updateAlertMsg = (state, msg) => {
     state.msg = msg;
 };
 
+export const setUser = (state, user) => {
+    state.user = user;
+};
+
+export const setProfile = (state, profile) => {
+    state.profile = profile;
+};
+
 export const setToken = (state, token) => {
     if (token) {
         state.isAuthenticated = true;

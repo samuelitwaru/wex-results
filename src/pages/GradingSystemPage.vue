@@ -44,7 +44,11 @@
               label="Level"
               emit-value
               map-options
+              required
             />
+
+            <q-checkbox v-model="formData.is_default" label="Make default" />
+
             <div align="right">
               <q-btn label="update" type="submit" color="primary" />
             </div>
@@ -243,30 +247,6 @@
               </tr>
             </tbody>
           </q-markup-table>
-          <!-- <q-table
-            :rows="grading_system.grades"
-            :columns="columns"
-            row-key="id"
-            :rows-per-page-options="[50]"
-          >
-            <template v-slot:body-cell-action="props">
-              <q-td :props="props">
-                <update-grade-modal
-                  :grade="props.row"
-                  :grading_system="grading_system"
-                  @replaceGrade="this.replaceGrade($event)"
-                />
-                <q-btn
-                  color="negative"
-                  icon-right="delete"
-                  no-caps
-                  flat
-                  dense
-                  @click="deleteGrade(props.key)"
-                />
-              </q-td>
-            </template>
-          </q-table> -->
         </div>
       </div>
     </q-card>
@@ -281,29 +261,6 @@ export default {
   components: { ConfirmDialog, CreateGradeModal, UpdateGradeModal },
   data() {
     return {
-      columns: [
-        {
-          name: "category",
-          label: "Category",
-          field: "category",
-          align: "left",
-        },
-        {
-          name: "range",
-          label: "Range",
-          field: "min_mark",
-          format: (data, row) => `${data} - ${row.max_mark}`,
-          align: "left",
-        },
-        { name: "points", label: "Points", field: "points", align: "left" },
-        {
-          name: "aggregates",
-          label: "Aggregates",
-          field: "aggregates",
-          align: "left",
-        },
-        { name: "action", label: "Action", field: "action", align: "left" },
-      ],
       grading_system: {},
       grading_systems: [],
       levelGroups: [],
@@ -311,6 +268,7 @@ export default {
       formData: {
         name: null,
         level_group: null,
+        is_default: false,
       },
     };
   },
@@ -328,6 +286,7 @@ export default {
           console.log(this.grading_system);
           this.formData.name = this.grading_system.name;
           this.formData.level_group = this.grading_system.level_group;
+          this.formData.is_default = this.grading_system.is_default;
           this.$setLoading(this, false);
         });
     },

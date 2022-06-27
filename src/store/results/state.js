@@ -5,5 +5,7 @@ export default function() {
         msg: "",
         isAuthenticated: false,
         token: null,
+        user: null,
+        profile: null,
     };
 }

@@ -13,11 +13,6 @@
       <q-markup-table flat bordered separator="cell" square dense>
         <thead>
           <tr>
-            <th class="text-left">Student</th>
-            <th class="text-right">Class Room</th>
-            <th class="text-right">Result</th>
-            <th class="text-right" colspan="2">Comments</th>
-            <th class="text-right"></th>
             <th class="text-right">
               <div class="flex justify-around items-center">
                 <input
@@ -27,11 +22,30 @@
                 />
               </div>
             </th>
+            <th class="text-left">Student</th>
+            <th class="text-right">Class Room</th>
+            <th class="text-right">Result</th>
+            <th class="text-right" colspan="2">Comments</th>
+            <th class="text-right"></th>
           </tr>
         </thead>
         <tbody>
           <template v-for="report in reports" :key="report.id">
             <tr>
+              <td rowspan="2">
+                <div class="flex justify-around items-center">
+                  <input
+                    type="checkbox"
+                    :name="report.id"
+                    :id="report.id"
+                    @change="addOrRemoveReport"
+                    :checked="
+                      this.formData.reports.findIndex((i) => i == report.id) !=
+                      -1
+                    "
+                  />
+                </div>
+              </td>
               <td class="text-left" rowspan="2">
                 {{ report.student.first_name }} {{ report.student.last_name }}
                 {{ report.student.middle_name || "" }}
@@ -81,26 +95,12 @@
                   >
                     <q-btn
                       color="primary"
-                      icon-right="book"
+                      icon-right="fa fa-eye"
                       no-caps
                       flat
                       dense
                     />
                   </router-link>
-                </div>
-              </td>
-              <td rowspan="2">
-                <div class="flex justify-around items-center">
-                  <input
-                    type="checkbox"
-                    :name="report.id"
-                    :id="report.id"
-                    @change="addOrRemoveReport"
-                    :checked="
-                      this.formData.reports.findIndex((i) => i == report.id) !=
-                      -1
-                    "
-                  />
                 </div>
               </td>
             </tr>
@@ -222,6 +222,12 @@ export default {
 
     saveComment() {
       this.$setLoading(this, true);
+      console.log(this.formData);
+      if (this.formData.class_teacher_comment == "")
+        delete this.formData.class_teacher_comment;
+      if (this.formData.head_teacher_comment == "")
+        delete this.formData.head_teacher_comment;
+      console.log(this.formData);
       this.$api.put(`/reports/comment/`, this.formData).then((response) => {
         this.reports = response.data;
         this.resetForm();

@@ -13,33 +13,46 @@
             @reset="resetForm"
             class="q-gutter-md"
           >
-            <q-input
-              v-model="formData.name"
-              type="text"
-              label="Name"
-              required
-            />
-            <q-input v-model="formData.stream" type="text" label="Stream" />
-            <q-select
-              outlined
-              v-model="formData.level"
-              option-label="name"
-              option-value="id"
-              :options="levels"
-              label="Level"
-              emit-value
-              map-options
-            />
-            <q-select
-              outlined
-              v-model="formData.teacher"
-              option-label="name"
-              option-value="id"
-              :options="teachers"
-              label="Class Teacher"
-              emit-value
-              map-options
-            />
+            <div class="row">
+              <div class="col q-mr-xs">
+                <q-input
+                  v-model="formData.name"
+                  type="text"
+                  label="Name"
+                  required
+                />
+              </div>
+              <div class="col q-mr-xs">
+                <q-input v-model="formData.stream" type="text" label="Stream" />
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col q-mr-xs">
+                <q-select
+                  outlined
+                  v-model="formData.level"
+                  option-label="name"
+                  option-value="id"
+                  :options="levels"
+                  label="Level"
+                  emit-value
+                  map-options
+                />
+              </div>
+              <div class="col q-mr-xs">
+                <q-select
+                  outlined
+                  v-model="formData.teacher"
+                  option-label="name"
+                  option-value="id"
+                  :options="teachers"
+                  label="Class Teacher"
+                  emit-value
+                  map-options
+                />
+              </div>
+            </div>
 
             <div class="flex justify-between">
               <div>

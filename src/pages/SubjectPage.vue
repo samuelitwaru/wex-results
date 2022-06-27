@@ -31,21 +31,43 @@
         <div class="col-12 q-pa-sm">
           <strong>Subject</strong>
           <q-form @submit="updateSubject" class="q-gutter-md">
-            <q-input
-              v-model="formData.code"
-              type="text"
-              label="Code"
-              required
-            />
+            <div class="row">
+              <div class="col q-mr-xs">
+                <q-input
+                  v-model="formData.code"
+                  type="code"
+                  label="Code"
+                  required
+                />
+              </div>
+              <div class="col q-ml-xs">
+                <q-input
+                  v-model="formData.name"
+                  type="text"
+                  label="Name"
+                  required
+                />
+              </div>
+            </div>
 
-            <q-input
-              v-model="formData.name"
-              type="text"
-              label="Name"
-              required
-            />
-
-            <q-input v-model="formData.abbr" type="text" label="Abbreviation" />
+            <div class="row">
+              <div class="col q-mr-xs">
+                <q-input
+                  v-model="formData.abbr"
+                  type="text"
+                  label="Abbreviation"
+                />
+              </div>
+              <div class="col q-ml-xs">
+                <q-input
+                  v-model.number="formData.no_papers"
+                  type="number"
+                  min="1"
+                  max="5"
+                  label="Number of Papers"
+                />
+              </div>
+            </div>
 
             <q-checkbox
               v-model="formData.is_selectable"
@@ -100,6 +122,17 @@
             />
           </div>
 
+          <update-paper-modal
+            ref="updatePaperModal"
+            :subject="subject"
+            :paper="paper"
+            @updatePaper="
+              subject.papers[
+                subject.papers.findIndex((p) => p.id == $event.id)
+              ] = $event
+            "
+          />
+
           <q-table
             :rows="subject.papers"
             :columns="columns"
@@ -108,9 +141,13 @@
           >
             <template v-slot:body-cell-action="props">
               <q-td :props="props">
-                <!-- <router-link class="text-white" :to="``">
-                  <q-btn color="primary" icon-right="edit" no-caps flat dense />
-                </router-link> -->
+                <q-btn
+                  dense
+                  flat
+                  icon="edit"
+                  color="primary"
+                  @click="showUpdatePaperModal(props.row)"
+                />
                 <q-btn
                   color="negative"
                   icon-right="delete"
@@ -150,12 +187,14 @@
 <script>
 import ConfirmDialog from "src/components/ConfirmDialog.vue";
 import CreatePaperModal from "src/components/CreatePaperModal.vue";
+import UpdatePaperModal from "src/components/UpdatePaperModal.vue";
 export default {
-  components: { ConfirmDialog, CreatePaperModal },
+  components: { ConfirmDialog, CreatePaperModal, UpdatePaperModal },
   data() {
     return {
       subject: {},
       classRooms: [],
+      paper: null,
       subjectTeachers: [],
       advancedLevelSelected: null,
       levelGroups: [],
@@ -291,6 +330,11 @@ export default {
       this.$api.get(`/class-rooms/`).then((response) => {
         this.classRooms = response.data;
       });
+    },
+
+    showUpdatePaperModal(paper) {
+      this.paper = paper;
+      this.$refs.updatePaperModal.show = true;
     },
   },
 };

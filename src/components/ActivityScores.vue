@@ -2,7 +2,7 @@
   <div class="q-px-sm">
     <h6 class="q-my-sm flex justify-between">
       Scores
-      <router-link :to="`/assessments/${$route.params.id}`">
+      <router-link :to="`/activities/${$route.params.id}`">
         <q-btn color="primary" label="Detials" no-caps flat dense />
       </router-link>
     </h6>
@@ -44,8 +44,8 @@
 
 <script>
 export default {
-  props: ["assessment"],
-  emits: ["updateAssessment"],
+  props: ["activity"],
+  emits: ["updateActivity"],
   data() {
     return {
       scores: [],
@@ -53,12 +53,12 @@ export default {
     };
   },
   created() {
-    this.getAssessmentScores();
+    this.getActivityScores();
   },
   methods: {
-    getAssessmentScores() {
+    getActivityScores() {
       this.$api
-        .get(`/scores/?assessment=${this.$route.params.id}`)
+        .get(`/activity-scores/?activity=${this.$route.params.id}`)
         .then((response) => {
           this.scores = response.data;
           this.getStudents();
@@ -68,26 +68,27 @@ export default {
     createOrUpdateOrDeleteStudentScore(event) {
       var formData = {
         mark: parseInt(event.target.value),
-        assessment: this.assessment.id,
+        activity: this.activity.id,
         student: parseInt(event.target.name),
       };
-      console.log(formData);
       var currentScore = this.getStudentScore(formData.student);
       if (currentScore.mark) {
         if (isNaN(formData.mark)) {
           this.removeStudentScore(formData.student);
-          this.$api.delete(`/scores/${currentScore.id}/`).then((response) => {
-            console.log(response.data);
-          });
+          this.$api
+            .delete(`/activity-scores/${currentScore.id}/`)
+            .then((response) => {
+              console.log(response.data);
+            });
         } else {
           this.$api
-            .put(`/scores/${currentScore.id}/`, formData)
+            .put(`/activity-scores/${currentScore.id}/`, formData)
             .then((response) => {
               console.log(response.data);
             });
         }
       } else {
-        this.$api.post(`/scores/`, formData).then((response) => {
+        this.$api.post(`/activity-scores/`, formData).then((response) => {
           this.scores.push(response.data);
         });
       }
@@ -95,14 +96,13 @@ export default {
 
     getStudents() {
       this.$api
-        .get(`/students/?class_room=${this.assessment.class_room}`)
+        .get(`/students/?class_room=${this.activity.class_room}`)
         .then((response) => {
           this.students = response.data;
           this.students = this.students.map((student) => {
             student.score = this.getStudentScore(student.id);
             return student;
           });
-          console.log(this.students);
         });
     },
 

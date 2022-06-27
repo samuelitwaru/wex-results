@@ -1,7 +1,7 @@
 <template>
   <div>
-    <q-btn dense icon="add" color="primary" @click="medium = true" />
-    <q-dialog v-model="medium">
+    <q-btn dense icon="add" color="primary" @click="show = true" />
+    <q-dialog v-model="show">
       <q-card style="width: 700px; max-width: 80vw">
         <q-card-section>
           <div class="text-h6">New Assessment</div>
@@ -111,14 +111,13 @@ export default {
   props: ["assessments"],
   setup() {
     return {
-      medium: ref(false),
+      show: ref(false),
     };
   },
   data() {
     return {
       teachers: [],
       classRooms: [],
-      subjects: [],
       papers: [],
       formData: {
         date: null,
@@ -131,24 +130,30 @@ export default {
   created() {
     this.getTeachers();
     this.getClassRooms();
-    this.getSubjects();
     this.getPapers();
   },
-  // watch: {
-  //   formData: {
-  //     handler(newVal, oldVal) {
-  //       console.log(oldVal.class_room);
-  //       console.log(newVal.class_room);
-  //     },
-  //     deep: true,
-  //   },
-  // },
+  computed: {
+    classRoomsUrl() {
+      if (this.$userHasGroup("teacher")) {
+        var user = this.$getState("user");
+        return `teachers/${user.teacher_id}/allocated-class-rooms/`;
+      }
+      return `/class-rooms/`;
+    },
+    papersUrl() {
+      if (this.$userHasGroup("teacher")) {
+        var user = this.$getState("user");
+        return `teachers/${user.teacher_id}/allocated-papers/`;
+      }
+      return `/papers/`;
+    },
+  },
   methods: {
     createAssessment() {
       this.$setLoading(this, true);
       this.$api.post(`/assessments/`, this.formData).then((response) => {
         this.$emit("addAssessment", response.data);
-        this.medium = false;
+        this.show = false;
         this.resetForm();
         this.$setLoading(this, false);
       });
@@ -160,20 +165,15 @@ export default {
       });
     },
 
-    getSubjects() {
-      this.$api.get(`/subjects/`).then((response) => {
-        this.subjects = response.data;
-      });
-    },
-
-    getPapers() {
-      this.$api.get(`/papers/`).then((response) => {
+    getPapers(args = {}) {
+      var queryString = this.$buildURLQuery(args);
+      this.$api.get(`${this.papersUrl}?${queryString}`).then((response) => {
         this.papers = response.data;
       });
     },
 
     getClassRooms() {
-      this.$api.get(`/class-rooms/`).then((response) => {
+      this.$api.get(`${this.classRoomsUrl}`).then((response) => {
         this.classRooms = response.data;
       });
     },
@@ -191,14 +191,10 @@ export default {
       var classRoom = this.classRooms.find(
         (classRoom) => classRoom.id == value
       );
-      console.log(classRoom);
-      this.$api
-        .get(
-          `/papers/?subject__level_group=${classRoom.level_detail.level_group}`
-        )
-        .then((response) => {
-          this.papers = response.data;
-        });
+      var args = {
+        subject__level_group: classRoom.level_detail.level_group,
+      };
+      this.getPapers(args);
     },
   },
 };

@@ -107,10 +107,24 @@ export default {
   created() {
     this.getAssessments();
   },
+  watch: {
+    assessmentsUrl(newValue, oldValue) {
+      this.getAssessments();
+    },
+  },
+  computed: {
+    assessmentsUrl() {
+      if (this.$userHasGroup("teacher")) {
+        var teacher_id = this.$store.state.results.user.teacher_id;
+        if (teacher_id) return `/teachers/${teacher_id}/assessments/`;
+      }
+      return `/assessments/`;
+    },
+  },
   methods: {
     getAssessments() {
       this.loading = true;
-      this.$api.get("/assessments/").then((response) => {
+      this.$api.get(`${this.assessmentsUrl}`).then((response) => {
         this.assessments = response.data;
         this.loading = false;
       });

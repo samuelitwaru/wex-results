@@ -7,22 +7,38 @@
       </router-link>
     </h6>
     <q-form @submit="updateStudent" class="q-gutter-md q-pa-sm">
-      <q-input
-        v-model="formData.first_name"
-        type="text"
-        label="First Name"
-        required
-      />
-      <q-input
-        v-model="formData.last_name"
-        type="text"
-        label="Last Name"
-        required
-      />
-      <q-input v-model="formData.middle_name" type="text" label="Middle Name" />
+      <div class="row">
+        <div class="col q-mr-xs">
+          <q-input
+            v-model="formData.first_name"
+            type="text"
+            label="First Name"
+            required
+          />
+        </div>
+        <div class="col q-ml-xs">
+          <q-input
+            v-model="formData.last_name"
+            type="text"
+            label="Last Name"
+            required
+          />
+        </div>
+      </div>
 
-      <q-radio v-model="formData.gender" val="M" label="Male" />
-      <q-radio v-model="formData.gender" val="F" label="Female" />
+      <div class="row">
+        <div class="col">
+          <q-input
+            v-model="formData.middle_name"
+            type="text"
+            label="Middle Name"
+          />
+        </div>
+        <div class="col q-my-auto">
+          <q-radio v-model="formData.gender" val="M" label="Male" />
+          <q-radio v-model="formData.gender" val="F" label="Female" />
+        </div>
+      </div>
 
       <div>
         <label class="text-grey-8">Date of Birth</label>

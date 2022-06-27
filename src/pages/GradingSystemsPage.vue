@@ -4,34 +4,49 @@
     <div class="q-pa-sm">
       <div class="flex justify-between q-py-sm">
         <label class="text-h4">Grading Systems</label>
-        <create-grading-system-modal
-          @addGradingSystem="grading_systems.push($event)"
-        />
+        <create-grading-system-modal @addGradingSystem="getLevelGroups()" />
       </div>
 
-      <q-table
-        :rows="grading_systems"
-        :columns="columns"
-        row-key="id"
-        :rows-per-page-options="[50]"
-        :loading="loading"
-      >
-        <template v-slot:loading>
-          <q-inner-loading showing color="primary">
-            <q-spinner-ios size="50px" color="primary" />
-          </q-inner-loading>
-        </template>
-        <template v-slot:body-cell-action="props">
-          <q-td :props="props">
-            <router-link
-              class="text-white"
-              :to="`/grading-systems/${props.key}`"
-            >
-              <q-btn color="primary" icon-right="edit" no-caps flat dense />
-            </router-link>
-          </q-td>
-        </template>
-      </q-table>
+      <q-markup-table>
+        <thead>
+          <tr>
+            <th class="text-left">Level</th>
+            <th class="text-left">Grading system</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="levelGroup in levelGroups" :key="levelGroup.id">
+            <td class="text-left">{{ levelGroup.full }}</td>
+            <td class="text-left">
+              <q-list>
+                <q-item v-for="gs in levelGroup.grading_systems" :key="gs.id">
+                  <q-item-section>
+                    {{ gs.name }}
+                  </q-item-section>
+                  <q-item-section>
+                    <span v-if="gs.is_default">(default)</span>
+                  </q-item-section>
+
+                  <q-item-section>
+                    <router-link
+                      class="text-white"
+                      :to="`/grading-systems/${gs.id}`"
+                    >
+                      <q-btn
+                        color="primary"
+                        icon-right="edit"
+                        no-caps
+                        flat
+                        dense
+                      />
+                    </router-link>
+                  </q-item-section>
+                </q-item>
+              </q-list>
+            </td>
+          </tr>
+        </tbody>
+      </q-markup-table>
     </div>
   </q-page>
 </template>
@@ -46,22 +61,23 @@ export default {
     return {
       columns: [
         { name: "name", label: "Name", field: "name", align: "left" },
-        // {
-        //   name: "description",
-        //   label: "Description",
-        //   field: "description",
-        //   align: "left",
-        // },
         { name: "action", label: "Action", field: "action", align: "left" },
       ],
       grading_systems: [],
+      levelGroups: [],
       loading: false,
     };
   },
   created() {
+    this.getLevelGroups();
     this.getGradingSystems();
   },
   methods: {
+    getLevelGroups() {
+      this.$api.get(`/level-groups/`).then((response) => {
+        this.levelGroups = response.data;
+      });
+    },
     getGradingSystems() {
       this.loading = true;
       this.$api.get("/grading-systems/").then((response) => {

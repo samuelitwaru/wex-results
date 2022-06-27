@@ -15,26 +15,43 @@
             @reset="resetForm"
             class="q-gutter-md"
           >
-            <q-input
-              v-model="formData.code"
-              type="code"
-              label="Code"
-              required
-            />
-            <q-input
-              v-model="formData.name"
-              type="text"
-              label="Name"
-              required
-            />
-            <q-input v-model="formData.abbr" type="text" label="Abbreviation" />
-            <q-input
-              v-model.number="formData.no_papers"
-              type="number"
-              min="1"
-              max="5"
-              label="Number of Papers"
-            />
+            <div class="row">
+              <div class="col q-mr-xs">
+                <q-input
+                  v-model="formData.code"
+                  type="code"
+                  label="Code"
+                  required
+                />
+              </div>
+              <div class="col q-ml-xs">
+                <q-input
+                  v-model="formData.name"
+                  type="text"
+                  label="Name"
+                  required
+                />
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col q-mr-xs">
+                <q-input
+                  v-model="formData.abbr"
+                  type="text"
+                  label="Abbreviation"
+                />
+              </div>
+              <div class="col q-ml-xs">
+                <q-input
+                  v-model.number="formData.no_papers"
+                  type="number"
+                  min="1"
+                  max="5"
+                  label="Number of Papers"
+                />
+              </div>
+            </div>
 
             <q-checkbox
               v-model="formData.is_selectable"

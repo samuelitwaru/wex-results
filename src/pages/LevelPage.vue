@@ -13,16 +13,6 @@
           <div>{{ levelGroup?.full }} Level</div>
         </q-card-section>
       </q-card-section>
-      <!-- <div class="q-pa-sm" align="right">
-        <q-btn
-          color="negative"
-          label="Delete"
-          no-caps
-          flat
-          dense
-          @click="deleteLevel(level)"
-        />
-      </div> -->
 
       <q-separator />
 

@@ -70,6 +70,20 @@ export default {
     this.getPapers();
     this.getClassRooms();
   },
+  watch: {
+    assessmentsUrl(newValue, oldValue) {
+      this.filterAssessments();
+    },
+  },
+  computed: {
+    assessmentsUrl() {
+      if (this.$userHasGroup("teacher")) {
+        var teacher_id = this.$store.state.results.user.teacher_id;
+        if (teacher_id) return `/teachers/${teacher_id}/assessments/`;
+      }
+      return `/assessments/`;
+    },
+  },
   methods: {
     getPeriods() {
       this.$api.get(`/periods/`).then((response) => {
@@ -89,7 +103,7 @@ export default {
     filterAssessments() {
       this.$emit("setLoading", true);
       var urlQuery = this.$buildURLQuery(this.formData);
-      this.$api.get(`/assessments/?${urlQuery}`).then((response) => {
+      this.$api.get(`${this.assessmentsUrl}?${urlQuery}`).then((response) => {
         this.$emit("updateAssessments", response.data);
         this.$emit("setLoading", false);
       });

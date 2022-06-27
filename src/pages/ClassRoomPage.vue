@@ -3,6 +3,9 @@
     <confirm-dialog ref="confirmDialog" />
     <q-card class="my-card no-borders" flat>
       <q-card-section horizontal>
+        <q-card-section class="q-my-aut">
+          <q-icon name="home" size="xl" />
+        </q-card-section>
         <q-card-section class="q-pt-xs">
           <div class="text-h5 q-mt-sm q-mb-xs">
             {{ class_room.name }}
@@ -31,34 +34,46 @@
         <div class="q-pa-sm">
           <strong>Class</strong>
           <q-form @submit="updateClassRoom" class="q-gutter-md">
-            <q-input
-              v-model="formData.name"
-              type="text"
-              label="Name"
-              required
-            />
+            <div class="row">
+              <div class="col q-mr-xs">
+                <q-input
+                  v-model="formData.name"
+                  type="text"
+                  label="Name"
+                  required
+                />
+              </div>
+              <div class="col q-mr-xs">
+                <q-input v-model="formData.stream" type="text" label="Stream" />
+              </div>
+            </div>
 
-            <q-input v-model="formData.stream" type="text" label="Stream" />
-            <q-select
-              outlined
-              v-model="formData.level"
-              option-label="name"
-              option-value="id"
-              :options="levels"
-              label="Level"
-              emit-value
-              map-options
-            />
-            <q-select
-              outlined
-              v-model="formData.teacher"
-              option-label="name"
-              option-value="id"
-              :options="teachers"
-              label="Class Teacher"
-              emit-value
-              map-options
-            />
+            <div class="row">
+              <div class="col q-mr-xs">
+                <q-select
+                  outlined
+                  v-model="formData.level"
+                  option-label="name"
+                  option-value="id"
+                  :options="levels"
+                  label="Level"
+                  emit-value
+                  map-options
+                />
+              </div>
+              <div class="col q-mr-xs">
+                <q-select
+                  outlined
+                  v-model="formData.teacher"
+                  option-label="name"
+                  option-value="id"
+                  :options="teachers"
+                  label="Class Teacher"
+                  emit-value
+                  map-options
+                />
+              </div>
+            </div>
 
             <div align="right">
               <q-btn label="update" type="submit" color="primary" />

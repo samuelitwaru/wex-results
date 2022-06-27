@@ -1,25 +1,23 @@
 <template>
   <q-form @submit="login" @reset="resetForm" class="q-gutter-md">
-    <q-input
-      v-model="formData.username"
-      type="text"
-      label="Username"
-      required
-    />
-    <q-input
-      v-model="formData.password"
-      type="password"
-      label="Password"
-      required
-    />
-    <div>
-      <q-btn label="Signin" type="submit" color="primary" />
+    <q-input v-model="formData.username" type="email" label="Email" required />
+    <q-input v-model="formData.password" type="password" label="Password" />
+    <div class="flex justify-between">
+      <forgot-password-form-modal />
+      <q-btn
+        style="display: block"
+        label="Signin"
+        type="submit"
+        color="primary"
+      />
     </div>
   </q-form>
 </template>
 
 <script>
+import ForgotPasswordFormModal from "src/components/ForgotPasswordFormModal.vue";
 export default {
+  components: { ForgotPasswordFormModal },
   data() {
     return {
       formData: {
@@ -34,10 +32,13 @@ export default {
       var data = this.formData;
       this.$setLoading(this, true);
       this.$api.post(`/auth/login/`, data).then((response) => {
-        console.log(response.data);
-        console.log(this.$store);
         this.$store.commit("results/setToken", response.data.token);
-        this.$router.push("/");
+        this.$store.commit("results/setUser", response.data.user);
+        if (this.$userHasGroup("dos")) {
+          this.$router.push("/");
+        } else {
+          this.$router.push("/students");
+        }
         this.resetForm();
         this.$setLoading(this, false);
       });

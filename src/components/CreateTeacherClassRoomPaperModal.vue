@@ -25,6 +25,7 @@
               emit-value
               map-options
               required
+              @update:model-value="onChangeClassRoom"
             />
             <q-select
               outlined
@@ -37,17 +38,6 @@
               map-options
               required
             />
-
-            <!-- <div v-if="formData.subject">
-              <strong>Select papers that apply</strong>
-              <q-option-group
-                v-model="formData.papers"
-                :options="paperOptions"
-                type="checkbox"
-                checked
-                required
-              />
-            </div> -->
 
             <div class="flex justify-between">
               <div>
@@ -79,7 +69,8 @@ export default {
     return {
       classRooms: [],
       papers: [],
-      // paperOptions: [],
+      classRoomsUrl: `/class-rooms/`,
+      papersUrl: `/papers/`,
       formData: {
         class_room: null,
         paper: null,
@@ -97,8 +88,9 @@ export default {
         this.classRooms = response.data;
       });
     },
-    getPapers() {
-      this.$api.get(`/papers/`).then((response) => {
+    getPapers(args = {}) {
+      var queryString = this.$buildURLQuery(args);
+      this.$api.get(`${this.papersUrl}?${queryString}`).then((response) => {
         this.papers = response.data;
       });
     },
@@ -123,6 +115,17 @@ export default {
         this.formData.papers.push(paper.value);
         return paper;
       });
+    },
+
+    onChangeClassRoom(value) {
+      this.formData.paper = null;
+      var classRoom = this.classRooms.find(
+        (classRoom) => classRoom.id == value
+      );
+      var args = {
+        subject__level_group: classRoom.level_detail.level_group,
+      };
+      this.getPapers(args);
     },
 
     resetForm() {

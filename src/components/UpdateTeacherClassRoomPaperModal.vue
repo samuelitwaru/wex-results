@@ -28,6 +28,8 @@
               label="Class Room"
               emit-value
               map-options
+              required
+              @update:model-value="onChangeClassRoom"
             />
 
             <q-select
@@ -39,6 +41,7 @@
               label="Subject Paper"
               emit-value
               map-options
+              required
             />
             <div class="flex justify-between">
               <div>
@@ -70,6 +73,8 @@ export default {
     return {
       classRooms: [],
       papers: [],
+      classRoomsUrl: `/class-rooms/`,
+      papersUrl: `/papers/`,
       formData: {
         class_room: this.teacherClassRoomPaper.class_room,
         paper: this.teacherClassRoomPaper.paper,
@@ -78,7 +83,7 @@ export default {
   },
   created() {
     this.getClassRooms();
-    this.getSubjects();
+    this.getPapers();
   },
   methods: {
     getClassRooms() {
@@ -86,8 +91,9 @@ export default {
         this.classRooms = response.data;
       });
     },
-    getSubjects() {
-      this.$api.get(`/papers/`).then((response) => {
+    getPapers(args = {}) {
+      var queryString = this.$buildURLQuery(args);
+      this.$api.get(`${this.papersUrl}?${queryString}`).then((response) => {
         this.papers = response.data;
       });
     },
@@ -103,6 +109,16 @@ export default {
           this.$emit("replaceTeacherClassRoomPaper", response.data);
           this.updateTeacherClassRoomPaperModal = false;
         });
+    },
+    onChangeClassRoom(value) {
+      this.formData.paper = null;
+      var classRoom = this.classRooms.find(
+        (classRoom) => classRoom.id == value
+      );
+      var args = {
+        subject__level_group: classRoom.level_detail.level_group,
+      };
+      this.getPapers(args);
     },
   },
 };
