@@ -66,8 +66,27 @@ const routes = [{
         children: [
             { path: "", component: () =>
                     import ("pages/ClassRoomsPage.vue") },
-            { path: ":id", component: () =>
-                    import ("pages/ClassRoomPage.vue") },
+            {
+                path: ":id",
+                component: () =>
+                    import ("pages/ClassRoomPage.vue"),
+                children: [{
+                        path: "",
+                        component: () =>
+                            import ("components/UpdateClassRoom.vue"),
+                    },
+                    {
+                        path: "reports",
+                        component: () =>
+                            import ("components/ClassRoomReports.vue"),
+                    },
+                    {
+                        path: "students",
+                        component: () =>
+                            import ("components/ClassRoomStudents.vue"),
+                    },
+                ],
+            },
         ],
     },
 
@@ -166,8 +185,6 @@ const routes = [{
         children: [
             { path: "", component: () =>
                     import ("pages/SubjectAllocationsPage.vue") },
-            // { path: ":id", component: () =>
-            //         import ("pages/UserPage.vue") },
         ],
     },
     {

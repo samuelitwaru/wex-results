@@ -15,7 +15,7 @@
           map-options
         />
       </div>
-      <div class="col q-px-sm">
+      <div class="col q-px-sm" v-if="!class_room">
         <q-select
           outlined
           dense
@@ -65,6 +65,12 @@
 
 <script>
 export default {
+  props: {
+    class_room: {
+      type: Number,
+      default: 0,
+    },
+  },
   data() {
     return {
       classRooms: [{ id: "", name: "All", stream: "" }],
@@ -92,6 +98,7 @@ export default {
   created() {
     this.getClassRooms();
     this.getPeriods();
+    this.formData.student__class_room = this.class_room;
   },
   methods: {
     getClassRooms() {
@@ -107,7 +114,6 @@ export default {
     filterReports() {
       this.$setLoading(this, true);
       var urlQuery = this.$buildURLQuery(this.formData);
-      console.log(urlQuery);
       this.$api.get(`/reports/?${urlQuery}`).then((response) => {
         this.$emit("updateReports", response.data);
         this.$setLoading(this, false);

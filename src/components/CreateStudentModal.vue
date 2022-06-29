@@ -91,6 +91,7 @@
             </div>
 
             <q-select
+              v-if="!class_room"
               outlined
               v-model="formData.class_room"
               :option-label="(item) => `${item.name} ${item.stream || ''}`"
@@ -121,7 +122,13 @@
 import { ref } from "vue";
 
 export default {
-  props: ["students"],
+  props: ["class_room"],
+  props: {
+    class_room: {
+      type: Number,
+      default: null,
+    },
+  },
   setup() {
     return {
       medium: ref(false),
@@ -141,6 +148,12 @@ export default {
   },
   created() {
     this.getClassRooms();
+    this.formData.class_room = this.class_room;
+  },
+  watch: {
+    class_room(newValue, oldValue) {
+      this.formData.class_room = newValue;
+    },
   },
   methods: {
     createStudent() {

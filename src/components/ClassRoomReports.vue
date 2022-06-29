@@ -7,7 +7,10 @@
       </div>
 
       <div class="q-pb-sm">
-        <filter-reports-form @updateReports="reports = $event" />
+        <filter-reports-form
+          :class_room="parseInt($route.params.id)"
+          @updateReports="reports = $event"
+        />
       </div>
 
       <q-markup-table flat bordered separator="cell" square dense>
@@ -183,11 +186,13 @@ export default {
   methods: {
     getReports() {
       this.$setLoading(this, true);
-      this.$api.get("/reports/").then((response) => {
-        this.reports = response.data;
-        this.$setLoading(this, false);
-        this.getComputedReports();
-      });
+      this.$api
+        .get(`/reports/?student__class_room=${this.$route.params.id}`)
+        .then((response) => {
+          this.reports = response.data;
+          this.$setLoading(this, false);
+          this.getComputedReports();
+        });
     },
 
     getComputedReports() {

@@ -84,6 +84,11 @@
               />
             </td>
           </tr>
+          <tr v-if="subjects.length == 0">
+            <td style="height: 60px" class="text-grey text-center" colspan="3">
+              No subjects allocated
+            </td>
+          </tr>
         </tbody>
       </q-markup-table>
     </div>
@@ -132,11 +137,14 @@ export default {
   methods: {
     getClassRooms() {
       this.$setLoading(this, true);
+      console.log(this.classRoomsUrl);
       this.$api.get(`${this.classRoomsUrl}`).then((response) => {
         this.classRooms = response.data;
-        this.formData.class_room = this.classRooms[0].id;
-        this.onChangeClassRoom(this.formData.class_room);
         this.$setLoading(this, false);
+        if (this.classRooms.length) {
+          this.formData.class_room = this.classRooms[0].id;
+          this.onChangeClassRoom(this.formData.class_room);
+        }
       });
     },
     onChangeClassRoom(value) {

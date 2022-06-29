@@ -24,6 +24,20 @@
             <router-link class="text-white" :to="`/class-rooms/${props.key}`">
               <q-btn color="primary" icon-right="edit" no-caps flat dense />
             </router-link>
+            |
+            <router-link
+              class="text-white"
+              :to="`/class-rooms/${props.key}/students`"
+            >
+              <q-btn color="primary" label="Students" no-caps flat dense />
+            </router-link>
+            |
+            <router-link
+              class="text-white"
+              :to="`/class-rooms/${props.key}/reports`"
+            >
+              <q-btn color="primary" label="Reports" no-caps flat dense />
+            </router-link>
           </q-td>
         </template>
       </q-table>

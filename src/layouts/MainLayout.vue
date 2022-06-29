@@ -15,6 +15,7 @@
 
         <q-toolbar-title> Results App </q-toolbar-title>
 
+        <div class="text-orange-3 q-px-xs">{{ $getState("user")?.name }}</div>
         <q-btn
           color="white"
           flat
@@ -99,6 +100,12 @@ const linksList = [
     title: "Class Rooms",
     icon: "home",
     link: "/class-rooms",
+    userGroups: ["dos"],
+  },
+  {
+    title: "Allocations",
+    icon: "fa fa-th-list",
+    link: "/subject-allocations",
     userGroups: ["dos"],
   },
   {

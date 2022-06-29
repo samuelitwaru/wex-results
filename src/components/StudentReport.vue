@@ -7,45 +7,50 @@
       </router-link>
     </h6>
 
-    <div class="q-pa-sm">
-      <q-form
-        class="q-my-sm"
-        @submit="getStudentComputedReport"
-        style="width: 100%"
-      >
-        <div class="row justify-end">
-          <div class="q-my-auto">Filter</div>
-          <div class="col q-px-sm q-my-auto">
-            <q-select
-              outlined
-              dense
-              v-model.number="formData.period"
-              :options="periods"
-              label="Period"
-              :option-label="(item) => `${item.name}`"
-              option-value="id"
-              emit-value
-              map-options
-            />
-          </div>
-          <div class="col q-px-sm">
-            <q-radio
-              v-model="formData.report_type"
-              val="assessment"
-              label="Assessment Report"
-            />
-            <q-radio
-              v-model="formData.report_type"
-              val="activity"
-              label="Activity Report"
-            />
-          </div>
-          <div class="q-my-auto">
-            <q-btn label="Get" type="submit" color="primary" />
-          </div>
-        </div>
-      </q-form>
+    <div class="row">
+      <div class="col-md-6 q-my-auto q-px-none">
+        <q-radio
+          v-model="formData.report_type"
+          val="assessment"
+          label="Assessment Report"
+        />
+        <q-radio
+          v-if="levelGroup?.name == 'O'"
+          v-model="formData.report_type"
+          val="activity"
+          label="Activity Report"
+        />
+      </div>
 
+      <div class="col-md-6 q-px-sm">
+        <q-form
+          class="q-my-sm"
+          @submit="getStudentComputedReport"
+          style="width: 100%"
+        >
+          <div class="row justify-end">
+            <div class="q-my-auto">Filter</div>
+            <div class="col q-px-sm q-my-auto">
+              <q-select
+                outlined
+                dense
+                v-model.number="formData.period"
+                :options="periods"
+                label="Period"
+                :option-label="(item) => `${item.name}`"
+                option-value="id"
+                emit-value
+                map-options
+              />
+            </div>
+            <div class="q-my-auto">
+              <q-btn label="Get" type="submit" color="primary" />
+            </div>
+          </div>
+        </q-form>
+      </div>
+    </div>
+    <div class="col q-pa-sm">
       <div v-if="subjectReports">
         <assessment-report
           v-if="formData.report_type == 'assessment'"
@@ -55,7 +60,13 @@
           :teacher="teacher"
         />
 
-        <activity-report v-else />
+        <activity-report
+          :report="computedReport"
+          :subjectReports="subjectReports"
+          :levelGroup="levelGroup"
+          :teacher="teacher"
+          v-else
+        />
       </div>
     </div>
   </div>

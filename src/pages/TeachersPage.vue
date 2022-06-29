@@ -4,7 +4,7 @@
     <div class="q-pa-sm">
       <div class="flex justify-between q-py-sm">
         <label class="text-h4">Teachers</label>
-        <create-teacher-modal @addTeacher="teachers.push($event)" />
+        <!-- <create-teacher-modal @addTeacher="teachers.push($event)" /> -->
       </div>
 
       <q-table

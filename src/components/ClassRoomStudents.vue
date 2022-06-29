@@ -3,13 +3,10 @@
     <confirm-dialog ref="confirmDialog" />
     <div class="q-pa-sm">
       <div class="flex justify-between q-py-sm">
-        <label class="text-h4">Students</label>
-        <create-student-modal @addStudent="students.push($event)" />
-      </div>
-      <div class="flex justify-between q-py-sm">
-        <filter-students-form
-          @updateStudents="students = $event"
-          @setLoading="loading = $event"
+        <label class="text-h6">Students</label>
+        <create-student-modal
+          :class_room="parseInt($route.params.id)"
+          @addStudent="students.push($event)"
         />
       </div>
 
@@ -93,10 +90,12 @@ export default {
   methods: {
     getStudents() {
       this.loading = true;
-      this.$api.get("/students/").then((response) => {
-        this.students = response.data;
-        this.loading = false;
-      });
+      this.$api
+        .get(`class-rooms/${this.$route.params.id}/students/`)
+        .then((response) => {
+          this.students = response.data;
+          this.loading = false;
+        });
     },
   },
 };
