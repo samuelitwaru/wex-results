@@ -78,6 +78,7 @@
               map-options
             />
             <q-select
+              v-if="!teacher"
               outlined
               v-model="formData.teacher"
               option-label="name"
@@ -108,7 +109,12 @@
 import { ref } from "vue";
 
 export default {
-  props: ["assessments"],
+  props: {
+    teacher: {
+      type: Number,
+      default: null,
+    },
+  },
   setup() {
     return {
       show: ref(false),
@@ -131,6 +137,12 @@ export default {
     this.getTeachers();
     this.getClassRooms();
     this.getPapers();
+    this.formData.teacher = this.teacher;
+  },
+  watch: {
+    teacher(newValue, oldValue) {
+      this.formData.teacher = newValue;
+    },
   },
   computed: {
     classRoomsUrl() {

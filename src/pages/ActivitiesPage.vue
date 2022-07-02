@@ -137,7 +137,6 @@ export default {
   methods: {
     getClassRooms() {
       this.$setLoading(this, true);
-      console.log(this.classRoomsUrl);
       this.$api.get(`${this.classRoomsUrl}`).then((response) => {
         this.classRooms = response.data;
         this.$setLoading(this, false);
@@ -154,40 +153,9 @@ export default {
 
     getSubjects() {
       this.$api.get(`${this.subjectsUrl}`).then((response) => {
-        console.log(response.data);
         this.subjects = response.data;
-        // this.subjects = response.data.map((subj) => {
-        //   subj.activities = [];
-        //   this.$api
-        //     .get(
-        //       `/activities/?subject=${subj.id}&class_room=${this.classRoom.id}`
-        //     )
-        //     .then((response) => {
-        //       subj.activities = response.data;
-        //     });
-        //   return subj;
-        // });
       });
     },
-
-    // getLevelSubjects(levelId) {
-    //   this.$setLoading(this, true);
-    //   this.$api.get(`/levels/${levelId}/`).then((response) => {
-    //     this.level = response.data;
-    //     this.subjects = this.level.subjects.map((subj) => {
-    //       subj.activities = [];
-    //       this.$api
-    //         .get(
-    //           `/activities/?subject=${subj.id}&class_room=${this.classRoom.id}`
-    //         )
-    //         .then((response) => {
-    //           subj.activities = response.data;
-    //         });
-    //       return subj;
-    //     });
-    //     this.$setLoading(this, false);
-    //   });
-    // },
     showCreateActivityModal(subject) {
       this.subject = subject.id;
       this.$refs.createActivityModal.show = true;

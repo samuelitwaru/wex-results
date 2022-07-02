@@ -12,7 +12,7 @@ const routes = [{
         path: "/",
         component: () =>
             import ("layouts/MainLayout.vue"),
-        meta: { loginRequired: true },
+        meta: { loginRequired: true, groupsRequired: ["dos", "head_teacher"] },
         children: [{
             path: "",
             component: () =>
@@ -24,7 +24,7 @@ const routes = [{
         path: "/students",
         component: () =>
             import ("layouts/MainLayout.vue"),
-        meta: { loginRequired: true },
+        meta: { loginRequired: true, groupsRequired: ["dos", "head_teacher"] },
         children: [
             { path: "", component: () =>
                     import ("pages/StudentsPage.vue") },
@@ -39,6 +39,10 @@ const routes = [{
                         path: "report",
                         component: () =>
                             import ("components/StudentReport.vue"),
+                        meta: {
+                            loginRequired: true,
+                            groupsRequired: ["dos", "head_teacher", "teacher"],
+                        },
                     },
                 ],
             },
@@ -49,7 +53,7 @@ const routes = [{
         path: "/teachers",
         component: () =>
             import ("layouts/MainLayout.vue"),
-        meta: { loginRequired: true },
+        meta: { loginRequired: true, groupsRequired: ["dos", "head_teacher"] },
         children: [
             { path: "", component: () =>
                     import ("pages/TeachersPage.vue") },
@@ -62,7 +66,10 @@ const routes = [{
         path: "/class-rooms",
         component: () =>
             import ("layouts/MainLayout.vue"),
-        meta: { loginRequired: true },
+        meta: {
+            loginRequired: true,
+            groupsRequired: ["dos", "head_teacher", "teacher"],
+        },
         children: [
             { path: "", component: () =>
                     import ("pages/ClassRoomsPage.vue") },
@@ -94,7 +101,7 @@ const routes = [{
         path: "/subjects",
         component: () =>
             import ("layouts/MainLayout.vue"),
-        meta: { loginRequired: true },
+        meta: { loginRequired: true, groupsRequired: ["dos", "head_teacher"] },
         children: [
             { path: "", component: () =>
                     import ("pages/SubjectsPage.vue") },
@@ -107,7 +114,7 @@ const routes = [{
         path: "/levels",
         component: () =>
             import ("layouts/MainLayout.vue"),
-        meta: { loginRequired: true },
+        meta: { loginRequired: true, groupsRequired: ["dos", "head_teacher"] },
         children: [
             { path: "", component: () =>
                     import ("pages/LevelsPage.vue") },
@@ -120,7 +127,7 @@ const routes = [{
         path: "/grading-systems",
         component: () =>
             import ("layouts/MainLayout.vue"),
-        meta: { loginRequired: true },
+        meta: { loginRequired: true, groupsRequired: ["dos", "head_teacher"] },
         children: [
             { path: "", component: () =>
                     import ("pages/GradingSystemsPage.vue") },
@@ -133,7 +140,10 @@ const routes = [{
         path: "/assessments",
         component: () =>
             import ("layouts/MainLayout.vue"),
-        meta: { loginRequired: true },
+        meta: {
+            loginRequired: true,
+            groupsRequired: ["dos", "head_teacher", "teacher"],
+        },
         children: [
             { path: "", component: () =>
                     import ("pages/AssessmentsPage.vue") },
@@ -160,7 +170,10 @@ const routes = [{
         path: "/reports",
         component: () =>
             import ("layouts/MainLayout.vue"),
-        meta: { loginRequired: true },
+        meta: {
+            loginRequired: true,
+            groupsRequired: ["dos", "head_teacher", "teacher"],
+        },
         children: [{ path: "", component: () =>
                 import ("pages/ReportsPage.vue") }],
     },
@@ -168,7 +181,7 @@ const routes = [{
         path: "/users",
         component: () =>
             import ("layouts/MainLayout.vue"),
-        meta: { loginRequired: true },
+        meta: { loginRequired: true, groupsRequired: ["dos", "head_teacher"] },
         children: [
             { path: "", component: () =>
                     import ("pages/UsersPage.vue") },
@@ -181,7 +194,7 @@ const routes = [{
         path: "/subject-allocations",
         component: () =>
             import ("layouts/MainLayout.vue"),
-        meta: { loginRequired: true },
+        meta: { loginRequired: true, groupsRequired: ["dos", "head_teacher"] },
         children: [
             { path: "", component: () =>
                     import ("pages/SubjectAllocationsPage.vue") },
@@ -191,7 +204,10 @@ const routes = [{
         path: "/activities",
         component: () =>
             import ("layouts/MainLayout.vue"),
-        meta: { loginRequired: true },
+        meta: {
+            loginRequired: true,
+            groupsRequired: ["dos", "head_teacher", "teacher"],
+        },
         children: [
             { path: "", component: () =>
                     import ("pages/ActivitiesPage.vue") },
@@ -212,6 +228,18 @@ const routes = [{
                 ],
             },
         ],
+    },
+
+    {
+        path: "/account",
+        component: () =>
+            import ("layouts/MainLayout.vue"),
+        meta: {
+            loginRequired: true,
+            groupsRequired: ["dos", "head_teacher", "teacher"],
+        },
+        children: [{ path: "", component: () =>
+                import ("pages/AccountPage.vue") }],
     },
 
     // Always leave this as last one,

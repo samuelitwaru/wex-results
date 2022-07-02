@@ -4,7 +4,10 @@
     <div class="q-pa-sm">
       <div class="flex justify-between q-py-sm">
         <label class="text-h4">Class Rooms</label>
-        <create-class-room-modal @addClassRoom="class_rooms.push($event)" />
+        <create-class-room-modal
+          v-if="$userHasGroup('dos')"
+          @addClassRoom="class_rooms.push($event)"
+        />
       </div>
 
       <q-table

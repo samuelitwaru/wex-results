@@ -19,10 +19,16 @@ export const updateAlertMsg = (state, msg) => {
 
 export const setUser = (state, user) => {
     state.user = user;
+    window.localStorage.setItem("groups", JSON.stringify(user.groups));
 };
 
-export const setProfile = (state, profile) => {
-    state.profile = profile;
+export const setGroups = (state, groups) => {
+    if (groups) {
+        state.groups = groups;
+        window.localStorage.setItem("groups", JSON.stringify(groups));
+    } else {
+        window.localStorage.removeItem("groups");
+    }
 };
 
 export const setToken = (state, token) => {
@@ -36,4 +42,8 @@ export const setToken = (state, token) => {
         api.defaults.headers.common.Authorization = ``;
     }
     state.token = token;
+};
+
+export const setProfile = (state, profile) => {
+    state.profile = profile;
 };

@@ -17,10 +17,6 @@
             </template>
           </q-img>
           <q-icon v-else name="image" size="xl" />
-          <!-- <upload-image-modal
-            :url="`${$apiURL}/entities/${entity.id}/logo/upload/`"
-            @updateObject="entity = $event"
-          /> -->
           <crop-image-uploader
             :url="`${$apiURL}/entities/${entity.id}/logo/upload/`"
             @updateObject="entity = $event"

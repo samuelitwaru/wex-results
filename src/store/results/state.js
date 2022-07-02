@@ -6,6 +6,7 @@ export default function() {
         isAuthenticated: false,
         token: null,
         user: null,
+        groups: [],
         profile: null,
     };
 }

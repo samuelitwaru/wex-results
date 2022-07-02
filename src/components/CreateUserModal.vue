@@ -112,6 +112,7 @@ export default {
       this.formData.last_name = null;
       this.formData.username = null;
       this.formData.email = null;
+      this.formData.groups = [];
     },
   },
 };

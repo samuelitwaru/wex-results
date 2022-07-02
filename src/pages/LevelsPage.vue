@@ -27,10 +27,10 @@
                   "
                   class="flex justify-between"
                 >
-                  {{ levelGroup.levels[0].name }}
+                  {{ levelGroup.levels[0]?.name }}
                   <router-link
                     class="text-white"
-                    :to="`/levels/${levelGroup.levels[0].id}`"
+                    :to="`/levels/${levelGroup.levels[0]?.id}`"
                   >
                     <q-btn
                       color="primary"
@@ -70,7 +70,7 @@
 
       <div v-else align="center">
         <p class="q-my-lg text-grey">No period was found</p>
-        <setup-levels-modal />
+        <setup-levels-modal @updateLevelGroups="levelGroups = $event" />
       </div>
     </div>
   </q-page>

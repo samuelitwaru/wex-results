@@ -79,10 +79,10 @@ export default {
       });
     },
     getGradingSystems() {
-      this.loading = true;
+      this.$setLoading(this, true);
       this.$api.get("/grading-systems/").then((response) => {
         this.grading_systems = response.data;
-        this.loading = false;
+        this.setLoading(this, false);
       });
     },
   },

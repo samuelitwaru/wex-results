@@ -10,8 +10,8 @@ import axiosRetry from "axios-retry";
 // for each client)
 
 // var baseURL = 'http://192.168.1.155:8000/api'
-var hostURL = "http://127.0.0.1:8000";
 var hostURL = "https://wex-erp.herokuapp.com";
+var hostURL = "http://127.0.0.1:8000";
 var apiURL = `${hostURL}/api`;
 var mediaURL = `${hostURL}/media`;
 
@@ -33,12 +33,19 @@ export default boot(({ app, router, store }) => {
                 store.dispatch("results/signOut");
                 router.push("/login");
             } else if (error.response.status == 400) {
+                var data = error.response.data;
+                console.log(Object.values(data));
+                var msg = "Bad request. Please check your input data.";
+                if (data && "non_field_errors" in data) {
+                    msg = data.non_field_errors.join(". ");
+                } else if (typeof data == "string") {
+                    msg = data;
+                } else if (typeof data == "object") {
+                    msg = Object.values(data);
+                }
                 store.commit("results/updateLoadingState", false);
                 store.commit("results/updateAlertState", true);
-                store.commit(
-                    "results/updateAlertMsg",
-                    "Bad request. Please check your input data."
-                );
+                store.commit("results/updateAlertMsg", `${msg}`);
             } else if (error.response.status == 404) {
                 router.back();
             }

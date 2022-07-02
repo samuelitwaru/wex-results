@@ -58,21 +58,13 @@
                   label="Abbreviation"
                 />
               </div>
-              <div class="col q-ml-xs">
-                <q-input
-                  v-model.number="formData.no_papers"
-                  type="number"
-                  min="1"
-                  max="5"
-                  label="Number of Papers"
+              <div class="col q-mr-xs q-my-auto">
+                <q-checkbox
+                  v-model="formData.is_selectable"
+                  label="Selectable Subject"
                 />
               </div>
             </div>
-
-            <q-checkbox
-              v-model="formData.is_selectable"
-              label="Selectable Subject"
-            />
 
             <div>
               <div>Level</div>
@@ -212,7 +204,6 @@ export default {
         code: null,
         name: null,
         abbr: null,
-        no_papers: null,
         field: null,
         level_group: null,
         created_from_system: false,
@@ -251,7 +242,6 @@ export default {
         this.formData.code = this.subject.code;
         this.formData.name = this.subject.name;
         this.formData.abbr = this.subject.abbr;
-        this.formData.no_papers = this.subject.no_papers;
         this.formData.field = this.subject.field;
         this.formData.level_group = this.subject.level_group;
         this.formData.is_selectable = this.subject.is_selectable;
@@ -277,6 +267,7 @@ export default {
     },
 
     updateSubject() {
+      console.log(this.formData);
       this.$setLoading(this, true);
       this.$api
         .put(`/subjects/${this.subject.id}/`, this.formData)

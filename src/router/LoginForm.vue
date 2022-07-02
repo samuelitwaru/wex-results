@@ -1,7 +1,12 @@
 <template>
   <q-form @submit="login" @reset="resetForm" class="q-gutter-md">
     <q-input v-model="formData.username" type="email" label="Email" required />
-    <q-input v-model="formData.password" type="password" label="Password" />
+    <q-input
+      v-model="formData.password"
+      type="password"
+      label="Password"
+      required
+    />
     <div class="flex justify-between">
       <forgot-password-form-modal />
       <q-btn
@@ -20,6 +25,11 @@ export default {
   components: { ForgotPasswordFormModal },
   data() {
     return {
+      indexRoutes: {
+        dos: "/",
+        head_teacher: "/",
+        teacher: "/class-rooms",
+      },
       formData: {
         username: null,
         password: null,
@@ -29,16 +39,12 @@ export default {
 
   methods: {
     login() {
-      var data = this.formData;
       this.$setLoading(this, true);
-      this.$api.post(`/auth/login/`, data).then((response) => {
+      this.$api.post(`/auth/login/`, this.formData).then((response) => {
         this.$store.commit("results/setToken", response.data.token);
         this.$store.commit("results/setUser", response.data.user);
-        if (this.$userHasGroup("dos")) {
-          this.$router.push("/");
-        } else {
-          this.$router.push("/students");
-        }
+        this.$store.commit("results/setGroups", response.data.user.groups);
+        this.$router.push(this.indexRoutes[response.data.user.groups[0]]);
         this.resetForm();
         this.$setLoading(this, false);
       });

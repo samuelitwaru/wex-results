@@ -10,6 +10,8 @@
         <filter-reports-form @updateReports="reports = $event" />
       </div>
 
+      <div class="q-pa-xs" align="center"></div>
+
       <q-markup-table flat bordered separator="cell" square dense>
         <thead>
           <tr>
@@ -54,36 +56,27 @@
                 {{ report.student.class_room_detail.name }}
                 {{ report.student.class_room_detail.stream || "" }}
               </td>
-              <td rowspan="2">
-                <q-list>
-                  <q-item>
-                    <q-item-section>
-                      <q-item-label>Average Mark</q-item-label>
-                    </q-item-section>
-
-                    <q-item-section side>
-                      <q-item-label>{{ report.average }}</q-item-label>
-                    </q-item-section>
-                  </q-item>
-                  <!-- <q-item>
-                    <q-item-section>
-                      <q-item-label>Points</q-item-label>
-                    </q-item-section>
-
-                    <q-item-section side>
-                      <q-item-label>{{ report.points }}</q-item-label>
-                    </q-item-section>
-                  </q-item>
-                  <q-item>
-                    <q-item-section>
-                      <q-item-label>Aggregates</q-item-label>
-                    </q-item-section>
-
-                    <q-item-section side>
-                      <q-item-label>{{ report.aggregates }}</q-item-label>
-                    </q-item-section>
-                  </q-item> -->
-                </q-list>
+              <td rowspan="2" class="q-my-auto">
+                <span v-if="report.level.level_group_name == 'A'">
+                  <q-btn
+                    class="q-py-none"
+                    outline
+                    dense
+                    :label="report.points"
+                    style="width: 1.5rem"
+                  />
+                  Pts
+                </span>
+                <span v-else>
+                  <q-btn
+                    class="q-py-none"
+                    outline
+                    dense
+                    :label="report.aggregates"
+                    style="width: 1.5rem"
+                  />
+                  Aggr
+                </span>
               </td>
               <td>CT</td>
               <td>{{ report.class_teacher_comment }}</td>
@@ -185,6 +178,7 @@ export default {
       this.$setLoading(this, true);
       this.$api.get("/reports/").then((response) => {
         this.reports = response.data;
+        console.log(this.reports);
         this.$setLoading(this, false);
         this.getComputedReports();
       });

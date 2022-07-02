@@ -15,7 +15,16 @@
 
         <q-toolbar-title> Results App </q-toolbar-title>
 
-        <div class="text-orange-3 q-px-xs">{{ $getState("user")?.name }}</div>
+        <div class="text-orange-3 q-px-xs">
+          <router-link to="/account">
+            <q-chip
+              class="glossy"
+              icon="person"
+              :label="$getState('user')?.name"
+            />
+          </router-link>
+          <!-- {{ $getState("user")?.name }} -->
+        </div>
         <q-btn
           color="white"
           flat
@@ -76,73 +85,73 @@ const linksList = [
     title: "Home",
     icon: "home",
     link: "/",
-    userGroups: ["dos"],
-  },
-  {
-    title: "Levels",
-    icon: "signal_cellular_alt",
-    link: "/levels",
-    userGroups: ["dos"],
-  },
-  {
-    title: "Subjects",
-    icon: "subject",
-    link: "/subjects",
-    userGroups: ["dos"],
-  },
-  {
-    title: "Teachers",
-    icon: "supervisor_account",
-    link: "/teachers",
-    userGroups: ["dos"],
-  },
-  {
-    title: "Class Rooms",
-    icon: "home",
-    link: "/class-rooms",
-    userGroups: ["dos"],
-  },
-  {
-    title: "Allocations",
-    icon: "fa fa-th-list",
-    link: "/subject-allocations",
-    userGroups: ["dos"],
-  },
-  {
-    title: "Students",
-    icon: "school",
-    link: "/students",
-    userGroups: ["dos"],
-  },
-  {
-    title: "Grading Systems",
-    icon: "stars",
-    link: "/grading-systems",
-    userGroups: ["dos"],
-  },
-  {
-    title: "Assessments",
-    icon: "fa fa-line-chart",
-    link: "/assessments",
-    userGroups: ["dos", "teacher"],
-  },
-  {
-    title: "Activities",
-    icon: "fa fa-lightbulb",
-    link: "/activities",
-    userGroups: ["teacher"],
-  },
-  {
-    title: "Reports",
-    icon: "book",
-    link: "/reports",
-    userGroups: ["dos", "teacher"],
+    userGroups: ["dos", "head_teacher"],
   },
   {
     title: "Users",
     icon: "fa fa-users",
     link: "/users",
-    userGroups: ["dos"],
+    userGroups: ["dos", "head_teacher"],
+  },
+  {
+    title: "Levels",
+    icon: "signal_cellular_alt",
+    link: "/levels",
+    userGroups: ["dos", "head_teacher"],
+  },
+  {
+    title: "Class Rooms",
+    icon: "home",
+    link: "/class-rooms",
+    userGroups: ["dos", "head_teacher", , "teacher"],
+  },
+  {
+    title: "Subjects",
+    icon: "subject",
+    link: "/subjects",
+    userGroups: ["dos", "head_teacher"],
+  },
+  {
+    title: "Grading Systems",
+    icon: "stars",
+    link: "/grading-systems",
+    userGroups: ["dos", "head_teacher"],
+  },
+  {
+    title: "Teachers",
+    icon: "supervisor_account",
+    link: "/teachers",
+    userGroups: ["dos", "head_teacher"],
+  },
+  {
+    title: "Allocations",
+    icon: "fa fa-th-list",
+    link: "/subject-allocations",
+    userGroups: ["dos", "head_teacher"],
+  },
+  {
+    title: "Students",
+    icon: "school",
+    link: "/students",
+    userGroups: ["dos", "head_teacher"],
+  },
+  {
+    title: "Activities",
+    icon: "fa fa-lightbulb",
+    link: "/activities",
+    userGroups: ["dos", "head_teacher", , "teacher"],
+  },
+  {
+    title: "Assessments",
+    icon: "fa fa-line-chart",
+    link: "/assessments",
+    userGroups: ["dos", "head_teacher", , "teacher"],
+  },
+  {
+    title: "Reports",
+    icon: "book",
+    link: "/reports",
+    userGroups: ["dos", "head_teacher", , "teacher"],
   },
 ];
 

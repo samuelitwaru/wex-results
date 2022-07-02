@@ -158,9 +158,9 @@ export default {
   methods: {
     createStudent() {
       this.$setLoading(this, true);
-      console.log(this.formData);
       this.$api.post(`/students/`, this.formData).then((response) => {
         this.$emit("addStudent", response.data);
+        this.$router.push(`/students/${response.data.id}`);
         this.medium = false;
         this.resetForm();
         this.$setLoading(this, false);

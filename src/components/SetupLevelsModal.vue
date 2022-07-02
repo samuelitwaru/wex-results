@@ -47,7 +47,6 @@ export default {
   },
   data() {
     return {
-      levelGroups: [],
       formData: {
         P: false,
         O: false,
@@ -62,8 +61,8 @@ export default {
       this.$api
         .post(`/level-groups/levels/setup/`, this.formData)
         .then((response) => {
-          this.levelGroups = response.data;
           this.$setLoading(this, false);
+          this.$emit("updateLevelGroups", response.data);
         });
     },
 

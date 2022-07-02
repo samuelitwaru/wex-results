@@ -68,9 +68,10 @@ export default {
   props: {
     class_room: {
       type: Number,
-      default: 0,
+      default: null,
     },
   },
+  emits: ["updateReports"],
   data() {
     return {
       classRooms: [{ id: "", name: "All", stream: "" }],

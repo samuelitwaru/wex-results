@@ -37,6 +37,11 @@ export default boot(({ app, router, store }) => {
         context.$store.commit("results/updateLoadingState", loading);
     };
 
+    app.config.globalProperties.$showMsg = (msg) => {
+        store.commit("results/updateAlertState", true);
+        store.commit("results/updateAlertMsg", msg);
+    };
+
     app.config.globalProperties.$camelToNormal = (text) => {
         var result = text.replace(/([A-Z])/g, " $1");
         var finalResult = result.charAt(0).toUpperCase() + result.slice(1);
@@ -44,20 +49,25 @@ export default boot(({ app, router, store }) => {
     };
 
     app.config.globalProperties.$userHasGroup = (group) => {
-        return store.state.results.user.groups.includes(group);
+        var userGroups = JSON.parse(window.localStorage.getItem("groups"));
+        return userGroups.includes(group);
     };
 
     app.config.globalProperties.$getState = (stateName) => {
         return store.state.results[stateName];
     };
 
+    app.config.globalProperties.$setState = (stateName, stateValue) => {
+        return (store.state.results[stateName] = stateValue);
+    };
+
     app.config.globalProperties.$userHasAllGroups = (groups) => {
-        var userGroups = store.state.results.user.groups;
+        var userGroups = JSON.parse(window.localStorage.getItem("groups"));
         return groups.every((group) => userGroups.includes(group));
     };
 
     app.config.globalProperties.$userHasAnyGroups = (groups) => {
-        var userGroups = store.state.results.user.groups;
+        var userGroups = JSON.parse(window.localStorage.getItem("groups"));
         return groups.some((group) => userGroups.includes(group));
     };
 });

@@ -4,7 +4,10 @@
     <div class="q-pa-sm">
       <div class="flex justify-between q-py-sm">
         <label class="text-h4">Assessments</label>
-        <create-assessment-modal @addAssessment="assessments.unshift($event)" />
+        <create-assessment-modal
+          :teacher="teacher_id"
+          @addAssessment="assessments.unshift($event)"
+        />
       </div>
 
       <div class="flex justify-between q-py-sm">
@@ -102,6 +105,7 @@ export default {
       ],
       assessments: [],
       loading: false,
+      teacher_id: null,
     };
   },
   created() {
@@ -116,6 +120,7 @@ export default {
     assessmentsUrl() {
       if (this.$userHasGroup("teacher")) {
         var teacher_id = this.$store.state.results.user.teacher_id;
+        this.teacher_id = teacher_id;
         if (teacher_id) return `/teachers/${teacher_id}/assessments/`;
       }
       return `/assessments/`;

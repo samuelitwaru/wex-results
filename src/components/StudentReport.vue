@@ -10,15 +10,15 @@
     <div class="row">
       <div class="col-md-6 q-my-auto q-px-none">
         <q-radio
-          v-model="formData.report_type"
-          val="assessment"
-          label="Assessment Report"
-        />
-        <q-radio
           v-if="levelGroup?.name == 'O'"
           v-model="formData.report_type"
           val="activity"
           label="Activity Report"
+        />
+        <q-radio
+          v-model="formData.report_type"
+          val="assessment"
+          label="Assessment Report"
         />
       </div>
 
