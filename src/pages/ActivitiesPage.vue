@@ -13,6 +13,16 @@
       </div>
 
       <div class="flex justify-between q-py-sm">
+        <!-- <q-btn-group push>
+          <q-btn
+            v-for="classRoom in classRooms"
+            :key="classRoom.id"
+            push
+            :label="classRoom.name"
+            color="primary"
+            disable
+          />
+        </q-btn-group> -->
         <div class="q-my-auto">Filter</div>
         <div class="col q-px-sm">
           <q-select
@@ -34,7 +44,7 @@
           <tr>
             <th class="text-left">Subjects</th>
             <th class="text-left">Activities</th>
-            <th class="text-left"></th>
+            <th class="text-left" v-if="$userHasGroup('teacher')"></th>
           </tr>
         </thead>
         <tbody>
@@ -50,6 +60,7 @@
                   <q-item-section>{{ activity.name }}</q-item-section>
                   <q-item-section>
                     <router-link
+                      v-if="$userHasGroup('teacher')"
                       class="text-white"
                       :to="`/activities/${activity.id}`"
                       ><q-btn
@@ -74,7 +85,7 @@
                 </q-item>
               </q-list>
             </td>
-            <td>
+            <td v-if="$userHasGroup('teacher')">
               <q-btn
                 color="primary"
                 icon="add"
@@ -133,6 +144,11 @@ export default {
       }
       return `/class-rooms/?level__level_group__name=O`;
     },
+
+    isAcitityOwner() {
+      var teacher_id = this.$getState("user")?.teacher_id;
+      return teacher_id;
+    },
   },
   methods: {
     getClassRooms() {
@@ -152,10 +168,26 @@ export default {
     },
 
     getSubjects() {
+      this.$setLoading(this, true);
       this.$api.get(`${this.subjectsUrl}`).then((response) => {
         this.subjects = response.data;
+        this.getSubjectReports();
+        this.$setLoading(this, false);
       });
     },
+
+    getSubjectReports() {
+      this.subjects.forEach((subject) => {
+        this.$api
+          .get(
+            `/activities/?subject=${subject.id}&class_room=${this.classRoom.id}`
+          )
+          .then((reponse) => {
+            subject.activities = reponse.data;
+          });
+      });
+    },
+
     showCreateActivityModal(subject) {
       this.subject = subject.id;
       this.$refs.createActivityModal.show = true;

@@ -31,9 +31,9 @@
         </template>
         <template v-slot:body-cell-action="props">
           <q-td :props="props">
-            <router-link class="text-white" :to="`/assessments/${props.key}`">
+            <!-- <router-link class="text-white" :to="`/assessments/${props.key}`">
               <q-btn color="primary" icon-right="edit" no-caps flat dense />
-            </router-link>
+            </router-link> -->
             |
             <router-link :to="`/assessments/${props.key}/scores`">
               <q-btn color="primary" label="SCORES" no-caps flat dense />

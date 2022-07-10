@@ -1,5 +1,6 @@
 <template>
   <q-page class="flex-center">
+    <confirm-dialog ref="confirmDialog" />
     <q-card class="my-card" flat v-if="entity">
       <q-card-section horizontal>
         <q-card-section style="min-width: 100px; height: 100px">
@@ -20,6 +21,7 @@
           <crop-image-uploader
             :url="`${$apiURL}/entities/${entity.id}/logo/upload/`"
             @updateObject="entity = $event"
+            v-if="$userHasGroup('dos')"
           />
         </q-card-section>
         <q-card-section class="q-mx-sm">
@@ -35,7 +37,10 @@
         <div v-if="period.name" class="col-12">
           <q-card class="my-card" flat bordered>
             <q-card-section>
-              <div class="text-h6">{{ period.name }}</div>
+              <div class="text-h6">
+                {{ period.name }}
+                <small v-if="period.is_promotional">(Promotional)</small>
+              </div>
               <div class="text-subtitle2">
                 <div class="row">
                   <div class="col-4">
@@ -52,11 +57,33 @@
                   </div>
                 </div>
 
-                <q-card-section align="right">
-                  <update-period-modal
-                    :period="period"
-                    @updatePeriod="period = $event"
-                  />
+                <q-card-section v-if="$userHasGroup('dos')" bordered>
+                  <div class="row items-center justify-end q-gutter-sm">
+                    <div v-if="period.is_promotional">
+                      <q-btn
+                        dense
+                        push
+                        color="primary"
+                        icon="fa fa-unlock"
+                        label="Open Promotions"
+                        v-if="!period.promotions_opened"
+                        @click="openPromotions"
+                      />
+                      <q-btn
+                        dense
+                        push
+                        color="primary"
+                        icon="fa fa-lock"
+                        label="Close Promotions"
+                        v-else
+                        @click="closePromotions"
+                      />
+                    </div>
+                    <update-period-modal
+                      :period="period"
+                      @updatePeriod="period = $event"
+                    />
+                  </div>
                 </q-card-section>
 
                 <q-separator spaced />
@@ -138,6 +165,7 @@
 </template>
 
 <script>
+import ConfirmDialog from "src/components/ConfirmDialog.vue";
 import CreatePeriodModal from "src/components/CreatePeriodModal.vue";
 import CropImageUploader from "src/components/CropImageUploader.vue";
 import ImageCropper from "src/components/ImageCropper.vue";
@@ -152,6 +180,7 @@ export default defineComponent({
     UploadImageModal,
     ImageCropper,
     CropImageUploader,
+    ConfirmDialog,
   },
   name: "IndexPage",
 
@@ -228,6 +257,48 @@ export default defineComponent({
     },
     imgLoadFailed(src) {
       this.entity.logo = null;
+    },
+    openPromotions() {
+      this.$refs.confirmDialog
+        .show({
+          title: "Open Promotions",
+          message: `Are you sure you want to open promotions?`,
+          okButton: "Yes, open",
+        })
+        .then((res) => {
+          if (res) {
+            this.$setLoading(this, true);
+            this.$api
+              .put(`/periods/latest/open-promotions/`)
+              .then((response) => {
+                if (response) {
+                  this.period = response.data;
+                  this.$setLoading(this, false);
+                }
+              });
+          }
+        });
+    },
+    closePromotions() {
+      this.$refs.confirmDialog
+        .show({
+          title: "Close Promotions",
+          message: `Are you sure you want to close promotions?`,
+          okButton: "Yes, close",
+        })
+        .then((res) => {
+          if (res) {
+            this.$setLoading(this, true);
+            this.$api
+              .put(`/periods/latest/close-promotions/`)
+              .then((response) => {
+                if (response) {
+                  this.period = response.data;
+                  this.$setLoading(this, false);
+                }
+              });
+          }
+        });
     },
   },
 });

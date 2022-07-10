@@ -2,7 +2,19 @@
   <div class="q-px-sm">
     <h6 class="q-my-sm flex justify-between">
       Scores
-      <router-link :to="`/assessments/${$route.params.id}`">
+      <q-btn
+        v-if="scores.length"
+        class="q-ml-sm"
+        color="primary"
+        dense
+        icon="download"
+        flat
+        @click="downloadScores"
+      />
+      <router-link
+        :to="`/assessments/${$route.params.id}`"
+        v-if="isCurrentTeachersAssessment"
+      >
         <q-btn color="primary" label="Detials" no-caps flat dense />
       </router-link>
     </h6>
@@ -11,7 +23,13 @@
         <thead>
           <tr>
             <th class="text-left">Student</th>
-            <th class="text-right">Score</th>
+            <th class="text-left">Score</th>
+            <th
+              class="text-right"
+              v-if="isCurrentTeachersAssessment && assessment?.is_open"
+            >
+              <q-icon name="edit" />
+            </th>
           </tr>
         </thead>
         <tbody>
@@ -20,7 +38,11 @@
               {{ student.first_name }} {{ student.last_name }}
               {{ student.middle_name }}
             </td>
-            <td class="text-right">
+            <td :id="`scoreLabel${student.id}`">{{ student.score.mark }}</td>
+            <td
+              class="text-right"
+              v-if="isCurrentTeachersAssessment && assessment?.is_open"
+            >
               <input
                 type="number"
                 min="0"
@@ -55,6 +77,13 @@ export default {
   created() {
     this.getAssessmentScores();
   },
+  computed: {
+    isCurrentTeachersAssessment() {
+      const currentTeacherId = this.$getState("user")?.teacher_id;
+      const assessmentTeacherId = this.assessment?.teacher;
+      return currentTeacherId == assessmentTeacherId;
+    },
+  },
   methods: {
     getAssessmentScores() {
       this.$api
@@ -71,24 +100,25 @@ export default {
         assessment: this.assessment.id,
         student: parseInt(event.target.name),
       };
-      console.log(formData);
+      var element = document.getElementById(`scoreLabel${formData.student}`);
       var currentScore = this.getStudentScore(formData.student);
       if (currentScore.mark) {
         if (isNaN(formData.mark)) {
           this.removeStudentScore(formData.student);
           this.$api.delete(`/scores/${currentScore.id}/`).then((response) => {
-            console.log(response.data);
+            element.innerHTML = "...";
           });
         } else {
           this.$api
             .put(`/scores/${currentScore.id}/`, formData)
             .then((response) => {
-              console.log(response.data);
+              element.innerHTML = response.data.mark;
             });
         }
       } else {
         this.$api.post(`/scores/`, formData).then((response) => {
           this.scores.push(response.data);
+          element.innerHTML = response.data.mark;
         });
       }
     },
@@ -115,6 +145,15 @@ export default {
     },
     removeStudentScore(studentId) {
       this.scores = this.scores.filter((score) => score.student != studentId);
+    },
+
+    downloadScores() {
+      this.$api
+        .get(`/assessments/${this.$route.params.id}/scores/download/`)
+        .then((response) => {
+          window.open(response.data.file_url, "_blank");
+          this.$setLoading(this, false);
+        });
     },
   },
 };

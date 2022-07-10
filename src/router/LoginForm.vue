@@ -41,11 +41,26 @@ export default {
     login() {
       this.$setLoading(this, true);
       this.$api.post(`/auth/login/`, this.formData).then((response) => {
-        this.$store.commit("results/setToken", response.data.token);
-        this.$store.commit("results/setUser", response.data.user);
-        this.$store.commit("results/setGroups", response.data.user.groups);
-        this.$router.push(this.indexRoutes[response.data.user.groups[0]]);
-        this.resetForm();
+        if (response) {
+          const acceptedGoups = ["dos", "head_teacher", "teacher"];
+          const user = response.data.user;
+          const token = response.data.token;
+          const groups = user.groups;
+          if (
+            groups &&
+            !groups.some((group) => acceptedGoups.includes(group))
+          ) {
+            this.$store.dispatch("results/signOut");
+            this.$router.push("/unauthorized");
+            return;
+          } else {
+            this.$store.commit("results/setToken", token);
+            this.$store.commit("results/setUser", user);
+            this.$store.commit("results/setGroups", groups);
+            this.$router.push(this.indexRoutes[response.data.user.groups[0]]);
+            this.resetForm();
+          }
+        }
         this.$setLoading(this, false);
       });
     },

@@ -2,7 +2,19 @@
   <div class="q-px-sm">
     <h6 class="q-my-sm flex justify-between">
       Scores
-      <router-link :to="`/activities/${$route.params.id}`">
+      <q-btn
+        v-if="scores.length"
+        class="q-ml-sm"
+        color="primary"
+        dense
+        icon="download"
+        flat
+        @click="downloadScores"
+      />
+      <router-link
+        v-if="isActivityOwner"
+        :to="`/activities/${$route.params.id}`"
+      >
         <q-btn color="primary" label="Detials" no-caps flat dense />
       </router-link>
     </h6>
@@ -11,7 +23,10 @@
         <thead>
           <tr>
             <th class="text-left">Student</th>
-            <th class="text-right">Score</th>
+            <th class="text-left">Score</th>
+            <th class="text-right" v-if="isActivityOwner && activity?.is_open">
+              <q-icon name="edit" />
+            </th>
           </tr>
         </thead>
         <tbody>
@@ -20,7 +35,8 @@
               {{ student.first_name }} {{ student.last_name }}
               {{ student.middle_name }}
             </td>
-            <td class="text-right">
+            <td :id="`scoreLabel${student.id}`">{{ student.score.mark }}</td>
+            <td class="text-right" v-if="isActivityOwner && activity?.is_open">
               <input
                 type="number"
                 min="0"
@@ -55,6 +71,13 @@ export default {
   created() {
     this.getActivityScores();
   },
+  computed: {
+    isActivityOwner() {
+      const currentTeacher = this.$getState("user")?.teacher_id;
+      const activityTeacher = this.activity?.teacher;
+      return currentTeacher == activityTeacher;
+    },
+  },
   methods: {
     getActivityScores() {
       this.$api
@@ -71,6 +94,7 @@ export default {
         activity: this.activity.id,
         student: parseInt(event.target.name),
       };
+      var element = document.getElementById(`scoreLabel${formData.student}`);
       var currentScore = this.getStudentScore(formData.student);
       if (currentScore.mark) {
         if (isNaN(formData.mark)) {
@@ -78,18 +102,25 @@ export default {
           this.$api
             .delete(`/activity-scores/${currentScore.id}/`)
             .then((response) => {
-              console.log(response.data);
+              if (response) {
+                element.innerHTML = "...";
+              }
             });
         } else {
           this.$api
             .put(`/activity-scores/${currentScore.id}/`, formData)
             .then((response) => {
-              console.log(response.data);
+              if (response) {
+                element.innerHTML = response.data.mark;
+              }
             });
         }
       } else {
         this.$api.post(`/activity-scores/`, formData).then((response) => {
-          this.scores.push(response.data);
+          if (response) {
+            this.scores.push(response.data);
+            element.innerHTML = response.data.mark;
+          }
         });
       }
     },
@@ -103,6 +134,15 @@ export default {
             student.score = this.getStudentScore(student.id);
             return student;
           });
+        });
+    },
+
+    downloadScores() {
+      this.$api
+        .get(`/activities/${this.$route.params.id}/scores/download/`)
+        .then((response) => {
+          window.open(response.data.file_url, "_blank");
+          this.$setLoading(this, false);
         });
     },
 

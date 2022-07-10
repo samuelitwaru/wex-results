@@ -5,6 +5,7 @@
       <div class="flex justify-between q-py-sm">
         <label class="text-h6">Students</label>
         <create-student-modal
+          v-if="canWriteStudent"
           :class_room="parseInt($route.params.id)"
           @addStudent="students.push($event)"
         />
@@ -24,7 +25,11 @@
         </template>
         <template v-slot:body-cell-action="props">
           <q-td :props="props">
-            <router-link class="text-white" :to="`/students/${props.key}`">
+            <router-link
+              v-if="canWriteStudent"
+              class="text-white"
+              :to="`/students/${props.key}`"
+            >
               <q-btn color="primary" icon-right="edit" no-caps flat dense />
             </router-link>
             |
@@ -81,12 +86,23 @@ export default {
         { name: "action", label: "Action", field: "action", align: "left" },
       ],
       students: [],
+      classRoom: null,
       loading: true,
     };
   },
   created() {
     this.getStudents();
+    this.getClassRoom();
   },
+
+  computed: {
+    canWriteStudent() {
+      const userTeacherId = this.$getState("user")?.teacher_id;
+      const classTeacherId = this.classRoom?.teacher;
+      return userTeacherId == classTeacherId;
+    },
+  },
+
   methods: {
     getStudents() {
       this.loading = true;
@@ -95,6 +111,16 @@ export default {
         .then((response) => {
           this.students = response.data;
           this.loading = false;
+        });
+    },
+
+    getClassRoom() {
+      this.$setLoading(this, true);
+      this.$api
+        .get(`/class-rooms/${this.$route.params.id}/`)
+        .then((response) => {
+          this.classRoom = response.data;
+          this.$setLoading(this, false);
         });
     },
   },

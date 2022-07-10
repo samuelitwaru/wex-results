@@ -34,19 +34,28 @@ export default route(function({ store, ssrContext }) {
         ),
     });
 
+    const landingRoutes = {
+        dos: "/",
+        head_teacher: "/",
+        teacher: "/class-rooms",
+    };
+
     Router.beforeEach((to, from, next) => {
         const isAuthenticated = store.state.results.isAuthenticated;
         if (isAuthenticated) {
-            if (to.path == "/login") {
-                next("/");
-            }
             const groups = store.state.results.groups;
+            const group = groups[0];
+            // next(landingRoutes[group]);
             const groupsRequired = to.meta.groupsRequired;
             const isAuthorized = groups.some((group) =>
                 groupsRequired.includes(group)
             );
+            // if (to.path == "/login" || to.path == "/") {
+            //     return;
+            // }
             if (!isAuthorized) {
-                Router.back();
+                // Router.back();
+                next("/unauthorized");
                 return;
             }
         } else if (

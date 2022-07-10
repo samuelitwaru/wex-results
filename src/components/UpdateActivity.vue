@@ -10,7 +10,20 @@
       <div class="q-py-sm">
         <q-input v-model="formData.name" type="text" label="Name" />
       </div>
-      <q-select
+      <div class="q-py-sm">
+        <q-select
+          label="Add Skills"
+          outlined
+          v-model="formData.skills"
+          use-input
+          use-chips
+          multiple
+          hide-dropdown-icon
+          input-debounce="0"
+          new-value-mode="add-unique"
+        />
+      </div>
+      <!-- <q-select
         outlined
         v-model="formData.subject"
         :option-label="(item) => `${item.code} ${item.name}`"
@@ -31,7 +44,7 @@
         label="Class"
         emit-value
         map-options
-      />
+      /> -->
 
       <div align="right">
         <q-btn label="update" type="submit" color="primary" />
@@ -51,8 +64,7 @@ export default {
       subjects: [],
       formData: {
         name: null,
-        class_room: null,
-        subject: null,
+        skills: [],
       },
     };
   },
@@ -68,8 +80,10 @@ export default {
         .then((response) => {
           this.activity = response.data;
           this.formData.name = this.activity.name;
+          this.formData.skills = this.activity.skills;
           this.formData.class_room = this.activity.class_room;
           this.formData.subject = this.activity.subject;
+          this.formData.teacher = this.activity.teacher;
         });
     },
 

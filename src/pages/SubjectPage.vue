@@ -259,7 +259,7 @@ export default {
     getSubjectTeachers() {
       this.$api
         .get(
-          `/teacher-class-room-papers/?paper__subject=${this.$route.params.id}`
+          `/paper-allocations/?paper__subject=${this.$route.params.id}`
         )
         .then((response) => {
           this.subjectTeachers = response.data;

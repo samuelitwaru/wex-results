@@ -8,5 +8,6 @@ export default function() {
         user: null,
         groups: [],
         profile: null,
+        formDataErrors: {},
     };
 }

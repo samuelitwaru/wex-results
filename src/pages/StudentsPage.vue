@@ -4,7 +4,10 @@
     <div class="q-pa-sm">
       <div class="flex justify-between q-py-sm">
         <label class="text-h4">Students</label>
-        <create-student-modal @addStudent="students.push($event)" />
+        <create-student-modal
+          v-if="canCreateStudent"
+          @addStudent="students.push($event)"
+        />
       </div>
       <div class="flex justify-between q-py-sm">
         <filter-students-form
@@ -86,6 +89,11 @@ export default {
       students: [],
       loading: true,
     };
+  },
+  computed: {
+    canCreateStudent() {
+      return this.$userHasGroup("dos");
+    },
   },
   created() {
     this.getStudents();

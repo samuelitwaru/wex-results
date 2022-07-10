@@ -17,7 +17,12 @@ export const updateAlertMsg = (state, msg) => {
     state.msg = msg;
 };
 
+export const updateFormDataErrors = (state, formDataErrors) => {
+    state.formDataErrors = formDataErrors;
+};
+
 export const setUser = (state, user) => {
+    console.log(user);
     state.user = user;
     window.localStorage.setItem("groups", JSON.stringify(user.groups));
 };

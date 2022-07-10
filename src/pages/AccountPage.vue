@@ -102,16 +102,15 @@ export default {
     },
 
     updatePassword() {
-      console.log(this.formData);
-      console.log(this.user);
       this.$setLoading(this, true);
       this.$api
         .put(`/users/${this.user.user_id}/update-password/`, this.formData)
         .then((response) => {
-          console.log("dooing");
-          this.resetForm();
-          this.$setLoading(this, false);
-          this.$showMsg("Your password has been updated");
+          if (response && response.data) {
+            this.resetForm();
+            this.$setLoading(this, false);
+            this.$showMsg("Your password has been updated");
+          }
         });
     },
 

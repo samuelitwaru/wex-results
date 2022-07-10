@@ -4,7 +4,11 @@
     <div class="q-pa-sm">
       <div class="flex justify-between q-py-sm">
         <label class="text-h4">Users</label>
-        <create-user-modal :groups="groups" @addUser="users.push($event)" />
+        <create-user-modal
+          v-if="$userHasGroup('dos')"
+          :groups="groups"
+          @addUser="users.push($event)"
+        />
       </div>
 
       <q-markup-table>
@@ -12,7 +16,6 @@
           <tr>
             <th class="text-left"></th>
             <th class="text-left">Name</th>
-            <!-- <th class="text-left">Email</th> -->
             <th class="text-left">Active</th>
             <th class="text-left">Roles</th>
           </tr>
@@ -20,7 +23,11 @@
         <tbody>
           <tr v-for="user in users" :key="user.id">
             <td>
-              <router-link class="text-white" :to="`/users/${user.id}`">
+              <router-link
+                v-if="$userHasGroup('dos')"
+                class="text-white"
+                :to="`/users/${user.id}`"
+              >
                 <q-btn color="primary" icon-right="edit" no-caps flat dense />
               </router-link>
             </td>
@@ -29,15 +36,8 @@
               <br />
               <small class="text-grey">{{ user.email }}</small>
             </td>
-            <!-- <td class="text-left">{{ user.email }}</td> -->
             <td class="text-left">
-              <input
-                type="checkbox"
-                class="q-mx-xs"
-                :name="user.id"
-                :checked="user.is_active"
-                @click="activateOrDeactivateUser($event, user)"
-              />
+              <q-icon v-if="user.is_active" name="check" size="sm" />
             </td>
             <td>
               <q-chip
@@ -47,6 +47,24 @@
                 icon="person"
                 :label="group.name"
               />
+              <q-btn
+                round
+                dense
+                v-if="user?.class_rooms"
+                class="glossy"
+                label="C"
+              >
+                <q-popup-proxy>
+                  <q-chip
+                    v-for="class_room in user.class_rooms"
+                    :key="class_room.id"
+                    size="10px"
+                    color="primary"
+                    text-color="white"
+                    :label="`${class_room.name} ${class_room.stream || ''}`"
+                  />
+                </q-popup-proxy>
+              </q-btn>
             </td>
           </tr>
         </tbody>
@@ -78,6 +96,7 @@ export default {
       this.$api.get("/users/").then((response) => {
         this.users = response.data;
         this.$setLoading(this, false);
+        this.getTeacherClassRooms();
       });
     },
     getGroups() {
@@ -85,47 +104,22 @@ export default {
         this.groups = response.data;
       });
     },
-
-    activateOrDeactivateUser(event, user) {
-      var userId = user.id;
-      if (event.target.checked) {
-        this.$refs.confirmDialog
-          .show({
-            title: "Activate User",
-            message: `Are you sure you want to activate user "${user.email}"?`,
-            okButton: "Yes, activate",
-          })
-          .then((res) => {
-            if (res) {
+    getTeacherClassRooms() {
+      this.users.forEach((user) => {
+        const userGroups = user.groups.map((group) => group.name);
+        if (userGroups.includes("teacher")) {
+          this.$api.get(`/teachers/?user=${user.id}`).then((response) => {
+            if (response && response.data.length) {
+              const teacher = response.data[0];
               this.$api
-                .put(`/users/${userId}/activate/`, { is_active: true })
-                .then((response) => {});
-              return;
+                .get(`/teachers/${teacher.id}/class-rooms/`)
+                .then((response) => {
+                  if (response) user.class_rooms = response.data;
+                });
             }
-            this.users.find((user) => user.id == userId).is_active =
-              !event.target.checked;
-            console.log(this.users.find((user) => user.id == userId));
           });
-      } else {
-        // remove
-        this.$refs.confirmDialog
-          .show({
-            title: "Deactivate User",
-            message: `Are you sure you want deactivate user "${user.email}"?`,
-            okButton: "Yes, deactivate",
-          })
-          .then((res) => {
-            if (res) {
-              this.$api
-                .put(`/users/${userId}/activate/`, { is_active: false })
-                .then((response) => {});
-              return;
-            }
-            this.users.find((user) => user.id == userId).is_active =
-              !event.target.checked;
-            console.log(this.users.find((user) => user.id == userId));
-          });
-      }
+        }
+      });
     },
   },
 };

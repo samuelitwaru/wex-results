@@ -2,7 +2,7 @@
   <div>
     <!-- <q-card style="width: 700px; max-width: 80vw"> -->
     <div class="q-pa-md">
-      <strong>Select Papers</strong>
+      <strong>Subject Papers</strong>
       <q-markup-table flat bordered>
         <thead>
           <tr>
@@ -14,7 +14,7 @@
           <tr v-for="subject in subjects" :key="subject.id">
             <td class="text-left">{{ subject.name }}</td>
             <td class="text-right">
-              <div class="flex justify-end">
+              <div v-if="$userHasGroup('dos')" class="flex justify-end">
                 <div
                   class="q-my-auto"
                   style="padding-right: 2px"
@@ -30,6 +30,32 @@
                       level.papers.findIndex((item) => item == paper.id) != -1
                     "
                   />
+                  <label :for="`check${paper.id}`"> P{{ paper.number }} </label>
+                </div>
+              </div>
+              <div v-else class="flex justify-end">
+                <div
+                  class="q-my-auto"
+                  style="padding-right: 2px"
+                  v-for="paper in subject.papers"
+                  :key="paper.id"
+                >
+                  <span
+                    v-if="
+                      level.papers.findIndex((item) => item == paper.id) != -1
+                    "
+                  >
+                    <q-icon name="check" />
+                  </span>
+                  <!-- <input
+                      type="checkbox"
+                      @change="addOrRemovePaper"
+                      :name="paper.id"
+                      :id="`check${paper.id}`"
+                      :checked="
+                        level.papers.findIndex((item) => item == paper.id) != -1
+                      "
+                    /> -->
                   <label :for="`check${paper.id}`"> P{{ paper.number }} </label>
                 </div>
               </div>

@@ -50,6 +50,12 @@
                 style="margin-left: 4px"
               />
             </td>
+            <td :class="{ 'mini-col': !cv.score }">
+              {{ subjectReport.papers[0]?.score }}
+            </td>
+            <td :class="{ 'mini-col': !cv.descriptor }">
+              {{ subjectReport.papers[0]?.descriptor }}
+            </td>
             <td :class="{ 'mini-col': !cv.total }">
               {{ subjectReport.papers[0]?.total }}
             </td>
@@ -83,10 +89,10 @@
               {{ subjectReport.points }}
             </td>
             <td
-              :class="{ 'mini-col': !cv.classTeacher }"
+              :class="{ 'mini-col': !cv.subjectTeacher }"
               :rowspan="subjectReport.papers.length"
             >
-              {{ teacher?.initials }}
+              {{ subjectReport.subject_teacher_initials }}
             </td>
           </tr>
           <tr
@@ -119,6 +125,10 @@
                 dense
                 style="margin-left: 4px"
               />
+            </td>
+            <td :class="{ 'mini-col': !cv.score }">{{ paper.score }}</td>
+            <td :class="{ 'mini-col': !cv.descriptor }">
+              {{ paper.descriptor }}
             </td>
             <td
               :class="{ 'mini-col': !cv.total }"
@@ -168,7 +178,7 @@
           >
             <q-btn
               class="q-py-none"
-              :label="`${report.points} Point(s)`"
+              :label="`${report?.points} Point(s)`"
               outline
               dense
               style="margin-left: 4px"
@@ -177,12 +187,20 @@
         </tr>
       </tbody>
     </q-markup-table>
-
-    <q-form @submit="saveComment" class="q-gutter-md" v-if="report">
+    <div v-if="report">
       <div class="q-py-sm">
-        <div class="text-subtitle1">Class Teacher</div>
-        <q-input outlined v-model="formData.class_teacher_comment" />
-        <!-- <q-card class="my-card bg-grey-2" flat bordered>
+        <div>
+          Class Teacher Comment
+          <q-btn
+            v-if="isClassTeacher"
+            dense
+            icon="edit"
+            flat
+            color="primary"
+            @click="show = true"
+          />
+        </div>
+        <q-card class="my-card bg-grey-2" flat bordered>
           <q-card-section>
             <div>
               <div v-if="report.report.class_teacher_comment">
@@ -191,13 +209,21 @@
               <div v-else class="text-grey">No comment</div>
             </div>
           </q-card-section>
-        </q-card> -->
+        </q-card>
       </div>
-
       <div class="q-py-sm">
-        <div class="text-subtitle1">Head Teacher</div>
-        <q-input outlined v-model="formData.head_teacher_comment" />
-        <!-- <q-card class="my-card bg-grey-2" flat bordered>
+        <div>
+          Head Teacher Comment
+          <q-btn
+            v-if="isHeadTeacher"
+            dense
+            icon="edit"
+            flat
+            color="primary"
+            @click="show = true"
+          />
+        </div>
+        <q-card class="my-card bg-grey-2" flat bordered>
           <q-card-section>
             <div>
               <div v-if="report.report.head_teacher_comment">
@@ -206,12 +232,38 @@
               <div v-else class="text-grey">No comment</div>
             </div>
           </q-card-section>
-        </q-card> -->
+        </q-card>
       </div>
-      <div class="q-pt-s" align="right">
-        <q-btn color="primary" label="submit" type="submit" />
-      </div>
-    </q-form>
+    </div>
+    <q-dialog v-model="show">
+      <q-card style="width: 700px; max-width: 80vw">
+        <q-card-section>
+          <div class="text-h6">Comment</div>
+        </q-card-section>
+        <q-card-section>
+          <q-form
+            v-if="report && (isHeadTeacher || isClassTeacher)"
+            @submit="saveComment"
+          >
+            <div class="q-py-sm" v-if="isClassTeacher">
+              <div class="text-subtitle1">Class Teacher</div>
+              <q-input outlined v-model="formData.class_teacher_comment" />
+            </div>
+
+            <div class="q-py-sm" v-if="isHeadTeacher">
+              <div class="text-subtitle1">Head Teacher</div>
+              <q-input outlined v-model="formData.head_teacher_comment" />
+            </div>
+            <div class="flex justify-between">
+              <div>
+                <q-btn flat color="primary" label="Cancel" v-close-popup />
+              </div>
+              <q-btn label="Submit" type="submit" color="primary" />
+            </div>
+          </q-form>
+        </q-card-section>
+      </q-card>
+    </q-dialog>
   </div>
 </template>
 
@@ -220,18 +272,21 @@ export default {
   props: ["subjectReports", "report", "levelGroup", "teacher"],
   data() {
     return {
+      show: false,
       columns: {
         code: false,
         subject: true,
         paper: true,
         assessments: true,
+        score: true,
+        descriptor: true,
         total: true,
         average: true,
         subjectAverage: true,
         aggregates: true,
         grade: true,
         points: true,
-        classTeacher: false,
+        subjectTeacher: false,
       },
       formData: {
         class_teacher_comment: "",
@@ -241,7 +296,21 @@ export default {
       },
     };
   },
+  watch: {
+    columns(newValue, oldValue) {
+      alert();
+    },
+  },
   computed: {
+    isClassTeacher() {
+      const userTeacherId = this.$getState("user")?.teacher_id;
+      const classTeacherId =
+        this.report.report?.student?.class_room_detail?.teacher;
+      return userTeacherId == classTeacherId;
+    },
+    isHeadTeacher() {
+      return this.$userHasGroup("head_teacher");
+    },
     cv() {
       if (this.levelGroup?.name == "O") {
         delete this.columns["grade"];
@@ -260,24 +329,6 @@ export default {
       }
       return 0;
     },
-    bestOf8() {
-      var compulsories = this.subjectReports
-        .filter((subj) => subj.subject.is_selectable == false)
-        .map((subj) => subj.aggregate)
-        .sort();
-      // .reduce((a, b) => a + b, 0);
-      var optionals = this.subjectReports
-        .filter((subj) => subj.subject.is_selectable == true)
-        .map((subj) => subj.aggregate)
-        .sort();
-
-      var best10 = compulsories.concat(optionals.slice(0, 2));
-
-      best10.push(optionals.pop());
-      best10.sort();
-      var best10;
-      return best10.slice(0, 8).reduce((a, b) => a + b, 0);
-    },
   },
   watch: {
     report(newValue, oldValue) {
@@ -294,6 +345,7 @@ export default {
       this.$api.put(`/reports/comment/`, this.formData).then((response) => {
         this.report.report = response.data[0];
         this.$setLoading(this, false);
+        this.show = false;
       });
     },
   },

@@ -4,67 +4,104 @@
     <div class="q-pa-sm">
       <div class="flex justify-between q-py-sm">
         <label class="text-h4">Subject Allocations</label>
-        <set-class-paper-teacher
+        <!-- <set-class-paper-teacher
           ref="setClassPaperTeacherModal"
           :allocation="allocation"
           @updateAllocation="getAllocations()"
-        />
+        /> -->
       </div>
 
-      <div class="flex justify-between q-py-sm">
-        <div class="q-my-auto">Filter</div>
-        <div class="col q-px-sm">
-          <q-select
-            outlined
-            v-model="formData.class_room"
-            :option-label="(item) => `${item.name} ${item.stream || ''}`"
-            option-value="id"
-            :options="classRooms"
-            label="Class"
-            emit-value
-            map-options
-            @update:model-value="onChangeClassRoom"
-          />
+      <q-form @submit="getAllocations" class="q-gutter-md">
+        <div class="flex justify-between q-py-sm">
+          <div class="q-my-auto">Filter</div>
+          <div class="col q-px-sm q-my-auto">
+            <q-select
+              dense
+              outlined
+              v-model="formData.class_room"
+              :option-label="(item) => `${item.name} ${item.stream || ''}`"
+              option-value="id"
+              :options="classRooms"
+              label="Class"
+              emit-value
+              map-options
+            />
+          </div>
+          <div class="col q-px-sm q-my-auto">
+            <q-select
+              dense
+              outlined
+              v-model="formData.paper__subject"
+              :option-label="(item) => `${item.code} ${item.name}`"
+              option-value="id"
+              :options="subjects"
+              label="Subject"
+              emit-value
+              map-options
+            />
+          </div>
+          <div class="col q-px-sm q-my-auto">
+            <q-select
+              dense
+              outlined
+              v-model="formData.teacher"
+              :option-label="(item) => `${item.name}`"
+              option-value="id"
+              :options="teachers"
+              label="Teacher"
+              emit-value
+              map-options
+            />
+          </div>
+          <div class="q-my-auto">
+            <q-btn color="primary" type="submit" label="Filter" />
+          </div>
         </div>
-      </div>
-
-      <q-markup-table flat separator="cell" bordered dense>
+      </q-form>
+      <q-markup-table bordered dense>
         <thead>
           <tr>
-            <th class="text-left">Subject</th>
-            <th class="text-left">Allocations</th>
+            <th class="text-left">Class Room</th>
+            <th class="text-left">Paper</th>
+            <th class="text-left">Teacher</th>
           </tr>
         </thead>
         <tbody>
-          <tr v-for="subject in subjects" :key="subject.id">
-            <td>{{ subject.code }} {{ subject.name }}</td>
-            <td>
-              <q-list separato>
-                <q-item dense v-for="paper in subject.papers" :key="paper.id">
-                  <q-item-section>{{ paper.description }}</q-item-section>
-                  <q-item-section>
-                    <span v-if="getAllocation(paper)" class="text-bold">{{
-                      getAllocation(paper).teacher_detail.name
-                    }}</span>
-                    <span v-else class="text-grey">Unallocted</span>
-                  </q-item-section>
-                  <q-item-section>
-                    <q-btn
-                      color="primary"
-                      icon="edit"
-                      flat
-                      dense
-                      @click="showSetClassPaperTeacherModal(paper)"
-                    />
-                  </q-item-section>
-                </q-item>
-              </q-list>
+          <tr v-for="alloc in paperAllocations" :key="alloc.id">
+            <td class="text-left">
+              {{ alloc.class_room_detail.name }}
+              {{ alloc.class_room_detail.stream || "" }}
+            </td>
+            <td class="text-left">
+              {{ alloc.paper_detail.subject_name }} /
+              {{ alloc.paper_detail.number }}
+            </td>
+            <td class="text-left">
+              <select
+                :name="`alloc${alloc.id}`"
+                :id="`alloc${alloc.id}`"
+                @change="updatePaperAllocation($event, alloc)"
+              >
+                <!-- <option :value="0" style="color: grey">Unallocated</option> -->
+                <option
+                  v-for="teacher in teachers2"
+                  :key="teacher.id"
+                  :value="teacher.id"
+                  :selected="teacher.id == alloc.teacher_detail?.id"
+                >
+                  {{ teacher.name }}
+                </option>
+              </select>
+              <q-icon
+                class="q-px-xs"
+                v-if="!alloc.teacher_detail?.name"
+                color="red"
+                name="fa fa-exclamation-circle"
+              />
             </td>
           </tr>
-          <tr v-if="subjects.length == 0">
-            <td style="height: 60px" class="text-grey text-center" colspan="3">
-              No subjects allocated
-            </td>
+          <tr v-if="!paperAllocations.length">
+            <td colspan="4" class="text-grey" align="center">No Allocations</td>
           </tr>
         </tbody>
       </q-markup-table>
@@ -87,86 +124,81 @@ export default {
   name: "ActivitiesPage",
   data() {
     return {
-      classRooms: [],
-      classRoom: null,
-      paper: null,
-      subject: null,
-      subjects: [],
-      allocations: [],
-      allocation: null,
-      teacher: null,
+      classRooms: [{ id: null, name: "All" }],
+      teachers: [
+        { id: null, name: "All" },
+        { id: "0", name: "Unallocated" },
+      ],
+      subjects: [{ id: null, code: "", name: "All" }],
+      paperAllocations: [],
       loading: false,
       formData: {
         class_room: null,
+        paper__subject: null,
+        teacher: null,
       },
     };
   },
   created() {
     this.getClassRooms();
     this.getAllocations();
+    this.getTeachers();
+    this.getSubjects();
+  },
+  computed: {
+    teachers2() {
+      return this.teachers.filter((tr) => Boolean(tr.id));
+    },
   },
   methods: {
     getClassRooms() {
-      this.$setLoading(this, true);
       this.$api.get(`/class-rooms/`).then((response) => {
-        this.classRooms = response.data;
-        this.$setLoading(this, false);
-        if (this.classRooms.length) {
-          this.classRoom = this.classRooms[0];
-          this.formData.class_room = this.classRoom.id;
-          this.onChangeClassRoom(this.formData.class_room);
-        }
+        if (response) this.classRooms = this.classRooms.concat(response.data);
       });
     },
-    onChangeClassRoom(value) {
-      this.classRoom = this.classRooms.find((cr) => cr.id == value);
-      this.getSubjects();
+    getTeachers() {
+      this.$api.get(`/teachers/`).then((response) => {
+        if (response) this.teachers = this.teachers.concat(response.data);
+      });
     },
 
     getSubjects() {
-      this.$setLoading(this, true);
-      this.$api
-        .get(
-          `/subjects/?level_group=${this.classRoom.level_detail.level_group}`
-        )
-        .then((response) => {
-          this.subjects = response.data;
-          this.$setLoading(this, false);
-        });
-    },
-
-    showCreateActivityModal(subject) {
-      this.subject = subject.id;
-      this.$refs.showCreateActivityModal.show = true;
-    },
-
-    showSetClassPaperTeacherModal(paper) {
-      this.allocation = this.getAllocation(paper);
-      if (this.allocation == null) {
-        this.allocation = {
-          paper_detail: paper,
-          paper: paper.id,
-          class_room_detail: this.classRoom,
-          class_room: this.classRoom.id,
-        };
-      }
-      this.$refs.setClassPaperTeacherModal.show = true;
+      this.$api.get(`/subjects/`).then((response) => {
+        if (response) this.subjects = this.subjects.concat(response.data);
+      });
     },
 
     getAllocations() {
-      this.$api.get(`/teacher-class-room-papers/`).then((response) => {
-        this.allocations = response.data;
+      var queryString = this.$buildURLQuery(this.formData);
+      this.$setLoading(this, true);
+      this.$api.get(`/paper-allocations/?${queryString}`).then((response) => {
+        if (response) {
+          this.paperAllocations = response.data;
+          this.$setLoading(this, false);
+        }
       });
     },
 
-    getAllocation(paper) {
-      var allocation = this.allocations.find((alloc) => {
-        return alloc.class_room == this.classRoom.id && alloc.paper == paper.id;
-      });
-      if (allocation) {
-        return allocation;
-      }
-      return null;
+    updatePaperAllocation(event, alloc) {
+      const teacher = parseInt(event.target.value) || null;
+      const formData = {
+        teacher: teacher,
+        class_room: alloc.class_room,
+        paper: alloc.paper,
+      };
+      this.$setLoading(this, true);
+      this.$api
+        .put(`/paper-allocations/${alloc.id}/`, formData)
+        .then((response) => {
+          if (response) {
+            this.paperAllocations[
+              this.paperAllocations.findIndex(
+                (paperAlloc) => paperAlloc.id == alloc.id
+              )
+            ] = response.data;
+            this.$setLoading(this, false);
+          }
+        });
     },
   },
 };

@@ -60,12 +60,48 @@
             v-bind="link"
             block
           >
-            <q-btn class="full-width" align="left" :icon="link.icon" flat>
+            <q-btn
+              v-if="link.name == $route.meta.name"
+              color="black"
+              class="full-width"
+              align="left"
+              :icon="link.icon"
+              flat
+              style="background: rgba(0, 0, 255, 0.145)"
+            >
+              <span class="q-px-md">{{ link.title }}</span>
+            </q-btn>
+            <q-btn
+              v-else
+              class="full-width"
+              align="left"
+              :icon="link.icon"
+              flat
+            >
               <span class="q-px-md">{{ link.title }}</span>
             </q-btn>
           </router-link>
         </div>
       </q-list>
+
+      <!-- <q-expansion-item
+        expand-separator
+        color="primary"
+        icon="book"
+        label="Reports"
+      >
+        <div class="q-ml-lg">
+          <div
+            v-for="levelGroup in levelGroups"
+            :key="levelGroup.id"
+            class="q-pl-lg q-ml-lg"
+          >
+            <router-link :to="`/reports/${levelGroup.id}`" block>
+              {{ levelGroup.full }} Level
+            </router-link>
+          </div>
+        </div>
+      </q-expansion-item> -->
     </q-drawer>
 
     <q-page-container>
@@ -85,74 +121,85 @@ const linksList = [
     title: "Home",
     icon: "home",
     link: "/",
+    name: "home",
     userGroups: ["dos", "head_teacher"],
   },
   {
     title: "Users",
     icon: "fa fa-users",
     link: "/users",
+    name: "users",
     userGroups: ["dos", "head_teacher"],
   },
   {
     title: "Levels",
     icon: "signal_cellular_alt",
     link: "/levels",
+    name: "levels",
     userGroups: ["dos", "head_teacher"],
   },
   {
     title: "Class Rooms",
     icon: "home",
     link: "/class-rooms",
+    name: "class-rooms",
     userGroups: ["dos", "head_teacher", , "teacher"],
   },
   {
     title: "Subjects",
     icon: "subject",
     link: "/subjects",
+    name: "subjects",
     userGroups: ["dos", "head_teacher"],
   },
   {
     title: "Grading Systems",
     icon: "stars",
     link: "/grading-systems",
+    name: "grading-systems",
     userGroups: ["dos", "head_teacher"],
   },
   {
     title: "Teachers",
     icon: "supervisor_account",
     link: "/teachers",
+    name: "teachers",
     userGroups: ["dos", "head_teacher"],
   },
   {
     title: "Allocations",
     icon: "fa fa-th-list",
     link: "/subject-allocations",
+    name: "allocations",
     userGroups: ["dos", "head_teacher"],
   },
   {
     title: "Students",
     icon: "school",
     link: "/students",
+    name: "students",
     userGroups: ["dos", "head_teacher"],
   },
   {
     title: "Activities",
     icon: "fa fa-lightbulb",
     link: "/activities",
-    userGroups: ["dos", "head_teacher", , "teacher"],
+    name: "activities",
+    userGroups: ["teacher", "dos", "head_teacher"],
   },
   {
     title: "Assessments",
     icon: "fa fa-line-chart",
     link: "/assessments",
-    userGroups: ["dos", "head_teacher", , "teacher"],
+    name: "assessments",
+    userGroups: ["teacher", "dos", "head_teacher"],
   },
-  {
-    title: "Reports",
-    icon: "book",
-    link: "/reports",
-    userGroups: ["dos", "head_teacher", , "teacher"],
-  },
+  // {
+  //   title: "Reports",
+  //   icon: "book",
+  //   link: "/reports",
+  //   userGroups: ["dos", "head_teacher", , "teacher"],
+  // },
 ];
 
 export default defineComponent({
@@ -175,6 +222,15 @@ export default defineComponent({
       },
     };
   },
+  data() {
+    return {
+      levelGroups: [],
+    };
+  },
+  created() {
+    this.getLevelGroups();
+    console.log(this.$route);
+  },
   methods: {
     signOut() {
       this.$setLoading(this, true);
@@ -183,6 +239,12 @@ export default defineComponent({
         this.$store.dispatch("results/signOut");
         this.$router.push("/login");
         this.$setLoading(this, false);
+      });
+    },
+
+    getLevelGroups() {
+      this.$api.get(`/level-groups/`).then((response) => {
+        this.levelGroups = response.data;
       });
     },
   },

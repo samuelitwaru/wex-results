@@ -34,18 +34,17 @@ export default boot(({ app, router, store }) => {
                 router.push("/login");
             } else if (error.response.status == 400) {
                 var data = error.response.data;
-                console.log(Object.values(data));
+                console.log(data);
                 var msg = "Bad request. Please check your input data.";
-                if (data && "non_field_errors" in data) {
-                    msg = data.non_field_errors.join(". ");
-                } else if (typeof data == "string") {
+                if (typeof data == "string") {
                     msg = data;
                 } else if (typeof data == "object") {
                     msg = Object.values(data);
+                    store.commit("results/updateFormDataErrors", data);
                 }
+                store.commit("results/updateAlertMsg", `${msg}`);
                 store.commit("results/updateLoadingState", false);
                 store.commit("results/updateAlertState", true);
-                store.commit("results/updateAlertMsg", `${msg}`);
             } else if (error.response.status == 404) {
                 router.back();
             }

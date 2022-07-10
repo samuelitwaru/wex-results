@@ -57,7 +57,9 @@
             <td
               :rowspan="subjectReport.activities.length || 1"
               :class="{ 'mini-col': !cv.subjectTeacher }"
-            ></td>
+            >
+              {{ subjectReport.subject_teacher_initials }}
+            </td>
           </tr>
           <tr
             v-for="(activity, index) in subjectReport.activities.slice(1)"
@@ -106,37 +108,6 @@ export default {
         subjectTeacher: true,
       },
     };
-  },
-  computed: {
-    averageMarks() {
-      if (this.subjectReports.length > 0) {
-        var total = 0;
-        for (let index = 0; index < this.subjectReports.length; index++) {
-          const subj = this.subjectReports[index];
-          total += subj.average;
-        }
-        return (total / this.subjectReports.length).toFixed(1);
-      }
-      return 0;
-    },
-    bestOf8() {
-      var compulsories = this.subjectReports
-        .filter((subj) => subj.subject.is_selectable == false)
-        .map((subj) => subj.aggregate)
-        .sort();
-      // .reduce((a, b) => a + b, 0);
-      var optionals = this.subjectReports
-        .filter((subj) => subj.subject.is_selectable == true)
-        .map((subj) => subj.aggregate)
-        .sort();
-
-      var best10 = compulsories.concat(optionals.slice(0, 2));
-
-      best10.push(optionals.pop());
-      best10.sort();
-      var best10;
-      return best10.slice(0, 8).reduce((a, b) => a + b, 0);
-    },
   },
 };
 </script>

@@ -31,18 +31,20 @@
       <q-separator />
 
       <div class="q-pa-xs" align="center">
-        <router-link
-          :to="`/class-rooms/${$route.params.id}`"
-          v-if="page != 'class-room'"
-        >
-          <q-btn
-            label="Class Room"
-            icon="home"
-            flat
-            :disable="page == 'class-room'"
-          />
-        </router-link>
-        <q-btn v-else label="Class Room" icon="home" flat disable />
+        <span v-if="$userHasAnyGroups(['dos', 'head_teacher'])">
+          <router-link
+            :to="`/class-rooms/${$route.params.id}`"
+            v-if="page != 'class-room'"
+          >
+            <q-btn
+              label="Class Room"
+              icon="home"
+              flat
+              :disable="page == 'class-room'"
+            />
+          </router-link>
+          <q-btn v-else label="Class Room" icon="home" flat disable />
+        </span>
 
         <router-link
           :to="`/class-rooms/${$route.params.id}/students`"
@@ -59,6 +61,16 @@
           <q-btn label="Reports" icon="book" flat />
         </router-link>
         <q-btn v-else label="Reports" icon="book" flat disable />
+
+        <span v-if="period?.is_promotional && period.promotions_opened">
+          <router-link
+            :to="`/class-rooms/${$route.params.id}/promotions`"
+            v-if="page != 'promotions'"
+          >
+            <q-btn label="Promotions" icon="fa fa-award" flat />
+          </router-link>
+          <q-btn v-else label="Promotions" icon="fa fa-award" flat disable />
+        </span>
       </div>
 
       <router-view @updateClassRoom="class_room = $event"> </router-view>
@@ -73,15 +85,18 @@ export default {
   data() {
     return {
       class_room: {},
+      period: null,
     };
   },
   created() {
     this.getClassRoom();
+    this.getLatestPeriod();
   },
   computed: {
     page() {
       if (this.$route.path.includes("students")) return "students";
       else if (this.$route.path.includes("reports")) return "reports";
+      else if (this.$route.path.includes("promotions")) return "promotions";
       else return "class-room";
     },
   },
@@ -94,6 +109,13 @@ export default {
           this.class_room = response.data;
           this.$setLoading(this, false);
         });
+    },
+
+    getLatestPeriod() {
+      this.$api.get(`/periods/latest/`).then((response) => {
+        this.period = response.data;
+        this.$setLoading(this, false);
+      });
     },
 
     deleteClassRoom(classRoom) {

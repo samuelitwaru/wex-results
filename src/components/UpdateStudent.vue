@@ -1,11 +1,5 @@
 <template>
   <div>
-    <h6 class="q-my-sm q-px-sm flex justify-between">
-      Student Info
-      <router-link :to="`/students/${$route.params.id}/report`">
-        <q-btn color="primary" label="Student Report" no-caps flat dense />
-      </router-link>
-    </h6>
     <q-form @submit="updateStudent" class="q-gutter-md q-pa-sm">
       <div class="row">
         <div class="col q-mr-xs">

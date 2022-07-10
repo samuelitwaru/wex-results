@@ -131,6 +131,7 @@ export default {
 
     updateUser() {
       this.formData["username"] = this.formData.email;
+      console.log(this.formData);
       this.$setLoading(this, true);
       this.$api
         .put(`/users/${this.user.id}/`, this.formData)

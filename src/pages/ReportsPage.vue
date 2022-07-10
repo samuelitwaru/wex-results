@@ -122,7 +122,7 @@
               :disable="formData.reports.length == 0"
             />
           </div>
-          <div class="q-py-sm">
+          <div class="q-py-sm" v-if="$userHasGroup('head_teacher')">
             <div class="text-subtitle1">Head Teacher Comment</div>
             <q-input
               outlined
@@ -176,12 +176,14 @@ export default {
   methods: {
     getReports() {
       this.$setLoading(this, true);
-      this.$api.get("/reports/").then((response) => {
-        this.reports = response.data;
-        console.log(this.reports);
-        this.$setLoading(this, false);
-        this.getComputedReports();
-      });
+      this.$api
+        .get(`/reports/?level__level_group=${this.$route.params.levelGroupId}`)
+        .then((response) => {
+          this.reports = response.data;
+          console.log(this.reports);
+          this.$setLoading(this, false);
+          this.getComputedReports();
+        });
     },
 
     getComputedReports() {

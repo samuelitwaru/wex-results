@@ -6,7 +6,6 @@
         <label class="text-h4">Grading Systems</label>
         <create-grading-system-modal @addGradingSystem="getLevelGroups()" />
       </div>
-
       <q-markup-table>
         <thead>
           <tr>
@@ -47,6 +46,7 @@
           </tr>
         </tbody>
       </q-markup-table>
+      <custom-grading-systems />
     </div>
   </q-page>
 </template>
@@ -54,8 +54,9 @@
 <script>
 import CreateGradingSystemModal from "src/components/CreateGradingSystemModal.vue";
 import ConfirmDialog from "src/components/ConfirmDialog.vue";
+import CustomGradingSystems from "src/components/CustomGradingSystems.vue";
 export default {
-  components: { CreateGradingSystemModal, ConfirmDialog },
+  components: { CreateGradingSystemModal, ConfirmDialog, CustomGradingSystems },
   name: "GradingSystemsPage",
   data() {
     return {
@@ -82,7 +83,7 @@ export default {
       this.$setLoading(this, true);
       this.$api.get("/grading-systems/").then((response) => {
         this.grading_systems = response.data;
-        this.setLoading(this, false);
+        this.$setLoading(this, false);
       });
     },
   },

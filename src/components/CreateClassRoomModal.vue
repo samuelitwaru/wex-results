@@ -1,7 +1,7 @@
 <template>
   <div>
-    <q-btn icon="add" dense color="primary" @click="medium = true" />
-    <q-dialog v-model="medium">
+    <q-btn icon="add" dense color="primary" @click="show = true" />
+    <q-dialog v-model="show">
       <q-card style="width: 700px; max-width: 80vw">
         <q-card-section>
           <div class="text-h6">New ClassRoom</div>
@@ -38,6 +38,7 @@
                   label="Level"
                   emit-value
                   map-options
+                  required
                 />
               </div>
               <div class="col q-mr-xs">
@@ -50,6 +51,7 @@
                   label="Class Teacher"
                   emit-value
                   map-options
+                  required
                 />
               </div>
             </div>
@@ -77,7 +79,7 @@ export default {
   props: ["class_rooms"],
   setup() {
     return {
-      medium: ref(false),
+      show: ref(false),
     };
   },
   data() {
@@ -96,13 +98,20 @@ export default {
     this.getLevels();
     this.getTeachers();
   },
+  computed: {
+    formDataErrors() {
+      return this.$store.state.results.formDataErrors;
+    },
+  },
   methods: {
     createClassRoom() {
       this.$setLoading(this, true);
       this.$api.post(`/class-rooms/`, this.formData).then((response) => {
-        this.$emit("addClassRoom", response.data);
-        this.medium = false;
-        this.resetForm();
+        if (response) {
+          this.$emit("addClassRoom", response.data);
+          this.show = false;
+          this.resetForm();
+        }
         this.$setLoading(this, false);
       });
     },

@@ -3,7 +3,50 @@
     <confirm-dialog ref="confirmDialog" />
     <div class="q-pa-sm">
       <div class="flex justify-between q-py-sm">
-        <label class="text-h4">Reports</label>
+        <label class="text-h6">Reports</label>
+        <q-btn
+          v-if="period?.is_promotional && period?.promotions_opened"
+          :disable="formData.reports.length == 0"
+          color="primary"
+          label="Promote"
+          icon-right="fa fa-award"
+          dense
+          flat
+          @click="show = true"
+        />
+        <q-dialog v-model="show">
+          <q-card>
+            <q-card-section>
+              <div class="text-h6">Promote</div>
+              <p>
+                {{ formData.reports.length }} students selected for promotion.
+              </p>
+              <div>
+                <q-select
+                  outlined
+                  dense
+                  v-model.number="formData2.next_class_room"
+                  :options="classRooms"
+                  label="Next Class Room"
+                  :option-label="(item) => `${item.name} ${item.stream || ''}`"
+                  option-value="id"
+                  emit-value
+                  map-options
+                />
+              </div>
+            </q-card-section>
+            <q-card-actions align="right">
+              <q-btn flat label="Cancel" color="primary" v-close-popup />
+              <q-btn
+                flat
+                label="Submit"
+                color="primary"
+                v-close-popup
+                @click="addPromotions"
+              />
+            </q-card-actions>
+          </q-card>
+        </q-dialog>
       </div>
 
       <div class="q-pb-sm">
@@ -115,7 +158,7 @@
 
       <div class="q-pt-sm" :class="{ disabled: formData.reports.length == 0 }">
         <q-form @submit="saveComment" @reset="resetForm" class="q-gutter-md">
-          <div class="q-py-sm">
+          <div class="q-py-sm" v-if="isClassTeacher">
             <div class="text-subtitle1">Class Teacher Comment</div>
             <q-input
               outlined
@@ -123,7 +166,7 @@
               :disable="formData.reports.length == 0"
             />
           </div>
-          <div class="q-py-sm">
+          <div class="q-py-sm" v-if="$userHasGroup('head_teacher')">
             <div class="text-subtitle1">Head Teacher Comment</div>
             <q-input
               outlined
@@ -132,19 +175,21 @@
             />
           </div>
 
-          <q-checkbox
-            v-model="formData.overwrite"
-            label="Overwrite existing comments"
-            :disable="formData.reports.length == 0"
-          />
-
-          <div class="q-pt-s" align="right">
-            <q-btn
-              color="primary"
-              label="submit"
-              type="submit"
+          <div v-if="$userHasGroup('head_teacher') || isClassTeacher">
+            <q-checkbox
+              v-model="formData.overwrite"
+              label="Overwrite existing comments"
               :disable="formData.reports.length == 0"
             />
+
+            <div class="q-pt-s" align="right">
+              <q-btn
+                color="primary"
+                label="submit"
+                type="submit"
+                :disable="formData.reports.length == 0"
+              />
+            </div>
           </div>
         </q-form>
       </div>
@@ -161,18 +206,31 @@ export default {
   data() {
     return {
       reports: [],
-      CTOverwrites: 0,
-      HTOverwrites: 0,
+      period: null,
+      show: false,
+      classRoom: null,
       formData: {
         class_teacher_comment: "",
         head_teacher_comment: "",
-        overwrite: false,
+        overwrite: true,
         reports: [],
+      },
+      formData2: {
+        next_class_room: null,
       },
     };
   },
   created() {
     this.getReports();
+    this.getClassRoom();
+    this.getLatestPeriod();
+  },
+  computed: {
+    isClassTeacher() {
+      const currentTeacher = this.$getState("user")?.teacher_id;
+      const classTeacher = this.classRoom?.teacher;
+      return currentTeacher == classTeacher;
+    },
   },
   methods: {
     getReports() {
@@ -198,6 +256,13 @@ export default {
       });
     },
 
+    getLatestPeriod() {
+      this.$api.get(`/periods/latest/`).then((response) => {
+        this.period = response.data;
+        this.$setLoading(this, false);
+      });
+    },
+
     addOrRemoveReport(event) {
       if (event.target.checked) {
         this.formData.reports.push(event.target.name);
@@ -218,7 +283,6 @@ export default {
 
     saveComment() {
       this.$setLoading(this, true);
-      console.log(this.formData);
       if (this.formData.class_teacher_comment == "")
         delete this.formData.class_teacher_comment;
       if (this.formData.head_teacher_comment == "")
@@ -226,6 +290,35 @@ export default {
       this.$api.put(`/reports/comment/`, this.formData).then((response) => {
         this.reports = response.data;
         this.resetForm();
+        this.$setLoading(this, false);
+      });
+    },
+
+    getClassRoom() {
+      this.$api
+        .get(`/class-rooms/${this.$route.params.id}/`)
+        .then((response) => {
+          this.classRoom = response.data;
+          this.getClassRooms();
+        });
+    },
+
+    getClassRooms() {
+      this.$api
+        .get(`levels/${this.classRoom.level}/class-rooms/`)
+        .then((response) => {
+          this.classRooms = response.data;
+        });
+    },
+
+    addPromotions() {
+      this.$setLoading(this, true);
+      const formData = {
+        reports: this.formData.reports,
+        next_class_room: this.formData2.next_class_room,
+      };
+      this.$api.post(`/promotions/add/`, formData).then((response) => {
+        this.promotions = response.data;
         this.$setLoading(this, false);
       });
     },

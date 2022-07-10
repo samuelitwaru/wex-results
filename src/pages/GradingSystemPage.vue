@@ -310,7 +310,7 @@ export default {
           minVal = 0;
         }
       } else if (levelIndex == 0) {
-        maxVal = 100;
+        maxVal = 101;
         beforeLevel = levels[levelIndex + 1];
         minVal = this.grading_system[beforeLevel] + 1;
       }

@@ -24,7 +24,11 @@
         </template>
         <template v-slot:body-cell-action="props">
           <q-td :props="props">
-            <router-link class="text-white" :to="`/class-rooms/${props.key}`">
+            <router-link
+              v-if="$userHasAnyGroups(['dos', 'head_teacher'])"
+              class="text-white"
+              :to="`/class-rooms/${props.key}`"
+            >
               <q-btn color="primary" icon-right="edit" no-caps flat dense />
             </router-link>
             |

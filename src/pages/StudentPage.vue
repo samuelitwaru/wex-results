@@ -51,6 +51,29 @@
 
       <q-separator />
 
+      <div class="q-pa-xs" align="center">
+        <router-link
+          :to="`/students/${$route.params.id}`"
+          v-if="page != 'student'"
+        >
+          <q-btn
+            label="Student"
+            icon="school"
+            flat
+            :disable="page == 'student'"
+          />
+        </router-link>
+        <q-btn v-else label="Student" icon="school" flat disable />
+
+        <router-link
+          :to="`/students/${$route.params.id}/report`"
+          v-if="page != 'report'"
+        >
+          <q-btn label="Report" icon="book" flat />
+        </router-link>
+        <q-btn v-else label="Report" icon="book" flat disable />
+      </div>
+
       <router-view @updateStudent="student = $event"> </router-view>
     </q-card>
   </q-page>
@@ -71,6 +94,12 @@ export default {
     };
   },
   created() {},
+  computed: {
+    page() {
+      if (this.$route.path.includes("report")) return "report";
+      else return "student";
+    },
+  },
   methods: {
     deleteStudent(student) {
       this.$refs.confirmDialog

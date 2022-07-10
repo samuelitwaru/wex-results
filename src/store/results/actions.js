@@ -6,20 +6,26 @@ export function someAction (context) {
 import { api } from "src/boot/axios";
 import router from "src/router";
 
-export const init = ({ commit }) => {
+export const init = (context) => {
     // get token and user groups from localStorage
     const token = localStorage.getItem("token");
     const groups = JSON.parse(localStorage.getItem("groups"));
     // commit them to state
-    commit("setToken", token);
-    commit("setGroups", groups);
+    context.commit("setToken", token);
+    context.commit("setGroups", groups);
+
+    const acceptedGoups = ["dos", "head_teacher", "teacher"];
+    if (groups && !groups.some((group) => acceptedGoups.includes(group))) {
+        context.dispatch("signOut");
+        return;
+    }
 
     if (token) {
         api.defaults.headers.common.Authorization = `Token ${token}`;
         api.get(`/users/token/${token}/`).then((response) => {
-            commit("setUser", response.data);
+            context.commit("setUser", response.data);
             var groups = response.data.groups;
-            commit("setGroups", groups);
+            context.commit("setGroups", groups);
         });
     } else {
         api.defaults.headers.common.Authorization = "";

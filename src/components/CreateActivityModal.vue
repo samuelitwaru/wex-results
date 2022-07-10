@@ -15,6 +15,18 @@
           >
             <q-input v-model="formData.name" type="text" label="Name" />
             <q-select
+              label="Add Skills"
+              outlined
+              v-model="formData.skills"
+              use-input
+              use-chips
+              multiple
+              hide-dropdown-icon
+              input-debounce="0"
+              new-value-mode="add-unique"
+            />
+            <q-select
+              v-if="!subject"
               outlined
               v-model="formData.subject"
               :option-label="(item) => `${item.code} ${item.name}`"
@@ -26,6 +38,7 @@
             />
 
             <q-select
+              v-if="!classRoom"
               outlined
               v-model="formData.class_room"
               :option-label="(item) => `${item.name} ${item.stream || ''}`"
@@ -68,6 +81,7 @@ export default {
       subjects: [],
       formData: {
         name: null,
+        skills: [],
         class_room: null,
         subject: null,
       },
@@ -76,6 +90,7 @@ export default {
   watch: {
     classRoom(newValue, oldValue) {
       this.formData.class_room = newValue;
+      console.log(newValue);
     },
     subject(newValue, oldValue) {
       this.formData.subject = newValue;
@@ -87,14 +102,17 @@ export default {
   },
   methods: {
     createActivity() {
-      console.log(this.formData);
       this.$setLoading(this, true);
-      this.$api.post(`/activities/`, this.formData).then((response) => {
-        this.$emit("addActivity", response.data);
-        this.show = false;
-        this.resetForm();
-        this.$setLoading(this, false);
-      });
+      const teacher = this.$getState("user")?.teacher_id;
+      if (teacher) {
+        this.formData["teacher"] = teacher;
+        this.$api.post(`/activities/`, this.formData).then((response) => {
+          this.$emit("addActivity", response.data);
+          this.show = false;
+          this.resetForm();
+          this.$setLoading(this, false);
+        });
+      }
     },
 
     getSubjects() {
@@ -113,6 +131,7 @@ export default {
 
     resetForm() {
       this.formData.name = null;
+      this.formData.skills = [];
       // this.formData.class_room = null;
       // this.formData.subject = null;
     },

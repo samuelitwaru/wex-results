@@ -101,6 +101,10 @@
                 </div>
               </div>
             </div>
+            <q-checkbox
+              v-model="formData.is_promotional"
+              label="Promotional Period"
+            />
             <div class="flex justify-between">
               <div>
                 <q-btn flat color="primary" label="Cancel" v-close-popup />
@@ -127,6 +131,7 @@ export default {
         name: this.period.name,
         start: this.period.start,
         stop: this.period.stop,
+        is_promotional: this.period.is_promotional,
       },
     };
   },

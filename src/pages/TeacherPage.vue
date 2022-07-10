@@ -31,7 +31,7 @@
           <div>{{ teacher.initials }}</div>
         </q-card-section>
       </q-card-section>
-      <div class="q-pa-sm" align="right">
+      <!-- <div class="q-pa-sm" align="right">
         <q-btn
           color="negative"
           label="Delete"
@@ -40,11 +40,11 @@
           dense
           @click="deleteTeacher(teacher)"
         />
-      </div>
-      <q-separator />
+      </div> -->
+      <q-separator class="q-my-sm" />
 
       <div class="row">
-        <div class="col-12 q-pa-sm">
+        <!-- <div class="col-12 q-pa-sm">
           <strong>Profile</strong>
           <q-form @submit="updateTeacher" class="q-gutter-md">
             <q-input
@@ -65,7 +65,7 @@
               <q-btn label="update" type="submit" color="primary" />
             </div>
           </q-form>
-        </div>
+        </div> -->
         <div class="col-12 q-pa-sm">
           <div class="flex justify-between q-py-sm">
             <strong class="q-my-auto">Class Subject Allocations</strong>
@@ -101,10 +101,10 @@
             </template>
           </q-table>
         </div>
-        <div class="col-12 q-pa-sm">
+        <!-- <div class="col-12 q-pa-sm">
           <strong>User</strong>
           <set-user-form :user="teacher.user" />
-        </div>
+        </div> -->
       </div>
     </q-card>
   </q-page>

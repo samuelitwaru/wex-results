@@ -12,7 +12,11 @@ const routes = [{
         path: "/",
         component: () =>
             import ("layouts/MainLayout.vue"),
-        meta: { loginRequired: true, groupsRequired: ["dos", "head_teacher"] },
+        meta: {
+            name: "home",
+            loginRequired: true,
+            groupsRequired: ["dos", "head_teacher"],
+        },
         children: [{
             path: "",
             component: () =>
@@ -24,7 +28,11 @@ const routes = [{
         path: "/students",
         component: () =>
             import ("layouts/MainLayout.vue"),
-        meta: { loginRequired: true, groupsRequired: ["dos", "head_teacher"] },
+        meta: {
+            name: "students",
+            loginRequired: true,
+            groupsRequired: ["dos", "head_teacher", "teacher"],
+        },
         children: [
             { path: "", component: () =>
                     import ("pages/StudentsPage.vue") },
@@ -53,7 +61,11 @@ const routes = [{
         path: "/teachers",
         component: () =>
             import ("layouts/MainLayout.vue"),
-        meta: { loginRequired: true, groupsRequired: ["dos", "head_teacher"] },
+        meta: {
+            name: "teachers",
+            loginRequired: true,
+            groupsRequired: ["dos", "head_teacher"],
+        },
         children: [
             { path: "", component: () =>
                     import ("pages/TeachersPage.vue") },
@@ -67,12 +79,18 @@ const routes = [{
         component: () =>
             import ("layouts/MainLayout.vue"),
         meta: {
+            name: "class-rooms",
             loginRequired: true,
             groupsRequired: ["dos", "head_teacher", "teacher"],
         },
-        children: [
-            { path: "", component: () =>
-                    import ("pages/ClassRoomsPage.vue") },
+        children: [{
+                path: "",
+                component: () =>
+                    import ("pages/ClassRoomsPage.vue"),
+                // meta: {
+                //     groupsRequired: ["dos", "head_teacher"],
+                // },
+            },
             {
                 path: ":id",
                 component: () =>
@@ -81,6 +99,9 @@ const routes = [{
                         path: "",
                         component: () =>
                             import ("components/UpdateClassRoom.vue"),
+                        meta: {
+                            groupsRequired: ["dos", "head_teacher"],
+                        },
                     },
                     {
                         path: "reports",
@@ -92,6 +113,11 @@ const routes = [{
                         component: () =>
                             import ("components/ClassRoomStudents.vue"),
                     },
+                    {
+                        path: "promotions",
+                        component: () =>
+                            import ("components/ClassRoomPromotions.vue"),
+                    },
                 ],
             },
         ],
@@ -101,7 +127,11 @@ const routes = [{
         path: "/subjects",
         component: () =>
             import ("layouts/MainLayout.vue"),
-        meta: { loginRequired: true, groupsRequired: ["dos", "head_teacher"] },
+        meta: {
+            name: "subjects",
+            loginRequired: true,
+            groupsRequired: ["dos", "head_teacher"],
+        },
         children: [
             { path: "", component: () =>
                     import ("pages/SubjectsPage.vue") },
@@ -114,7 +144,11 @@ const routes = [{
         path: "/levels",
         component: () =>
             import ("layouts/MainLayout.vue"),
-        meta: { loginRequired: true, groupsRequired: ["dos", "head_teacher"] },
+        meta: {
+            name: "levels",
+            loginRequired: true,
+            groupsRequired: ["dos", "head_teacher"],
+        },
         children: [
             { path: "", component: () =>
                     import ("pages/LevelsPage.vue") },
@@ -127,7 +161,11 @@ const routes = [{
         path: "/grading-systems",
         component: () =>
             import ("layouts/MainLayout.vue"),
-        meta: { loginRequired: true, groupsRequired: ["dos", "head_teacher"] },
+        meta: {
+            name: "grading-systems",
+            loginRequired: true,
+            groupsRequired: ["dos", "head_teacher"],
+        },
         children: [
             { path: "", component: () =>
                     import ("pages/GradingSystemsPage.vue") },
@@ -141,6 +179,7 @@ const routes = [{
         component: () =>
             import ("layouts/MainLayout.vue"),
         meta: {
+            name: "assessments",
             loginRequired: true,
             groupsRequired: ["dos", "head_teacher", "teacher"],
         },
@@ -171,22 +210,36 @@ const routes = [{
         component: () =>
             import ("layouts/MainLayout.vue"),
         meta: {
+            name: "reports",
             loginRequired: true,
             groupsRequired: ["dos", "head_teacher", "teacher"],
         },
-        children: [{ path: "", component: () =>
-                import ("pages/ReportsPage.vue") }],
+        children: [{
+            path: ":levelGroupId",
+            component: () =>
+                import ("pages/ReportsPage.vue"),
+        }, ],
     },
     {
         path: "/users",
         component: () =>
             import ("layouts/MainLayout.vue"),
-        meta: { loginRequired: true, groupsRequired: ["dos", "head_teacher"] },
-        children: [
-            { path: "", component: () =>
-                    import ("pages/UsersPage.vue") },
-            { path: ":id", component: () =>
-                    import ("pages/UserPage.vue") },
+        meta: {
+            name: "users",
+            loginRequired: true,
+            groupsRequired: ["dos", "head_teacher"],
+        },
+        children: [{
+                path: "",
+                component: () =>
+                    import ("pages/UsersPage.vue"),
+            },
+            {
+                path: ":id",
+                component: () =>
+                    import ("pages/UserPage.vue"),
+                meta: { groupsRequired: ["dos"] },
+            },
         ],
     },
 
@@ -194,7 +247,11 @@ const routes = [{
         path: "/subject-allocations",
         component: () =>
             import ("layouts/MainLayout.vue"),
-        meta: { loginRequired: true, groupsRequired: ["dos", "head_teacher"] },
+        meta: {
+            name: "allocations",
+            loginRequired: true,
+            groupsRequired: ["dos", "head_teacher"],
+        },
         children: [
             { path: "", component: () =>
                     import ("pages/SubjectAllocationsPage.vue") },
@@ -205,6 +262,7 @@ const routes = [{
         component: () =>
             import ("layouts/MainLayout.vue"),
         meta: {
+            name: "activities",
             loginRequired: true,
             groupsRequired: ["dos", "head_teacher", "teacher"],
         },
@@ -219,6 +277,9 @@ const routes = [{
                         path: "",
                         component: () =>
                             import ("components/UpdateActivity.vue"),
+                        meta: {
+                            groupsRequired: ["teacher"],
+                        },
                     },
                     {
                         path: "scores",
@@ -235,6 +296,7 @@ const routes = [{
         component: () =>
             import ("layouts/MainLayout.vue"),
         meta: {
+            name: "account",
             loginRequired: true,
             groupsRequired: ["dos", "head_teacher", "teacher"],
         },
@@ -248,6 +310,29 @@ const routes = [{
         path: "/:catchAll(.*)*",
         component: () =>
             import ("pages/ErrorNotFound.vue"),
+    },
+    // {
+    //     path: "/unauthorized",
+    //     component: () =>
+    //         import ("pages/ErrorUnauthorized.vue"),
+    //     meta: {
+    //         loginRequired: true,
+    //         groupsRequired: ["dos", "head_teacher", "teacher"],
+    //     },
+    // },
+
+    {
+        path: "/unauthorized",
+        component: () =>
+            import ("layouts/MainLayout.vue"),
+        meta: {
+            loginRequired: true,
+            groupsRequired: ["dos", "head_teacher", "teacher"],
+        },
+        children: [
+            { path: "", component: () =>
+                    import ("pages/ErrorUnauthorized.vue") },
+        ],
     },
 ];
 

@@ -4,13 +4,20 @@
     <q-card class="my-card no-borders" flat>
       <q-card-section horizontal>
         <q-card-section class="q-pt-xs">
+          <q-icon name="fa fa-lightbulb" size="xl" />
+        </q-card-section>
+        <q-card-section class="q-pt-xs">
           <div class="text-h5">
             {{ activity.name }}
           </div>
           <div>{{ classRoom?.name }}</div>
+          <div>{{ activity.subject_name }}</div>
+          <div v-if="activity.is_open"><q-icon name="fa fa-unlock" /> OPEN</div>
+          <div v-else><q-icon name="fa fa-lock" /> CLOSED</div>
         </q-card-section>
       </q-card-section>
-      <q-card-actions align="right">
+      <q-card-actions align="right" v-if="isActivityOwner && activity.is_open">
+        <q-btn color="primary" label="close" dense @click="closeActivity" />
         <q-btn
           color="negative"
           label="Delete"
@@ -19,6 +26,13 @@
           dense
           @click="deleteActivity(activity)"
         />
+      </q-card-actions>
+
+      <q-card-actions
+        align="right"
+        v-if="!activity.is_open && $userHasGroup('dos')"
+      >
+        <q-btn color="primary" label="open" dense @click="openActivity" />
       </q-card-actions>
 
       <q-separator />
@@ -44,6 +58,15 @@ export default {
   created() {
     this.getActivity();
   },
+
+  computed: {
+    isActivityOwner() {
+      const currentTeacher = this.$getState("user")?.teacher_id;
+      const activityTeacher = this.activity?.teacher;
+      return currentTeacher == activityTeacher;
+    },
+  },
+
   methods: {
     getActivity() {
       this.$setLoading(this, true);
@@ -80,6 +103,50 @@ export default {
                 this.$router.push("/activities");
               }
             });
+          }
+        });
+    },
+
+    closeActivity(activity) {
+      this.$refs.confirmDialog
+        .show({
+          title: "Confirm Close Activity",
+          message: `Are you sure you want to close this activity?`,
+          okButton: "Yes, close",
+        })
+        .then((res) => {
+          if (res) {
+            this.$setLoading(this, true);
+            this.$api
+              .put(`/activities/${this.$route.params.id}/close/`, {})
+              .then((response) => {
+                if (response) {
+                  this.activity = response.data;
+                  this.$setLoading(this, false);
+                }
+              });
+          }
+        });
+    },
+
+    openActivity(activity) {
+      this.$refs.confirmDialog
+        .show({
+          title: "Confirm Open Activity",
+          message: `Are you sure you want to open this activity?`,
+          okButton: "Yes, open",
+        })
+        .then((res) => {
+          if (res) {
+            this.$setLoading(this, true);
+            this.$api
+              .put(`/activities/${this.$route.params.id}/open/`, {})
+              .then((response) => {
+                if (response) {
+                  this.activity = response.data;
+                  this.$setLoading(this, false);
+                }
+              });
           }
         });
     },

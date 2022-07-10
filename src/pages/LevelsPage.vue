@@ -34,7 +34,7 @@
                   >
                     <q-btn
                       color="primary"
-                      icon-right="edit"
+                      icon-right="fa fa-eye"
                       no-caps
                       flat
                       dense
@@ -55,7 +55,7 @@
                   <router-link class="text-white" :to="`/levels/${level.id}`">
                     <q-btn
                       color="primary"
-                      icon-right="edit"
+                      icon-right="fa fa-eye"
                       no-caps
                       flat
                       dense

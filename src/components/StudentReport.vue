@@ -1,12 +1,5 @@
 <template>
   <div>
-    <h6 class="q-my-sm q-px-sm flex justify-between">
-      Student Report
-      <router-link :to="`/students/${$route.params.id}`">
-        <q-btn color="primary" label="Student Info" no-caps flat dense />
-      </router-link>
-    </h6>
-
     <div class="row">
       <div class="col-md-6 q-my-auto q-px-none">
         <q-radio
@@ -46,6 +39,14 @@
             <div class="q-my-auto">
               <q-btn label="Get" type="submit" color="primary" />
             </div>
+            <q-btn
+              class="q-ml-sm"
+              color="primary"
+              dense
+              icon="download"
+              flat
+              @click="downloadReport"
+            />
           </div>
         </q-form>
       </div>
@@ -53,6 +54,7 @@
     <div class="col q-pa-sm">
       <div v-if="subjectReports">
         <assessment-report
+          ref="assessmentReport"
           v-if="formData.report_type == 'assessment'"
           :report="computedReport"
           :subjectReports="subjectReports"
@@ -61,6 +63,7 @@
         />
 
         <activity-report
+          ref="activityReport"
           :report="computedReport"
           :subjectReports="subjectReports"
           :levelGroup="levelGroup"
@@ -90,7 +93,6 @@ export default {
       teacher: null,
       formData: {
         period: null,
-        grading_system: null,
         report_type: "assessment",
       },
     };
@@ -145,6 +147,23 @@ export default {
       this.$api.get(`/periods/`).then((response) => {
         this.periods = response.data;
       });
+    },
+
+    downloadReport() {
+      let columns = {};
+      this.$setLoading(this, true);
+      if (this.formData.report_type == "activity") {
+        columns = this.$refs.activityReport.cv;
+      } else {
+        columns = this.$refs.assessmentReport.columns;
+      }
+      this.formData["columns"] = columns;
+      this.$api
+        .post(`/reports/computed/${this.student.id}/download/`, this.formData)
+        .then((response) => {
+          window.open(response.data.file_url, "_blank");
+          this.$setLoading(this, false);
+        });
     },
   },
 };
