@@ -11,7 +11,7 @@ import axiosRetry from "axios-retry";
 
 var hostURL = "http://127.0.0.1:8000";
 var hostURL = "https://wex-erp.herokuapp.com";
-var baseURL = "https://mydemoapp.pythonanywhere.com/";
+var hostURL = "https://mydemoapp.pythonanywhere.com/";
 var apiURL = `${hostURL}/api`;
 var mediaURL = `${hostURL}/media`;
 
