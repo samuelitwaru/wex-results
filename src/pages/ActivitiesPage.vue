@@ -13,20 +13,11 @@
       </div>
 
       <div class="flex justify-between q-py-sm">
-        <!-- <q-btn-group push>
-          <q-btn
-            v-for="classRoom in classRooms"
-            :key="classRoom.id"
-            push
-            :label="classRoom.name"
-            color="primary"
-            disable
-          />
-        </q-btn-group> -->
         <div class="q-my-auto">Filter</div>
         <div class="col q-px-sm">
           <q-select
             outlined
+            dense
             v-model="formData.class_room"
             :option-label="(item) => `${item.name} ${item.stream || ''}`"
             option-value="id"
@@ -196,5 +187,4 @@ export default {
 };
 </script>
 
-<style>
-</style>
+<style></style>

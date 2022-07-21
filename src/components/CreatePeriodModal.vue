@@ -107,6 +107,11 @@
               </div>
             </div>
 
+            <q-checkbox
+              v-model="formData.is_promotional"
+              label="Promotional Period"
+            />
+
             <div class="flex justify-between">
               <div>
                 <q-btn flat color="primary" label="Cancel" v-close-popup />
@@ -132,25 +137,28 @@ export default {
         name: null,
         start: null,
         stop: null,
+        is_promotional: false,
       },
     };
   },
   methods: {
     createPeriod() {
+      this.$setLoading(this, true);
       this.$api.post(`/periods/`, this.formData).then((response) => {
         this.$emit("updatePeriod", response.data);
         this.medium = false;
         this.resetForm();
+        this.$setLoading(this, false);
       });
     },
     resetForm() {
       this.formData.name = null;
       this.formData.start = null;
       this.formData.stop = null;
+      this.formData.is_promotional = false;
     },
   },
 };
 </script>
 
-<style>
-</style>
+<style></style>

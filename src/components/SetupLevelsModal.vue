@@ -14,10 +14,25 @@
         <q-card-section class="q-pt-none">
           <q-form @submit="setupLevels" @reset="resetForm" class="q-gutter-md">
             <div>
-              <p>Select Levels</p>
-              <q-checkbox dense v-model="formData.P" label="Primary Level" />
-              <q-checkbox dense v-model="formData.O" label="Ordinary Level" />
-              <q-checkbox dense v-model="formData.A" label="Advanced Level" />
+              <p>Select levels that apply</p>
+              <q-checkbox
+                class="q-px-xs"
+                dense
+                v-model="formData.P"
+                label="Primary Level"
+              />
+              <q-checkbox
+                class="q-px-xs"
+                dense
+                v-model="formData.O"
+                label="Ordinary Level"
+              />
+              <q-checkbox
+                class="q-px-xs"
+                dense
+                v-model="formData.A"
+                label="Advanced Level"
+              />
             </div>
 
             <div class="flex justify-between">
@@ -75,5 +90,4 @@ export default {
 };
 </script>
 
-<style>
-</style>
+<style></style>

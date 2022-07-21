@@ -33,6 +33,7 @@
       </q-card-section>
 
       <q-separator />
+
       <div class="row q-pa-sm" v-if="periodLoaded">
         <div v-if="period.name" class="col-12">
           <q-card class="my-card" flat bordered>
@@ -59,26 +60,6 @@
 
                 <q-card-section v-if="$userHasGroup('dos')" bordered>
                   <div class="row items-center justify-end q-gutter-sm">
-                    <div v-if="period.is_promotional">
-                      <q-btn
-                        dense
-                        push
-                        color="primary"
-                        icon="fa fa-unlock"
-                        label="Open Promotions"
-                        v-if="!period.promotions_opened"
-                        @click="openPromotions"
-                      />
-                      <q-btn
-                        dense
-                        push
-                        color="primary"
-                        icon="fa fa-lock"
-                        label="Close Promotions"
-                        v-else
-                        @click="closePromotions"
-                      />
-                    </div>
                     <update-period-modal
                       :period="period"
                       @updatePeriod="period = $event"
@@ -86,6 +67,64 @@
                   </div>
                 </q-card-section>
 
+                <q-separator spaced />
+
+                <div v-if="period.is_promotional && $userHasGroup('dos')">
+                  <div class="row">
+                    <div class="col-6">
+                      Promotions
+                      <q-chip
+                        v-if="period.promotions_opened"
+                        color="green"
+                        text-color="white"
+                        size="sm"
+                        label="OPEN"
+                      />
+                      <q-chip
+                        v-else
+                        color="red"
+                        text-color="white"
+                        size="sm"
+                        label="CLOSED"
+                      />
+                    </div>
+                    <div
+                      class="col-6"
+                      v-if="period.is_promotional && $userHasGroup('dos')"
+                    >
+                      <div v-if="!period.promotions_opened">
+                        <q-btn
+                          dense
+                          flat
+                          color="primary"
+                          icon="fa fa-unlock"
+                          label="Open"
+                          @click="openPromotions"
+                        />
+                      </div>
+                      <div v-else>
+                        <q-btn
+                          dense
+                          flat
+                          color="primary"
+                          icon="fa fa-lock"
+                          label="Close"
+                          @click="closePromotions"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-6">
+                      <small class="text-grey">Pending</small> <br />
+                      <div>{{ pendingPromotionCount }} promotion(s)</div>
+                    </div>
+                    <div class="col-6">
+                      <small class="text-grey">Approved</small> <br />
+                      <div>{{ approvedPromotionCount }} promotion(s)</div>
+                    </div>
+                  </div>
+                </div>
                 <q-separator spaced />
                 <div class="text-h6">Registry</div>
 
@@ -146,6 +185,7 @@
             </q-card-section>
           </q-card>
         </div>
+
         <div v-else class="col-12" align="center">
           <p class="q-my-lg text-grey">No period was found</p>
           <create-period-modal @updatePeriod="period = $event" />
@@ -153,8 +193,6 @@
 
         <div class="col-12"></div>
       </div>
-
-      <q-card-actions> </q-card-actions>
     </q-card>
     <div>
       <q-inner-loading :showing="!entity">
@@ -194,6 +232,8 @@ export default defineComponent({
       subjectCount: 0,
       studentCount: 0,
       gradingSystemCount: 0,
+      pendingPromotionCount: 0,
+      approvedPromotionCount: 0,
       assessmentCount: 0,
       periodLoaded: false,
     };
@@ -254,6 +294,7 @@ export default defineComponent({
       this.$api.get(`/grading-systems/count/`).then((response) => {
         this.gradingSystemCount = response.data.count;
       });
+      this.getPromotionCounts();
     },
     imgLoadFailed(src) {
       this.entity.logo = null;
@@ -298,6 +339,20 @@ export default defineComponent({
                 }
               });
           }
+        });
+    },
+
+    getPromotionCounts() {
+      this.$api
+        .get(`/reports/count/?promotion_added=yes&promo_is_approved=0`)
+        .then((response) => {
+          this.pendingPromotionCount = response.data.count;
+        });
+
+      this.$api
+        .get(`/reports/count/?promotion_added=yes&promo_is_approved=1`)
+        .then((response) => {
+          this.approvedPromotionCount = response.data.count;
         });
     },
   },

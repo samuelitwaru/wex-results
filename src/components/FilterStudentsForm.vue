@@ -15,6 +15,15 @@
           map-options
         />
       </div>
+      <div class="col q-px-sm">
+        <q-input
+          v-model="formData.search"
+          outlined
+          dense
+          type="text"
+          label="Name"
+        />
+      </div>
       <div class="q-my-auto">
         <q-btn label="Filter" type="submit" color="primary" />
       </div>
@@ -29,6 +38,7 @@ export default {
       classRooms: [{ id: "", name: "All", stream: "" }],
       formData: {
         class_room: "",
+        search: null,
       },
     };
   },
@@ -53,5 +63,4 @@ export default {
 };
 </script>
 
-<style>
-</style>
+<style></style>

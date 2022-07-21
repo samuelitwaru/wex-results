@@ -152,25 +152,6 @@
             </template>
           </q-table>
         </div>
-        <div class="col-12 q-pa-sm">
-          <q-markup-table>
-            <thead>
-              <tr>
-                <th class="text-left">Subject Teachers</th>
-                <th class="text-right"></th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr v-for="teacher in subjectTeachers" :key="teacher.id">
-                <td class="text-left">{{ teacher.teacher_detail.name }}</td>
-                <td class="text-right">
-                  {{ teacher.class_room_detail.name }}
-                  {{ teacher.class_room_detail.stream }}
-                </td>
-              </tr>
-            </tbody>
-          </q-markup-table>
-        </div>
       </div>
     </q-card>
   </q-page>
@@ -187,7 +168,7 @@ export default {
       subject: {},
       classRooms: [],
       paper: null,
-      subjectTeachers: [],
+      // subjectTeachers: [],
       advancedLevelSelected: null,
       levelGroups: [],
       columns: [
@@ -216,7 +197,7 @@ export default {
     this.getSubject();
     this.getLevelGroups();
     this.getClassRooms();
-    this.getSubjectTeachers();
+    // this.getSubjectTeachers();
   },
   watch: {
     formData: {
@@ -256,15 +237,14 @@ export default {
       });
     },
 
-    getSubjectTeachers() {
-      this.$api
-        .get(
-          `/paper-allocations/?paper__subject=${this.$route.params.id}`
-        )
-        .then((response) => {
-          this.subjectTeachers = response.data;
-        });
-    },
+    // getSubjectTeachers() {
+    //   this.$api
+    //     .get(`/paper-allocations/?paper__subject=${this.$route.params.id}`)
+    //     .then((response) => {
+    //       console.log(response.data);
+    //       this.subjectTeachers = response.data;
+    //     });
+    // },
 
     updateSubject() {
       console.log(this.formData);
@@ -331,5 +311,4 @@ export default {
 };
 </script>
 
-<style>
-</style>
+<style></style>

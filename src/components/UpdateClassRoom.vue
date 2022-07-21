@@ -18,7 +18,7 @@
         </div>
 
         <div class="row">
-          <div class="col q-mr-xs">
+          <!-- <div class="col q-mr-xs">
             <q-select
               outlined
               v-model="formData.level"
@@ -29,7 +29,7 @@
               emit-value
               map-options
             />
-          </div>
+          </div> -->
           <div class="col q-mr-xs">
             <q-select
               outlined
@@ -120,5 +120,4 @@ export default {
 };
 </script>
 
-<style>
-</style>
+<style></style>

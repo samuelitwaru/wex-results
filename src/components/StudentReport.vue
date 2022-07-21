@@ -13,6 +13,14 @@
           val="assessment"
           label="Assessment Report"
         />
+        <q-btn
+          class="q-ml-sm"
+          color="primary"
+          dense
+          icon="download"
+          flat
+          @click="downloadReport"
+        />
       </div>
 
       <div class="col-md-6 q-px-sm">
@@ -39,14 +47,6 @@
             <div class="q-my-auto">
               <q-btn label="Get" type="submit" color="primary" />
             </div>
-            <q-btn
-              class="q-ml-sm"
-              color="primary"
-              dense
-              icon="download"
-              flat
-              @click="downloadReport"
-            />
           </div>
         </q-form>
       </div>
@@ -169,5 +169,4 @@ export default {
 };
 </script>
 
-<style>
-</style>
+<style></style>

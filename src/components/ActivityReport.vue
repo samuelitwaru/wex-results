@@ -40,8 +40,11 @@
               <span v-if="subjectReport.activities.length">1.</span>
               {{ subjectReport.activities[0]?.activity?.name }}
             </td>
-            <td :class="{ 'mini-col': !cv.score }">
+            <td :class="{ 'mini-col': !cv.mark }">
               {{ subjectReport.activities[0]?.mark }}
+            </td>
+            <td :class="{ 'mini-col': !cv.score }">
+              {{ subjectReport.activities[0]?.score }}
             </td>
             <td :class="{ 'mini-col': !cv.descriptor }">
               {{ subjectReport.activities[0]?.descriptor }}
@@ -74,8 +77,11 @@
             >
               {{ index + 2 }}. {{ activity?.activity?.name }}
             </td>
-            <td :class="{ 'mini-col': !cv.score }">
+            <td :class="{ 'mini-col': !cv.mark }">
               {{ activity?.mark }}
+            </td>
+            <td :class="{ 'mini-col': !cv.score }">
+              {{ activity?.score }}
             </td>
             <td :class="{ 'mini-col': !cv.descriptor }">
               {{ activity?.descriptor }}
@@ -100,6 +106,7 @@ export default {
         code: true,
         subject: true,
         competency: true,
+        mark: true,
         score: true,
         descriptor: true,
         skills: true,
@@ -112,5 +119,4 @@ export default {
 };
 </script>
 
-<style>
-</style>
+<style></style>

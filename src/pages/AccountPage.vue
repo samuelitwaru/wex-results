@@ -87,9 +87,6 @@ export default {
         this.$setLoading(this, true);
         this.$api.get(`/users/token/${token}/`).then((response) => {
           this.user = response.data;
-          // commit("setUser", response.data);
-          // var groups = response.data.groups;
-          // commit("setGroups", groups);
           this.$setLoading(this, false);
         });
       }
@@ -123,5 +120,4 @@ export default {
 };
 </script>
 
-<style>
-</style>
+<style></style>

@@ -1,8 +1,8 @@
 import { store } from "quasar/wrappers";
 import { createStore } from "vuex";
-import results from "./results";
 
 // import example from './module-example'
+import results from "./results";
 
 /*
  * If not building with SSR mode, you can

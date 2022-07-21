@@ -4,8 +4,13 @@
     <div class="q-pa-sm">
       <div class="flex justify-between q-py-sm">
         <label class="text-h6">Reports</label>
+        <download-class-room-report-form />
         <q-btn
-          v-if="period?.is_promotional && period?.promotions_opened"
+          v-if="
+            period?.is_promotional &&
+            period?.promotions_opened &&
+            isClassTeacher
+          "
           :disable="formData.reports.length == 0"
           color="primary"
           label="Promote"
@@ -95,6 +100,11 @@
               <td class="text-left" rowspan="2">
                 {{ report.student.first_name }} {{ report.student.last_name }}
                 {{ report.student.middle_name || "" }}
+                <br />
+                <div v-if="report.promo_to_class_room_detail?.id">
+                  <q-icon name="fa fa-award" />
+                  {{ report.promo_is_approved ? "APPROVED" : "PENDING" }}
+                </div>
               </td>
               <td class="text-right" rowspan="2">
                 {{ report.student.class_room_detail.name }}
@@ -200,8 +210,9 @@
 <script>
 import ConfirmDialog from "src/components/ConfirmDialog.vue";
 import FilterReportsForm from "src/components/FilterReportsForm.vue";
+import DownloadClassRoomReportForm from "./DownloadClassRoomReportForm.vue";
 export default {
-  components: { ConfirmDialog, FilterReportsForm },
+  components: { ConfirmDialog, FilterReportsForm, DownloadClassRoomReportForm },
   name: "ReportsPage",
   data() {
     return {
@@ -305,7 +316,9 @@ export default {
 
     getClassRooms() {
       this.$api
-        .get(`levels/${this.classRoom.level}/class-rooms/`)
+        .get(
+          `/class-rooms/?level__level_group__name=${this.classRoom.level_detail.level_group_name}&level__gt=${this.classRoom.level}`
+        )
         .then((response) => {
           this.classRooms = response.data;
         });
@@ -315,11 +328,14 @@ export default {
       this.$setLoading(this, true);
       const formData = {
         reports: this.formData.reports,
-        next_class_room: this.formData2.next_class_room,
+        promo_from_class_room: this.$route.params.id,
+        promo_to_class_room: this.formData2.next_class_room,
       };
-      this.$api.post(`/promotions/add/`, formData).then((response) => {
-        this.promotions = response.data;
-        this.$setLoading(this, false);
+      this.$api.post(`reports/promotions/add/`, formData).then((response) => {
+        if (response) {
+          this.getReports();
+          this.$setLoading(this, false);
+        }
       });
     },
 
@@ -333,5 +349,4 @@ export default {
 };
 </script>
 
-<style>
-</style>
+<style></style>

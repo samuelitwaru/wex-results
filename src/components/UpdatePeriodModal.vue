@@ -113,9 +113,6 @@
             </div>
           </q-form>
         </q-card-section>
-
-        <q-card-actions align="right" class="bg-white text-teal">
-        </q-card-actions>
       </q-card>
     </q-dialog>
   </div>
@@ -137,11 +134,12 @@ export default {
   },
   methods: {
     updatePeriod() {
+      this.$setLoading(this, true);
       this.$api
         .put(`/periods/${this.period.id}/`, this.formData)
         .then((response) => {
-          console.log(response.data);
           this.medium = false;
+          this.$setLoading(this, false);
           this.$emit("updatePeriod", response.data);
         });
     },
@@ -149,5 +147,4 @@ export default {
 };
 </script>
 
-<style>
-</style>
+<style></style>

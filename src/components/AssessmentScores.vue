@@ -11,12 +11,12 @@
         flat
         @click="downloadScores"
       />
-      <router-link
+      <!-- <router-link
         :to="`/assessments/${$route.params.id}`"
         v-if="isCurrentTeachersAssessment"
       >
         <q-btn color="primary" label="Detials" no-caps flat dense />
-      </router-link>
+      </router-link> -->
     </h6>
     <div bordered>
       <q-markup-table flat bordered>
@@ -159,5 +159,4 @@ export default {
 };
 </script>
 
-<style>
-</style>
+<style></style>

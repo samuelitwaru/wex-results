@@ -69,7 +69,7 @@
       </div>
 
       <div v-else align="center">
-        <p class="q-my-lg text-grey">No period was found</p>
+        <p class="q-my-lg text-grey">No levels found!</p>
         <setup-levels-modal @updateLevelGroups="levelGroups = $event" />
       </div>
     </div>
@@ -96,7 +96,6 @@ export default {
       this.$setLoading(this, true);
       this.$api.get(`/level-groups/`).then((response) => {
         this.levelGroups = response.data;
-        console.log(this.levelGroups);
         this.$setLoading(this, false);
       });
     },
@@ -104,5 +103,4 @@ export default {
 };
 </script>
 
-<style>
-</style>
+<style></style>

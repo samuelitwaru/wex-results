@@ -19,42 +19,42 @@ const api = axios.create({ baseURL: apiURL });
 axiosRetry(api, { retries: 1 });
 
 export default boot(({ app, router, store }) => {
-    // for use inside Vue files (Options API) through this.$axios and this.$api
+  // for use inside Vue files (Options API) through this.$axios and this.$api
 
-    app.config.globalProperties.$axios = axios;
-    // ^ ^ ^ this will allow you to use this.$axios (for Vue Options API form)
-    //       so you won't necessarily have to import axios in each vue file
+  app.config.globalProperties.$axios = axios;
+  // ^ ^ ^ this will allow you to use this.$axios (for Vue Options API form)
+  //       so you won't necessarily have to import axios in each vue file
 
-    api.interceptors.response.use(
-        (response) => response,
-        (error) => {
-            // whatever you want to do with the error
-            if (error.response.status == 403) {
-                store.dispatch("results/signOut");
-                router.push("/login");
-            } else if (error.response.status == 400) {
-                var data = error.response.data;
-                console.log(data);
-                var msg = "Bad request. Please check your input data.";
-                if (typeof data == "string") {
-                    msg = data;
-                } else if (typeof data == "object") {
-                    msg = Object.values(data);
-                    store.commit("results/updateFormDataErrors", data);
-                }
-                store.commit("results/updateAlertMsg", `${msg}`);
-                store.commit("results/updateLoadingState", false);
-                store.commit("results/updateAlertState", true);
-            } else if (error.response.status == 404) {
-                router.back();
-            }
+  api.interceptors.response.use(
+    (response) => response,
+    (error) => {
+      // whatever you want to do with the error
+      if (error.response.status == 403) {
+        store.dispatch("results/signOut");
+        router.push("/login");
+      } else if (error.response.status == 400) {
+        var data = error.response.data;
+        console.log(data);
+        var msg = "Bad request. Please check your input data.";
+        if (typeof data == "string") {
+          msg = data;
+        } else if (typeof data == "object") {
+          msg = Object.values(data);
+          store.commit("results/updateFormDataErrors", data);
         }
-    );
-    app.config.globalProperties.$api = api;
-    // ^ ^ ^ this will allow you to use this.$api (for Vue Options API form)
-    //       so you can easily perform requests against your app's API
-    app.config.globalProperties.$apiURL = apiURL;
-    app.config.globalProperties.$mediaURL = mediaURL;
+        store.commit("results/updateAlertMsg", `${msg}`);
+        store.commit("results/updateLoadingState", false);
+        store.commit("results/updateAlertState", true);
+      } else if (error.response.status == 404) {
+        router.back();
+      }
+    }
+  );
+  app.config.globalProperties.$api = api;
+  // ^ ^ ^ this will allow you to use this.$api (for Vue Options API form)
+  //       so you can easily perform requests against your app's API
+  app.config.globalProperties.$apiURL = apiURL;
+  app.config.globalProperties.$mediaURL = mediaURL;
 });
 
 export { api };

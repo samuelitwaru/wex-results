@@ -50,10 +50,16 @@
                 style="margin-left: 4px"
               />
             </td>
-            <td :class="{ 'mini-col': !cv.score }">
+            <td
+              :class="{ 'mini-col': !cv.score }"
+              v-if="levelGroup?.name == 'O'"
+            >
               {{ subjectReport.papers[0]?.score }}
             </td>
-            <td :class="{ 'mini-col': !cv.descriptor }">
+            <td
+              :class="{ 'mini-col': !cv.descriptor }"
+              v-if="levelGroup?.name == 'O'"
+            >
               {{ subjectReport.papers[0]?.descriptor }}
             </td>
             <td :class="{ 'mini-col': !cv.total }">
@@ -63,12 +69,19 @@
               {{ subjectReport.papers[0]?.average }}
             </td>
             <td
+              v-if="levelGroup?.name == 'A'"
+              :class="{ 'mini-col': !cv.aggregate }"
+            >
+              {{ $wrapAggr(subjectReport.papers[0]?.aggregate) }}
+            </td>
+            <td
               :class="{ 'mini-col': !cv.subjectAverage }"
               :rowspan="subjectReport.papers.length"
             >
               {{ subjectReport.average }}
             </td>
             <td
+              v-if="levelGroup?.name == 'O'"
               :class="{ 'mini-col': !cv.aggregates }"
               :rowspan="subjectReport.papers.length"
             >
@@ -126,8 +139,16 @@
                 style="margin-left: 4px"
               />
             </td>
-            <td :class="{ 'mini-col': !cv.score }">{{ paper.score }}</td>
-            <td :class="{ 'mini-col': !cv.descriptor }">
+            <td
+              :class="{ 'mini-col': !cv.score }"
+              v-if="levelGroup?.name == 'O'"
+            >
+              {{ paper.score }}
+            </td>
+            <td
+              :class="{ 'mini-col': !cv.descriptor }"
+              v-if="levelGroup?.name == 'O'"
+            >
               {{ paper.descriptor }}
             </td>
             <td
@@ -147,6 +168,16 @@
               "
             >
               {{ paper.average }}
+            </td>
+            <td
+              v-if="levelGroup?.name == 'A'"
+              :class="{ 'mini-col': !cv.aggregate }"
+              style="
+                border-left: 1px solid rgba(0, 0, 0, 0.12);
+                padding-left: 0.45rem;
+              "
+            >
+              {{ $wrapAggr(paper.aggregate) }}
             </td>
           </tr>
         </template>
@@ -282,6 +313,7 @@ export default {
         descriptor: true,
         total: true,
         average: true,
+        aggregate: true,
         subjectAverage: true,
         aggregates: true,
         grade: true,
@@ -315,6 +347,11 @@ export default {
       if (this.levelGroup?.name == "O") {
         delete this.columns["grade"];
         delete this.columns["points"];
+        delete this.columns["aggregate"];
+      } else if (this.levelGroup?.name == "A") {
+        delete this.columns["score"];
+        delete this.columns["descriptor"];
+        delete this.columns["aggregates"];
       }
       return this.columns;
     },
@@ -352,5 +389,4 @@ export default {
 };
 </script>
 
-<style>
-</style>
+<style></style>

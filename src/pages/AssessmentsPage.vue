@@ -35,7 +35,7 @@
               <q-btn color="primary" icon-right="edit" no-caps flat dense />
             </router-link> -->
             |
-            <router-link :to="`/assessments/${props.key}/scores`">
+            <router-link :to="`/assessments/${props.key}`">
               <q-btn color="primary" label="SCORES" no-caps flat dense />
             </router-link>
           </q-td>
@@ -138,5 +138,4 @@ export default {
 };
 </script>
 
-<style>
-</style>
+<style></style>

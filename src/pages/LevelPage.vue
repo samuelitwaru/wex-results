@@ -16,11 +16,7 @@
 
       <q-separator />
 
-      <set-level-papers
-        :level="level"
-        :subjects="subjects"
-        @updateLevel="level = $event"
-      />
+      <set-level-papers :level="level" @updateLevel="level = $event" />
     </q-card>
   </q-page>
 </template>
@@ -35,9 +31,8 @@ export default {
     return {
       level: null,
       levelGroup: null,
-      teachers: [],
-      subjects: [],
-      papers: [],
+      // subjects: [],
+      // papers: [],
 
       formData: {
         rank: null,
@@ -47,8 +42,8 @@ export default {
   },
   created() {
     this.getLevel();
-    this.getSubjects();
-    this.getPapers();
+    // this.getSubjects();
+    // this.getPapers();
   },
   methods: {
     getLevel() {
@@ -69,36 +64,35 @@ export default {
       });
     },
 
-    addLevelSubjects() {
-      this.$api
-        .put(`/levels/${this.$route.params.id}/subjects/`, [1, 2])
-        .then((response) => {
-          this.level = response.data;
-          console.log(response.data);
-        });
-    },
+    // getSubjects() {
+    //   this.$api.get(`/subjects/`).then((response) => {
+    //     this.subjects = response.data;
+    //   });
+    // },
 
-    getSubjects() {
-      this.$api.get(`/subjects/`).then((response) => {
-        this.subjects = response.data;
-      });
-    },
+    // getPapers() {
+    //   this.$api.get(`/papers/`).then((response) => {
+    //     this.papers = response.data;
+    //   });
+    // },
+    // addLevelSubjects() {
+    //   this.$api
+    //     .put(`/levels/${this.$route.params.id}/subjects/`, [1, 2])
+    //     .then((response) => {
+    //       this.level = response.data;
+    //       console.log(response.data);
+    //     });
+    // },
 
-    getPapers() {
-      this.$api.get(`/papers/`).then((response) => {
-        this.papers = response.data;
-      });
-    },
-
-    updateLevel() {
-      this.$setLoading(this, true);
-      this.$api
-        .put(`/levels/${this.level?.id}/`, this.formData)
-        .then((response) => {
-          this.level = response.data;
-          this.$setLoading(this, false);
-        });
-    },
+    // updateLevel() {
+    //   this.$setLoading(this, true);
+    //   this.$api
+    //     .put(`/levels/${this.level?.id}/`, this.formData)
+    //     .then((response) => {
+    //       this.level = response.data;
+    //       this.$setLoading(this, false);
+    //     });
+    // },
 
     // deleteLevel(level) {
     //   this.$refs.confirmDialog
@@ -123,5 +117,4 @@ export default {
 };
 </script>
 
-<style>
-</style>
+<style></style>

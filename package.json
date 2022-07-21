@@ -1,12 +1,13 @@
 {
   "name": "wex-results",
   "version": "0.0.1",
-  "description": "Client app for results wex-erp",
-  "productName": "Wex Reults",
-  "author": "samuelitwaru <samuelitwaru@gmail.com>",
+  "description": "Wex results client application",
+  "productName": "Wex App",
+  "author": "samuelitwaru",
   "private": true,
   "scripts": {
     "lint": "eslint --ext .js,.vue ./",
+    "format": "prettier --write \"**/*.{js,vue,scss,html,md,json}\" --ignore-path .gitignore",
     "test": "echo \"No test specified\" && exit 0"
   },
   "dependencies": {
@@ -26,12 +27,10 @@
     "@babel/eslint-parser": "^7.13.14",
     "@quasar/app-webpack": "^3.0.0",
     "eslint": "^8.10.0",
-    "eslint-config-standard": "^17.0.0-1",
-    "eslint-plugin-import": "^2.19.1",
-    "eslint-plugin-n": "^14.0.0",
-    "eslint-plugin-promise": "^6.0.0",
-    "eslint-plugin-vue": "^8.5.0",
-    "eslint-webpack-plugin": "^3.1.1"
+    "eslint-config-prettier": "^8.1.0",
+    "eslint-plugin-vue": "^9.0.0",
+    "eslint-webpack-plugin": "^3.1.1",
+    "prettier": "^2.5.1"
   },
   "browserslist": [
     "last 10 Chrome versions",

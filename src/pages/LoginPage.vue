@@ -23,7 +23,7 @@
 </template>
 
 <script>
-import LoginForm from "src/router/LoginForm.vue";
+import LoginForm from "src/components/LoginForm.vue";
 export default {
   components: { LoginForm },
   // name: 'PageName',

@@ -50,7 +50,7 @@
               <q-btn
                 round
                 dense
-                v-if="user?.class_rooms"
+                v-if="user?.class_rooms?.length"
                 class="glossy"
                 label="C"
               >
@@ -125,5 +125,4 @@ export default {
 };
 </script>
 
-<style>
-</style>
+<style></style>

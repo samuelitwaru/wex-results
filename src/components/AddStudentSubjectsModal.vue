@@ -1,6 +1,6 @@
 <template>
   <div>
-    <q-btn icon="add" color="primary" flat dense @click="modal = true" />
+    <q-btn icon="edit" color="primary" flat dense @click="modal = true" />
     <q-dialog v-model="modal">
       <q-card style="width: 700px; max-width: 80vw">
         <div class="q-pa-md">
@@ -56,7 +56,6 @@ export default {
 
   watch: {
     level(newValue, oldValue) {
-      console.log("doing");
       this.getLevelGroupSubjects(newValue.level_group);
     },
   },
@@ -68,19 +67,10 @@ export default {
 
         this.getLevelGroupSubjects(this.level.level_group);
       }
-      // this.getLevel();
     }
   },
 
   methods: {
-    // getLevel() {
-    //   this.$api
-    //     .get(`/levels/${this.student.class_room_detail.level}/`)
-    //     .then((response) => {
-    //       this.level = response.data;
-    //       this.getLevelGroupSubjects(this.level.level_group);
-    //     });
-    // },
     getLevelGroupSubjects(levelGroupId) {
       this.$api
         .get(`/subjects/?level_group=${levelGroupId}&is_selectable=1`)
@@ -112,6 +102,4 @@ export default {
 };
 </script>
 
-<style>
-</style>
-
+<style></style>

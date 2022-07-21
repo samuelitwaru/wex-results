@@ -1,8 +1,9 @@
 import { boot } from "quasar/wrappers";
 import { Notify } from "quasar";
-// import store from "src/store";
+import store from "src/store";
 
 export default boot(({ app, router, store }) => {
+
     app.config.globalProperties.$groupBy = (array, field) => {
         return array.reduce((r, a) => {
             r[a[field]] = r[field] || [];

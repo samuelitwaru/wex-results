@@ -57,7 +57,10 @@
                   required
                 />
               </div>
-              <div class="col q-ml-xs q-my-auto">
+              <div
+                class="col q-ml-xs q-my-auto"
+                v-if="!user?.groups?.map((grp) => grp.name).includes('dos')"
+              >
                 <q-checkbox
                   v-model="formData.is_active"
                   :label="`Use is ${formData.is_active ? '' : 'NOT'} active`"
@@ -118,7 +121,6 @@ export default {
         this.formData.email = this.user.email;
         this.formData.is_active = this.user.is_active;
         this.formData.groups = this.user.groups.map((group) => group.id);
-        console.log(this.formData.groups);
         this.$setLoading(this, false);
       });
     },
@@ -131,7 +133,6 @@ export default {
 
     updateUser() {
       this.formData["username"] = this.formData.email;
-      console.log(this.formData);
       this.$setLoading(this, true);
       this.$api
         .put(`/users/${this.user.id}/`, this.formData)
@@ -164,5 +165,4 @@ export default {
 };
 </script>
 
-<style>
-</style>
+<style></style>

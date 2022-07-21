@@ -31,48 +31,12 @@
           <div>{{ teacher.initials }}</div>
         </q-card-section>
       </q-card-section>
-      <!-- <div class="q-pa-sm" align="right">
-        <q-btn
-          color="negative"
-          label="Delete"
-          no-caps
-          flat
-          dense
-          @click="deleteTeacher(teacher)"
-        />
-      </div> -->
       <q-separator class="q-my-sm" />
 
       <div class="row">
-        <!-- <div class="col-12 q-pa-sm">
-          <strong>Profile</strong>
-          <q-form @submit="updateTeacher" class="q-gutter-md">
-            <q-input
-              v-model="formData.name"
-              type="text"
-              label="Name"
-              required
-            />
-
-            <q-input
-              v-model="formData.initials"
-              type="text"
-              label="Initials"
-              required
-            />
-
-            <div align="right">
-              <q-btn label="update" type="submit" color="primary" />
-            </div>
-          </q-form>
-        </div> -->
         <div class="col-12 q-pa-sm">
           <div class="flex justify-between q-py-sm">
-            <strong class="q-my-auto">Class Subject Allocations</strong>
-            <create-teacher-class-room-paper-modal
-              :teacher="teacher"
-              @addTeacherClassRoomPaper="teacherClassRoomPapers.push($event)"
-            />
+            <strong class="q-my-auto">Paper Allocations</strong>
           </div>
           <q-table
             :rows="teacherClassRoomPapers"
@@ -80,31 +44,8 @@
             row-key="id"
             :rows-per-page-options="[50]"
           >
-            <template v-slot:body-cell-action="props">
-              <q-td :props="props">
-                <update-teacher-class-room-paper-modal
-                  :teacherClassRoomPaper="props.row"
-                  :teacher="teacher"
-                  @replaceTeacherClassRoomPaper="
-                    this.replaceTeacherClassRoomPaper($event)
-                  "
-                />
-                <q-btn
-                  color="negative"
-                  icon-right="delete"
-                  no-caps
-                  flat
-                  dense
-                  @click="deleteTeacherClassRoomPaper(props.key)"
-                />
-              </q-td>
-            </template>
           </q-table>
         </div>
-        <!-- <div class="col-12 q-pa-sm">
-          <strong>User</strong>
-          <set-user-form :user="teacher.user" />
-        </div> -->
       </div>
     </q-card>
   </q-page>
@@ -112,16 +53,12 @@
 
 <script>
 import ConfirmDialog from "src/components/ConfirmDialog.vue";
-import UpdateTeacherClassRoomPaperModal from "src/components/UpdateTeacherClassRoomPaperModal.vue";
-import CreateTeacherClassRoomPaperModal from "src/components/CreateTeacherClassRoomPaperModal.vue";
 import UploadImageModal from "src/components/UploadImageModal.vue";
 import SetUserForm from "src/components/SetUserForm.vue";
 import CropImageUploader from "src/components/CropImageUploader.vue";
 export default {
   components: {
     ConfirmDialog,
-    UpdateTeacherClassRoomPaperModal,
-    CreateTeacherClassRoomPaperModal,
     UploadImageModal,
     SetUserForm,
     CropImageUploader,
@@ -151,10 +88,6 @@ export default {
           label: "Subject",
           align: "left",
           format: (data, row) => `${data.subject_name} / ${data.number}`,
-        },
-        {
-          name: "action",
-          label: "Action",
         },
       ],
     };
@@ -206,7 +139,7 @@ export default {
 
     getTeacherClassRoomPapers() {
       this.$api
-        .get(`/teacher-class-room-papers/?teacher=${this.$route.params.id}`)
+        .get(`/paper-allocations/?teacher=${this.$route.params.id}`)
         .then((response) => {
           this.teacherClassRoomPapers = response.data;
         });
@@ -247,5 +180,4 @@ export default {
 };
 </script>
 
-<style>
-</style>
+<style></style>

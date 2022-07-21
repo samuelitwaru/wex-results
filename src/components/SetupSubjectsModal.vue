@@ -51,6 +51,7 @@
               </tbody>
             </q-markup-table>
           </div>
+          <div v-else class="text-grey text-center">No levels found!</div>
         </q-card-section>
 
         <q-card-actions align="right" class="bg-white text-teal">
@@ -118,6 +119,4 @@ export default {
 };
 </script>
 
-<style>
-</style>
-
+<style></style>

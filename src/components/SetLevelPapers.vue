@@ -1,6 +1,5 @@
 <template>
   <div>
-    <!-- <q-card style="width: 700px; max-width: 80vw"> -->
     <div class="q-pa-md">
       <strong>Subject Papers</strong>
       <q-markup-table flat bordered>
@@ -64,7 +63,6 @@
         </tbody>
       </q-markup-table>
     </div>
-    <!-- </q-card> -->
   </div>
 </template>
 
@@ -125,5 +123,4 @@ export default {
 };
 </script>
 
-<style>
-</style>
+<style></style>

@@ -78,6 +78,7 @@
             </td>
             <td class="text-left">
               <select
+                class="js-example-basic-single"
                 :name="`alloc${alloc.id}`"
                 :id="`alloc${alloc.id}`"
                 @change="updatePaperAllocation($event, alloc)"
@@ -204,5 +205,4 @@ export default {
 };
 </script>
 
-<style>
-</style>
+<style></style>

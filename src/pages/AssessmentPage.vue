@@ -25,12 +25,16 @@
           <div v-else><q-icon name="fa fa-lock" /> CLOSED</div>
         </q-card-section>
       </q-card-section>
-      <q-card-actions
-        align="right"
-        v-if="isCurrentTeachersAssessment && assessment.is_open"
-      >
-        <q-btn color="primary" label="close" dense @click="closeAssessment" />
+      <q-card-actions align="right">
         <q-btn
+          v-if="isCurrentTeachersAssessment && assessment.is_open"
+          color="primary"
+          label="close"
+          dense
+          @click="closeAssessment"
+        />
+        <q-btn
+          v-if="$userHasGroup('dos')"
           color="negative"
           label="Delete"
           no-caps
@@ -154,5 +158,4 @@ export default {
 };
 </script>
 
-<style>
-</style>
+<style></style>
