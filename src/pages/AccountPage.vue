@@ -23,8 +23,8 @@
       </q-card-section>
       <q-separator />
 
-      <div class="row">
-        <div class="col-12 q-pa-sm">
+      <div class="flex justify-around">
+        <div class="col-md-6 q-pa-sm">
           <strong>Change Password</strong>
           <q-form @submit="updatePassword" class="q-gutter-md">
             <q-input
@@ -52,10 +52,34 @@
               </div>
             </div>
 
-            <div align="right">
+            <div>
               <q-btn label="Submit" type="submit" color="primary" />
             </div>
           </q-form>
+        </div>
+        <div class="col-md-3 q-pa-sm" align="center">
+          <strong>Your Signature</strong>
+          <q-card-section style="min-width: 100px; height: 100px">
+            <q-img
+              v-if="user2?.signature"
+              class="rounded-borders hoverImg"
+              alt="~/assets/profile-placeholder.jpg"
+              :src="`${$mediaURL}/${user2?.signature}?r=${Math.random()}`"
+              style="width: 100px; hieght: 100px"
+              @error="imgLoadFailed"
+            >
+              <template v-slot:loading>
+                <div>
+                  <q-spinner-ios />
+                </div>
+              </template>
+            </q-img>
+            <q-icon v-else name="edit" size="xl" />
+            <crop-image-uploader
+              :url="`${$apiURL}/users/${user2?.id}/signature/upload/`"
+              @updateObject="user2 = $event"
+            />
+          </q-card-section>
         </div>
       </div>
     </q-card>
@@ -63,11 +87,14 @@
 </template>
 
 <script>
+import CropImageUploader from "src/components/CropImageUploader.vue";
+
 export default {
-  components: {},
+  components: { CropImageUploader },
   data() {
     return {
       user: {},
+      user2: null,
       userClassRoomPapers: [],
       groups: [],
       formData: {
@@ -78,18 +105,25 @@ export default {
     };
   },
   created() {
-    this.getUser();
+    this.getUserByToken();
   },
   methods: {
-    getUser() {
+    getUserByToken() {
       const token = localStorage.getItem("token");
       if (token) {
         this.$setLoading(this, true);
         this.$api.get(`/users/token/${token}/`).then((response) => {
           this.user = response.data;
+          this.getUser();
           this.$setLoading(this, false);
         });
       }
+    },
+
+    getUser() {
+      this.$api.get(`/users/${this.user.user_id}/`).then((response) => {
+        this.user2 = response.data;
+      });
     },
 
     getGroups() {
@@ -115,6 +149,10 @@ export default {
       this.formData.current_password = null;
       this.formData.new_password = null;
       this.formData.confirm_password = null;
+    },
+
+    imgLoadFailed(src) {
+      this.user.signature = null;
     },
   },
 };

@@ -119,7 +119,6 @@ export default {
         .then((response) => {
           if (response) {
             this.classRoom = response.data;
-            console.log(this.classRoom);
             this.levelGroupName = this.classRoom.level_detail.level_group_name;
           }
         });

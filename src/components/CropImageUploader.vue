@@ -130,7 +130,6 @@ export default {
   created() {},
   methods: {
     uploadSuccess(jsonData, field) {
-      console.log("success");
       this.$emit("updateObject", jsonData);
     },
     cropImage() {
@@ -241,4 +240,3 @@ input[type="file"] {
   width: 90%;
 }
 </style>
-

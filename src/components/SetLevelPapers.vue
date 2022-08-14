@@ -46,15 +46,6 @@
                   >
                     <q-icon name="check" />
                   </span>
-                  <!-- <input
-                      type="checkbox"
-                      @change="addOrRemovePaper"
-                      :name="paper.id"
-                      :id="`check${paper.id}`"
-                      :checked="
-                        level.papers.findIndex((item) => item == paper.id) != -1
-                      "
-                    /> -->
                   <label :for="`check${paper.id}`"> P{{ paper.number }} </label>
                 </div>
               </div>
@@ -71,7 +62,6 @@ export default {
   props: ["level"],
   data() {
     return {
-      // modal: false,
       subjects: [],
       levelPapers: [],
     };

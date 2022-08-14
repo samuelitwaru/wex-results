@@ -28,7 +28,7 @@
               </div>
             </div>
             <div class="row">
-              <div class="col-12 q-mr-xs">
+              <div class="col q-mr-xs">
                 <q-input
                   v-model="formData.email"
                   type="email"
@@ -36,8 +36,19 @@
                   required
                 />
               </div>
-              <div class="col-12 q-ml-xs"></div>
+              <div class="col q-ml-xs">
+                <q-input
+                  v-model="formData.telephone"
+                  type="text"
+                  label="Telephone"
+                  required
+                  mask="phone"
+                  unmasked-value
+                  hint="eg (078) 190 - 2516"
+                />
+              </div>
             </div>
+            <div class="col-12 q-ml-xs"></div>
             <div>
               <div>Roles</div>
               <q-checkbox
@@ -112,11 +123,11 @@ export default {
       this.formData.last_name = null;
       this.formData.username = null;
       this.formData.email = null;
+      this.formData.telephone = null;
       this.formData.groups = [];
     },
   },
 };
 </script>
 
-<style>
-</style>
+<style></style>

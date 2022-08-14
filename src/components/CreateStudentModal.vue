@@ -19,7 +19,7 @@
                   v-model="formData.first_name"
                   type="text"
                   label="First Name"
-                  required
+                  :rules="[$required]"
                 />
               </div>
               <div class="col q-ml-xs">
@@ -28,6 +28,7 @@
                   type="text"
                   label="Last Name"
                   required
+                  :rules="[$required]"
                 />
               </div>
             </div>
@@ -46,7 +47,7 @@
               </div>
             </div>
 
-            <div>
+            <!-- <div>
               <label class="text-grey-8">Date of Birth</label>
               <div
                 class="row q-pa-xs rounded-borders"
@@ -88,19 +89,45 @@
                   </q-btn>
                 </div>
               </div>
-            </div>
+            </div> -->
 
-            <q-select
-              v-if="!class_room"
-              outlined
-              v-model="formData.class_room"
-              :option-label="(item) => `${item.name} ${item.stream || ''}`"
-              option-value="id"
-              :options="classRooms"
-              label="Class"
-              emit-value
-              map-options
-            />
+            <div class="row">
+              <div class="col q-mr-xs">
+                <q-select
+                  v-if="!class_room"
+                  outlined
+                  v-model="formData.class_room"
+                  :option-label="(item) => `${item.name} ${item.stream || ''}`"
+                  option-value="id"
+                  :options="classRooms"
+                  label="Class"
+                  emit-value
+                  map-options
+                  :rules="[$required]"
+                >
+                  <template v-slot:no-option>
+                    <q-item>
+                      <q-item-section class="text-grey">
+                        No results
+                      </q-item-section>
+                    </q-item>
+                  </template>
+                </q-select>
+              </div>
+              <div class="col q-ml-xs">
+                <q-select
+                  outlined
+                  v-model="formData.nationality"
+                  :option-label="(item) => `${item[1]}`"
+                  option-value="0"
+                  :options="nationalities"
+                  label="Nationality"
+                  emit-value
+                  map-options
+                  :rules="[$required]"
+                />
+              </div>
+            </div>
 
             <div class="flex justify-between">
               <div>
@@ -136,6 +163,7 @@ export default {
   },
   data() {
     return {
+      nationalities: [],
       formData: {
         first_name: null,
         last_name: null,
@@ -143,11 +171,13 @@ export default {
         gender: null,
         dob: null,
         class_room: null,
+        nationality: "Uganda",
       },
     };
   },
   created() {
     this.getClassRooms();
+    this.getNationalities();
     this.formData.class_room = this.class_room;
   },
   watch: {
@@ -173,17 +203,23 @@ export default {
       });
     },
 
+    getNationalities() {
+      this.$api.get(`/core/nationalities/`).then((response) => {
+        this.nationalities = response.data;
+      });
+    },
+
     resetForm() {
       this.formData.first_name = null;
       this.formData.last_name = null;
       this.formData.middle_name = null;
       this.formData.gender = null;
-      this.formData.dob = null;
+      // this.formData.dob = null;
       this.formData.class_room = null;
+      this.formData.nationality = null;
     },
   },
 };
 </script>
 
-<style>
-</style>
+<style></style>

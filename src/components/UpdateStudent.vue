@@ -68,16 +68,35 @@
         </div>
       </div>
 
-      <q-select
-        outlined
-        v-model="formData.class_room"
-        :option-label="(item) => `${item.name} ${item.stream || ''}`"
-        option-value="id"
-        :options="classRooms"
-        label="Class"
-        emit-value
-        map-options
-      />
+      <div class="row">
+        <div class="col q-mr-xs">
+          <q-select
+            v-if="!class_room"
+            outlined
+            v-model="formData.class_room"
+            :option-label="(item) => `${item.name} ${item.stream || ''}`"
+            option-value="id"
+            :options="classRooms"
+            label="Class"
+            emit-value
+            map-options
+            :rules="[$required]"
+          />
+        </div>
+        <div class="col q-ml-xs">
+          <q-select
+            outlined
+            v-model="formData.nationality"
+            :option-label="(item) => `${item[1]}`"
+            option-value="0"
+            :options="nationalities"
+            label="Nationality"
+            emit-value
+            map-options
+            :rules="[$required]"
+          />
+        </div>
+      </div>
 
       <div align="right">
         <q-btn label="update" type="submit" color="primary" />
@@ -136,6 +155,8 @@ export default {
   data() {
     return {
       classRooms: [],
+      class_room: null,
+      nationalities: [],
       student: null,
       level: null,
       compulsorySubjects: [],
@@ -146,11 +167,13 @@ export default {
         gender: null,
         dob: null,
         class_room: null,
+        nationality: null,
       },
     };
   },
   created() {
     this.getClassRooms();
+    this.getNationalities();
     this.getStudent();
   },
   methods: {
@@ -158,7 +181,6 @@ export default {
       this.$setLoading(this, true);
       this.$api.get(`/students/${this.$route.params.id}/`).then((response) => {
         this.student = response.data;
-        console.log(this.student);
         this.$emit("updateStudent", response.data);
         this.formData.first_name = this.student?.first_name;
         this.formData.last_name = this.student?.last_name;
@@ -166,6 +188,7 @@ export default {
         this.formData.gender = this.student?.gender;
         this.formData.dob = this.student?.dob;
         this.formData.class_room = this.student?.class_room;
+        this.formData.nationality = this.student?.nationality;
         this.$setLoading(this, false);
         this.getLevel();
       });
@@ -201,9 +224,14 @@ export default {
         this.classRooms = response.data;
       });
     },
+
+    getNationalities() {
+      this.$api.get(`/core/nationalities/`).then((response) => {
+        this.nationalities = response.data;
+      });
+    },
   },
 };
 </script>
 
-<style>
-</style>
+<style></style>

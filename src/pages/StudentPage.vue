@@ -30,9 +30,9 @@
             {{ student.middle_name }}
           </div>
           <div>
-            {{ student.dob }}
+            {{ student.index_no }}
           </div>
-          <div v-if="student.class_room">
+          <div v-if="student?.class_room">
             {{ student.class_room_detail.name }}
             {{ student.class_room_detail.stream }}
           </div>
@@ -40,6 +40,7 @@
       </q-card-section>
       <q-card-actions align="right">
         <q-btn
+          v-if="$userHasGroup('dos')"
           color="negative"
           label="Delete"
           no-caps

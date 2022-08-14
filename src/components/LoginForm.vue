@@ -1,6 +1,12 @@
 <template>
   <q-form @submit="login" @reset="resetForm" class="q-gutter-md">
-    <q-input v-model="formData.username" type="email" label="Email" required />
+    <q-input
+      v-model="formData.username"
+      type="text"
+      label="Email or Telephone number"
+      hint="e.g example@gmail.com or 0781902516"
+      required
+    />
     <q-input
       v-model="formData.password"
       type="password"
@@ -46,13 +52,13 @@ export default {
           const user = response.data.user;
           const token = response.data.token;
           const groups = user.groups;
-          if (
-            groups &&
-            !groups.some((group) => acceptedGoups.includes(group))
-          ) {
+          const userAccepted = groups.some((group) =>
+            acceptedGoups.includes(group)
+          );
+          if (!userAccepted) {
             this.$store.dispatch("results/signOut");
-            this.$router.push("/unauthorized");
-            return;
+            window.location = "/login";
+            // return;
           } else {
             this.$store.commit("results/setToken", token);
             this.$store.commit("results/setUser", user);
@@ -73,5 +79,4 @@ export default {
 };
 </script>
 
-<style>
-</style>
+<style></style>

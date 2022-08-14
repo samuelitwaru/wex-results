@@ -71,7 +71,7 @@ export default {
           format: (data, row) =>
             `${data} ${row.last_name} ${row.middle_name || ""}`,
         },
-        { name: "dob", label: "Date of birth", field: "dob", align: "left" },
+        { name: "index_no", label: "Number", field: "index_no", align: "left" },
         {
           name: "class_room",
           label: "Class room",
@@ -127,5 +127,4 @@ export default {
 };
 </script>
 
-<style>
-</style>
+<style></style>

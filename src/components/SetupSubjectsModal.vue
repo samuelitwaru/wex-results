@@ -87,7 +87,6 @@ export default {
       subject.level_group = levelGroup.id;
       this.$api.post(`/subjects/`, subject).then((response) => {
         this.$emit("addSubject", response.data);
-        // this.medium = false;
         this.$setLoading(this, false);
         this.getSystemSubjects();
       });

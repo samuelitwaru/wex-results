@@ -34,7 +34,9 @@
             <td class="text-left">
               {{ user.first_name }} {{ user.last_name }}
               <br />
-              <small class="text-grey">{{ user.email }}</small>
+              <small class="text-grey"
+                >{{ user.email }} {{ user.telephone }}</small
+              >
             </td>
             <td class="text-left">
               <q-icon v-if="user.is_active" name="check" size="sm" />

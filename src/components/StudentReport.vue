@@ -62,7 +62,7 @@
           :teacher="teacher"
         />
 
-        <activity-report
+        <competence-report
           ref="activityReport"
           :report="computedReport"
           :subjectReports="subjectReports"
@@ -78,8 +78,9 @@
 <script>
 import ActivityReport from "./ActivityReport.vue";
 import AssessmentReport from "./AssessmentReport.vue";
+import CompetenceReport from "./CompetenceReport.vue";
 export default {
-  components: { AssessmentReport, ActivityReport },
+  components: { AssessmentReport, ActivityReport, CompetenceReport },
   data() {
     return {
       student: {},

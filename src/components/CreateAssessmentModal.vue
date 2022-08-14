@@ -14,6 +14,18 @@
             class="q-gutter-md"
           >
             <div>
+              <label class="text-grey-8">Category</label>
+              <div>
+                <q-radio
+                  v-for="cat in assessmentCategories"
+                  v-model="formData.assessment_category"
+                  :val="cat.id"
+                  :label="cat.name"
+                />
+              </div>
+            </div>
+
+            <div>
               <label class="text-grey-8">Date</label>
               <div
                 class="row q-pa-xs rounded-borders"
@@ -124,12 +136,14 @@ export default {
     return {
       teachers: [],
       classRooms: [],
+      assessmentCategories: [],
       papers: [],
       formData: {
         date: null,
         teacher: null,
         class_room: null,
         paper: null,
+        assessment_category: null,
       },
     };
   },
@@ -137,6 +151,7 @@ export default {
     this.getTeachers();
     this.getClassRooms();
     this.getPapers();
+    this.getAssessmentCategories();
     this.formData.teacher = this.teacher;
   },
   watch: {
@@ -177,6 +192,12 @@ export default {
       });
     },
 
+    getAssessmentCategories() {
+      this.$api.get(`/assessment-categories/`).then((response) => {
+        this.assessmentCategories = response.data;
+      });
+    },
+
     getPapers(args = {}) {
       var queryString = this.$buildURLQuery(args);
       this.$api.get(`${this.papersUrl}?${queryString}`).then((response) => {
@@ -212,5 +233,4 @@ export default {
 };
 </script>
 
-<style>
-</style>
+<style></style>

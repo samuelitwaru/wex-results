@@ -31,9 +31,6 @@ export default {
     return {
       level: null,
       levelGroup: null,
-      // subjects: [],
-      // papers: [],
-
       formData: {
         rank: null,
         name: null,
@@ -42,8 +39,6 @@ export default {
   },
   created() {
     this.getLevel();
-    // this.getSubjects();
-    // this.getPapers();
   },
   methods: {
     getLevel() {
@@ -63,56 +58,6 @@ export default {
         this.levelGroup = response.data;
       });
     },
-
-    // getSubjects() {
-    //   this.$api.get(`/subjects/`).then((response) => {
-    //     this.subjects = response.data;
-    //   });
-    // },
-
-    // getPapers() {
-    //   this.$api.get(`/papers/`).then((response) => {
-    //     this.papers = response.data;
-    //   });
-    // },
-    // addLevelSubjects() {
-    //   this.$api
-    //     .put(`/levels/${this.$route.params.id}/subjects/`, [1, 2])
-    //     .then((response) => {
-    //       this.level = response.data;
-    //       console.log(response.data);
-    //     });
-    // },
-
-    // updateLevel() {
-    //   this.$setLoading(this, true);
-    //   this.$api
-    //     .put(`/levels/${this.level?.id}/`, this.formData)
-    //     .then((response) => {
-    //       this.level = response.data;
-    //       this.$setLoading(this, false);
-    //     });
-    // },
-
-    // deleteLevel(level) {
-    //   this.$refs.confirmDialog
-    //     .show({
-    //       title: "Hello",
-    //       message: `Are you sure you want to delete the level "${level?.name}"?`,
-    //       okButton: "Yes, delete",
-    //     })
-    //     .then((res) => {
-    //       if (res) {
-    //         this.$setLoading(this, true);
-    //         this.$api.delete(`/levels/${level?.id}/`).then((response) => {
-    //           if (response.status == 204) {
-    //             this.$setLoading(this, false);
-    //             this.$router.push("/levels");
-    //           }
-    //         });
-    //       }
-    //     });
-    // },
   },
 };
 </script>

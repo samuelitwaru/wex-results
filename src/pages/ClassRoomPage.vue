@@ -19,6 +19,7 @@
 
       <div class="q-pa-sm" align="right">
         <q-btn
+          v-if="$userHasGroup('dos')"
           color="negative"
           label="Delete"
           no-caps
@@ -145,5 +146,4 @@ export default {
 };
 </script>
 
-<style>
-</style>
+<style></style>

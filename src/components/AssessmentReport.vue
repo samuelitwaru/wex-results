@@ -328,11 +328,6 @@ export default {
       },
     };
   },
-  watch: {
-    columns(newValue, oldValue) {
-      alert();
-    },
-  },
   computed: {
     isClassTeacher() {
       const userTeacherId = this.$getState("user")?.teacher_id;

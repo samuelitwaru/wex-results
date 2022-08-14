@@ -20,6 +20,7 @@
                   type="text"
                   label="Name"
                   required
+                  :rules="[$required]"
                 />
               </div>
               <div class="col q-mr-xs">
@@ -38,7 +39,7 @@
                   label="Level"
                   emit-value
                   map-options
-                  required
+                  :rules="[$required]"
                 />
               </div>
               <div class="col q-mr-xs">
@@ -51,7 +52,7 @@
                   label="Class Teacher"
                   emit-value
                   map-options
-                  required
+                  :rules="[$required]"
                 />
               </div>
             </div>
@@ -138,5 +139,4 @@ export default {
 };
 </script>
 
-<style>
-</style>
+<style></style>

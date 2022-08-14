@@ -12,6 +12,7 @@
             {{ user.last_name }}
           </div>
           <div>{{ user.email }}</div>
+          <div>{{ user.telephone }}</div>
         </q-card-section>
       </q-card-section>
       <div class="q-pa-sm" align="right">
@@ -57,13 +58,15 @@
                   required
                 />
               </div>
-              <div
-                class="col q-ml-xs q-my-auto"
-                v-if="!user?.groups?.map((grp) => grp.name).includes('dos')"
-              >
-                <q-checkbox
-                  v-model="formData.is_active"
-                  :label="`Use is ${formData.is_active ? '' : 'NOT'} active`"
+              <div class="col q-ml-xs">
+                <q-input
+                  v-model="formData.telephone"
+                  type="text"
+                  label="Telephone"
+                  required
+                  mask="phone"
+                  unmasked-value
+                  hint="eg (078) 190 - 2516"
                 />
               </div>
             </div>
@@ -75,6 +78,12 @@
                 v-model="formData.groups"
                 :val="group.id"
                 :label="group.name.toUpperCase().replace('_', ' ')"
+              />
+            </div>
+            <div v-if="!user?.groups?.map((grp) => grp.name).includes('dos')">
+              <q-checkbox
+                v-model="formData.is_active"
+                :label="`Use is ${formData.is_active ? '' : 'NOT'} active`"
               />
             </div>
             <div align="right">
@@ -119,6 +128,7 @@ export default {
         this.formData.first_name = this.user.first_name;
         this.formData.last_name = this.user.last_name;
         this.formData.email = this.user.email;
+        this.formData.telephone = this.user.telephone;
         this.formData.is_active = this.user.is_active;
         this.formData.groups = this.user.groups.map((group) => group.id);
         this.$setLoading(this, false);
