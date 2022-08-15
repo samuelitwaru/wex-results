@@ -78,13 +78,11 @@ export default {
       activityColumns: {
         code: true,
         subject: true,
-        competency: true,
-        score: true,
-        descriptor: true,
-        skills: true,
-        skills: true,
-        remarks: true,
-        subjectTeacher: true,
+        totalScores: true,
+        average: true,
+        identifier: true,
+        achievement: true,
+        initials: true,
       },
       formData: {
         report_type: "assessment",

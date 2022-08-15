@@ -9,8 +9,8 @@ import axiosRetry from "axios-retry";
 // "export default () => {}" function below (which runs individually
 // for each client)
 
-var hostURL = "https://wex-erp.herokuapp.com";
 var hostURL = "http://127.0.0.1:8000";
+var hostURL = "https://wex-erp.herokuapp.com";
 var hostURL = "https://mydemoapp.pythonanywhere.com/";
 var apiURL = `${hostURL}/api`;
 var mediaURL = `${hostURL}/media`;
@@ -34,7 +34,6 @@ export default boot(({ app, router, store }) => {
         router.push("/login");
       } else if (error.response.status == 400) {
         var data = error.response.data;
-        console.log(data);
         var msg = "Bad request. Please check your input data.";
         if (typeof data == "string") {
           msg = data;
@@ -42,6 +41,12 @@ export default boot(({ app, router, store }) => {
           msg = Object.values(data);
           store.commit("results/updateFormDataErrors", data);
         }
+        store.commit("results/updateAlertMsg", `${msg}`);
+        store.commit("results/updateLoadingState", false);
+        store.commit("results/updateAlertState", true);
+      } else if (error.response.status == 500) {
+        var msg =
+          "505: An Error occured. Please refresh the page and try again.";
         store.commit("results/updateAlertMsg", `${msg}`);
         store.commit("results/updateLoadingState", false);
         store.commit("results/updateAlertState", true);

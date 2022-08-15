@@ -34,16 +34,15 @@
             </div>
 
             <div class="row">
-              <div class="col">
+              <div class="col q-mr-xs">
                 <q-input
                   v-model="formData.middle_name"
                   type="text"
                   label="Middle Name"
                 />
               </div>
-              <div class="col q-my-auto">
-                <q-radio v-model="formData.gender" val="M" label="Male" />
-                <q-radio v-model="formData.gender" val="F" label="Female" />
+              <div class="col q-ml-xs">
+                <q-input v-model="formData.house" type="text" label="House" />
               </div>
             </div>
 
@@ -94,6 +93,19 @@
             <div class="row">
               <div class="col q-mr-xs">
                 <q-select
+                  outlined
+                  v-model="formData.nationality"
+                  :option-label="(item) => `${item[1]}`"
+                  option-value="0"
+                  :options="nationalities"
+                  label="Nationality"
+                  emit-value
+                  map-options
+                  :rules="[$required]"
+                />
+              </div>
+              <div class="col q-ml-xs">
+                <q-select
                   v-if="!class_room"
                   outlined
                   v-model="formData.class_room"
@@ -114,18 +126,11 @@
                   </template>
                 </q-select>
               </div>
-              <div class="col q-ml-xs">
-                <q-select
-                  outlined
-                  v-model="formData.nationality"
-                  :option-label="(item) => `${item[1]}`"
-                  option-value="0"
-                  :options="nationalities"
-                  label="Nationality"
-                  emit-value
-                  map-options
-                  :rules="[$required]"
-                />
+            </div>
+            <div class="row">
+              <div class="col q-my-auto">
+                <q-radio v-model="formData.gender" val="M" label="Male" />
+                <q-radio v-model="formData.gender" val="F" label="Female" />
               </div>
             </div>
 
@@ -168,6 +173,7 @@ export default {
         first_name: null,
         last_name: null,
         middle_name: null,
+        house: null,
         gender: null,
         dob: null,
         class_room: null,
@@ -213,6 +219,7 @@ export default {
       this.formData.first_name = null;
       this.formData.last_name = null;
       this.formData.middle_name = null;
+      this.formData.house = null;
       this.formData.gender = null;
       // this.formData.dob = null;
       this.formData.class_room = null;

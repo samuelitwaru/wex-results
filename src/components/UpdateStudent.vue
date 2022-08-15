@@ -7,7 +7,7 @@
             v-model="formData.first_name"
             type="text"
             label="First Name"
-            required
+            :rules="[$required]"
           />
         </div>
         <div class="col q-ml-xs">
@@ -16,21 +16,21 @@
             type="text"
             label="Last Name"
             required
+            :rules="[$required]"
           />
         </div>
       </div>
 
       <div class="row">
-        <div class="col">
+        <div class="col q-mr-xs">
           <q-input
             v-model="formData.middle_name"
             type="text"
             label="Middle Name"
           />
         </div>
-        <div class="col q-my-auto">
-          <q-radio v-model="formData.gender" val="M" label="Male" />
-          <q-radio v-model="formData.gender" val="F" label="Female" />
+        <div class="col q-ml-xs">
+          <q-input v-model="formData.house" type="text" label="House" />
         </div>
       </div>
 
@@ -71,20 +71,6 @@
       <div class="row">
         <div class="col q-mr-xs">
           <q-select
-            v-if="!class_room"
-            outlined
-            v-model="formData.class_room"
-            :option-label="(item) => `${item.name} ${item.stream || ''}`"
-            option-value="id"
-            :options="classRooms"
-            label="Class"
-            emit-value
-            map-options
-            :rules="[$required]"
-          />
-        </div>
-        <div class="col q-ml-xs">
-          <q-select
             outlined
             v-model="formData.nationality"
             :option-label="(item) => `${item[1]}`"
@@ -95,6 +81,32 @@
             map-options
             :rules="[$required]"
           />
+        </div>
+        <div class="col q-ml-xs">
+          <q-select
+            v-if="!class_room"
+            outlined
+            v-model="formData.class_room"
+            :option-label="(item) => `${item.name} ${item.stream || ''}`"
+            option-value="id"
+            :options="classRooms"
+            label="Class"
+            emit-value
+            map-options
+            :rules="[$required]"
+          >
+            <template v-slot:no-option>
+              <q-item>
+                <q-item-section class="text-grey"> No results </q-item-section>
+              </q-item>
+            </template>
+          </q-select>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col q-my-auto">
+          <q-radio v-model="formData.gender" val="M" label="Male" />
+          <q-radio v-model="formData.gender" val="F" label="Female" />
         </div>
       </div>
 
@@ -164,6 +176,7 @@ export default {
         first_name: null,
         last_name: null,
         middle_name: null,
+        house: null,
         gender: null,
         dob: null,
         class_room: null,
@@ -185,6 +198,7 @@ export default {
         this.formData.first_name = this.student?.first_name;
         this.formData.last_name = this.student?.last_name;
         this.formData.middle_name = this.student?.middle_name;
+        this.formData.house = this.student?.house;
         this.formData.gender = this.student?.gender;
         this.formData.dob = this.student?.dob;
         this.formData.class_room = this.student?.class_room;

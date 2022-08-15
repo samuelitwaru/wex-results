@@ -36,7 +36,7 @@
             >
               {{ subjectReport.subject.name }}
             </td>
-            <td :class="{ 'mini-col': !cv.total_scores }">
+            <td :class="{ 'mini-col': !cv.totalScores }">
               {{ subjectReport.activity_total_scores }}
             </td>
             <td :class="{ 'mini-col': !cv.average }">
