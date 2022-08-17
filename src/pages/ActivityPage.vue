@@ -16,7 +16,10 @@
           <div v-else><q-icon name="fa fa-lock" /> CLOSED</div>
         </q-card-section>
       </q-card-section>
-      <q-card-actions align="right" v-if="isActivityOwner && activity.is_open">
+      <q-card-actions
+        align="right"
+        v-if="$userHasGroup('dos') && activity.is_open"
+      >
         <q-btn color="primary" label="close" dense @click="closeActivity" />
         <q-btn
           color="negative"
@@ -154,5 +157,4 @@ export default {
 };
 </script>
 
-<style>
-</style>
+<style></style>

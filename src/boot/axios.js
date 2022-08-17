@@ -9,9 +9,9 @@ import axiosRetry from "axios-retry";
 // "export default () => {}" function below (which runs individually
 // for each client)
 
-var hostURL = "http://127.0.0.1:8000";
 var hostURL = "https://wex-erp.herokuapp.com";
 var hostURL = "https://mydemoapp.pythonanywhere.com/";
+var hostURL = "http://127.0.0.1:8000";
 var apiURL = `${hostURL}/api`;
 var mediaURL = `${hostURL}/media`;
 
