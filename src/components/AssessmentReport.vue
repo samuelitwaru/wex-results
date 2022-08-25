@@ -321,8 +321,8 @@ export default {
         subjectTeacher: false,
       },
       formData: {
-        class_teacher_comment: "",
-        head_teacher_comment: "",
+        class_teacher_comment: this.report?.report?.class_teacher_comment || "",
+        head_teacher_comment: this.report?.report?.head_teacher_comment || "",
         overwrite: true,
         reports: [],
       },
@@ -362,18 +362,10 @@ export default {
       return 0;
     },
   },
-  watch: {
-    report(newValue, oldValue) {
-      this.formData.class_teacher_comment =
-        newValue.report.class_teacher_comment;
-      this.formData.head_teacher_comment = newValue.report.head_teacher_comment;
-      this.formData.reports = [newValue.report.id];
-    },
-  },
   methods: {
     saveComment() {
       this.$setLoading(this, true);
-      console.log(this.formData);
+      this.formData.reports = [this.report.report.id];
       this.$api.put(`/reports/comment/`, this.formData).then((response) => {
         this.report.report = response.data[0];
         this.$setLoading(this, false);
