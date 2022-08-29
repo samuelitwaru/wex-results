@@ -47,8 +47,18 @@
         </tr>
         <tr
           rowspan="8"
-          style="height: 5rem; background-color: rgba(0, 0, 0, 0.02)"
+          style="height: 4rem; background-color: rgba(0, 0, 0, 0.02)"
         ></tr>
+      </tbody>
+    </q-markup-table>
+    <q-markup-table>
+      <tbody>
+        <tr>
+          <td><strong>Total</strong></td>
+          <td>{{ report.total_scores }}</td>
+          <td><strong>Average</strong></td>
+          <td>{{ report.average_scores }}</td>
+        </tr>
       </tbody>
     </q-markup-table>
     <div v-if="report">
