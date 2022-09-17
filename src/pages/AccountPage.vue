@@ -77,6 +77,7 @@
             <q-icon v-else name="edit" size="xl" />
             <crop-image-uploader
               :url="`${$apiURL}/users/${user2?.id}/signature/upload/`"
+              :aspectRatio="''"
               @updateObject="user2 = $event"
             />
           </q-card-section>

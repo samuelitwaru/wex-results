@@ -5,6 +5,7 @@
       <div class="flex justify-between q-py-sm">
         <label class="text-h6">Reports</label>
         <download-class-room-report-form />
+        <BulkReportCommenting />
         <q-btn
           v-if="
             period?.is_promotional &&
@@ -165,44 +166,6 @@
           </template>
         </tbody>
       </q-markup-table>
-
-      <div class="q-pt-sm" :class="{ disabled: formData.reports.length == 0 }">
-        <q-form @submit="saveComment" @reset="resetForm" class="q-gutter-md">
-          <div class="q-py-sm" v-if="isClassTeacher">
-            <div class="text-subtitle1">Class Teacher Comment</div>
-            <q-input
-              outlined
-              v-model="formData.class_teacher_comment"
-              :disable="formData.reports.length == 0"
-            />
-          </div>
-          <div class="q-py-sm" v-if="$userHasGroup('head_teacher')">
-            <div class="text-subtitle1">Head Teacher Comment</div>
-            <q-input
-              outlined
-              v-model="formData.head_teacher_comment"
-              :disable="formData.reports.length == 0"
-            />
-          </div>
-
-          <div v-if="$userHasGroup('head_teacher') || isClassTeacher">
-            <q-checkbox
-              v-model="formData.overwrite"
-              label="Overwrite existing comments"
-              :disable="formData.reports.length == 0"
-            />
-
-            <div class="q-pt-s" align="right">
-              <q-btn
-                color="primary"
-                label="submit"
-                type="submit"
-                :disable="formData.reports.length == 0"
-              />
-            </div>
-          </div>
-        </q-form>
-      </div>
     </div>
   </q-page>
 </template>
@@ -211,8 +174,14 @@
 import ConfirmDialog from "src/components/ConfirmDialog.vue";
 import FilterReportsForm from "src/components/FilterReportsForm.vue";
 import DownloadClassRoomReportForm from "./DownloadClassRoomReportForm.vue";
+import BulkReportCommenting from "./bulk_report_commenting/BulkReportCommenting.vue";
 export default {
-  components: { ConfirmDialog, FilterReportsForm, DownloadClassRoomReportForm },
+  components: {
+    ConfirmDialog,
+    FilterReportsForm,
+    DownloadClassRoomReportForm,
+    BulkReportCommenting,
+  },
   name: "ReportsPage",
   data() {
     return {

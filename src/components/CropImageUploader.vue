@@ -91,7 +91,7 @@
                   :viewMode="2"
                   zoomable
                   drag-mode="move"
-                  :aspectRatio="1 / 1"
+                  :aspectRatio="aspectRatio"
                   style="
                     width: 100%;
                     min-height: 280px;
@@ -116,7 +116,16 @@
 import VueCropper from "vue-cropperjs";
 import "cropperjs/dist/cropper.css";
 export default {
-  props: ["url"],
+  props: {
+    url: {
+      type: String,
+    },
+    aspectRatio: {
+      type: String,
+      defaullt: "1 / 1",
+    },
+  },
+  // props: ["url", "aspectRatio"],
   components: { VueCropper },
   data() {
     return {
