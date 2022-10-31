@@ -7,7 +7,7 @@
       </q-card-section>
       <q-card-actions align="right">
         <q-btn flat label="Cancel" color="primary" v-close-popup />
-        <q-btn flat label="Turn on Wifi" color="primary" v-close-popup />
+        <q-btn flat label="Submit" color="primary" v-close-popup />
       </q-card-actions>
     </q-card>
   </q-dialog>
@@ -37,5 +37,4 @@ export default {
 };
 </script>
 
-<style>
-</style>
+<style></style>

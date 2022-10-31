@@ -77,7 +77,8 @@
             <th class="text-left">Student</th>
             <th class="text-right">Class Room</th>
             <th class="text-right">Result</th>
-            <th class="text-right" colspan="2">Comments</th>
+            <th class="text-right" colspan="2">Comments (Assessment)</th>
+            <th class="text-right">Comments (Activity)</th>
             <th class="text-right"></th>
           </tr>
         </thead>
@@ -135,6 +136,7 @@
               </td>
               <td>CT</td>
               <td>{{ report.class_teacher_comment }}</td>
+              <td>{{ report.compentency_class_teacher_comment }}</td>
               <td rowspan="2">
                 <div class="flex justify-around items-center">
                   <router-link
@@ -162,6 +164,7 @@
                 HT
               </td>
               <td>{{ report.head_teacher_comment }}</td>
+              <td>{{ report.competency_head_teacher_comment }}</td>
             </tr>
           </template>
         </tbody>
