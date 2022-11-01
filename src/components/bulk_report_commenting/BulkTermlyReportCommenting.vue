@@ -103,6 +103,7 @@ export default {
           this.reports = response.data;
           this.resetForm();
           this.$setLoading(this, false);
+          this.$emit("get-reports");
         });
     },
     resetForm() {

@@ -25,18 +25,22 @@
           </div>
           <div>
             <BulkTermlyReportCommenting
+              ref="bulkTermlyReportCommenting"
               :levelGroupName="levelGroupName"
               v-if="formData.report_type == 'assessment'"
+              @get-reports="getReports"
             />
             <BulkCompetencyReportCommenting
+              ref="bulkCompetencyReportCommenting"
               :classRoom="classRoom"
               v-if="formData.report_type == 'activity'"
+              @get-reports="getReports"
             />
           </div>
         </q-card-section>
         <q-card-actions align="right">
           <q-btn flat label="Cancel" color="primary" v-close-popup />
-          <q-btn flat label="Submit" color="primary" v-close-popup />
+          <q-btn flat label="Submit" color="primary" @click="saveComment" />
         </q-card-actions>
       </q-card>
     </q-dialog>
@@ -76,6 +80,16 @@ export default {
             this.levelGroupName = this.classRoom.level_detail.level_group_name;
           }
         });
+    },
+    saveComment() {
+      if (this.formData.report_type == "assessment") {
+        this.$refs.bulkTermlyReportCommenting.saveComment();
+      } else {
+        this.$refs.bulkCompetencyReportCommenting.saveComment();
+      }
+    },
+    getReports() {
+      this.$emit("get-reports");
     },
   },
   components: { BulkTermlyReportCommenting, BulkCompetencyReportCommenting },

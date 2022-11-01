@@ -5,7 +5,7 @@
       <div class="flex justify-between q-py-sm">
         <label class="text-h6">Reports</label>
         <download-class-room-report-form />
-        <BulkReportCommenting />
+        <BulkReportCommenting @get-reports="getReports" />
         <q-btn
           v-if="
             period?.is_promotional &&
@@ -47,7 +47,6 @@
                 flat
                 label="Submit"
                 color="primary"
-                v-close-popup
                 @click="addPromotions"
               />
             </q-card-actions>
@@ -136,7 +135,7 @@
               </td>
               <td>CT</td>
               <td>{{ report.class_teacher_comment }}</td>
-              <td>{{ report.compentency_class_teacher_comment }}</td>
+              <td>{{ report.competency_class_teacher_comment }}</td>
               <td rowspan="2">
                 <div class="flex justify-around items-center">
                   <router-link
@@ -223,7 +222,7 @@ export default {
         .then((response) => {
           this.reports = response.data;
           this.$setLoading(this, false);
-          this.getComputedReports();
+          // this.getComputedReports();
         });
     },
 
