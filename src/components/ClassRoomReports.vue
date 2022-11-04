@@ -4,7 +4,9 @@
     <div class="q-pa-sm">
       <div class="flex justify-between q-py-sm">
         <label class="text-h6">Reports</label>
-        <download-class-room-report-form />
+        <download-class-room-report-form
+          v-if="$userHasAnyGroups(['dos', 'head_teacher'])"
+        />
         <BulkReportCommenting @get-reports="getReports" />
         <q-btn
           v-if="
@@ -75,7 +77,7 @@
             </th>
             <th class="text-left">Student</th>
             <th class="text-right">Class Room</th>
-            <th class="text-right">Result</th>
+            <!-- <th class="text-right">Result</th> -->
             <th class="text-right" colspan="2">Comments (Assessment)</th>
             <th class="text-right">Comments (Activity)</th>
             <th class="text-right"></th>
@@ -111,7 +113,7 @@
                 {{ report.student.class_room_detail.name }}
                 {{ report.student.class_room_detail.stream || "" }}
               </td>
-              <td rowspan="2" class="q-my-auto">
+              <!-- <td rowspan="2" class="q-my-auto">
                 <span v-if="report.level.level_group_name == 'A'">
                   <q-btn
                     class="q-py-none"
@@ -132,7 +134,7 @@
                   />
                   Aggr
                 </span>
-              </td>
+              </td> -->
               <td>CT</td>
               <td>{{ report.class_teacher_comment }}</td>
               <td>{{ report.competency_class_teacher_comment }}</td>
