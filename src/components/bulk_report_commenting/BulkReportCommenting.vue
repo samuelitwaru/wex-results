@@ -6,7 +6,7 @@
       label="Bulk Commenting"
       @click="show = true"
     />
-    <q-dialog v-model="show" persistent>
+    <q-dialog v-model="show">
       <q-card>
         <q-card-section class="items-center">
           <div>
@@ -26,18 +26,17 @@
           <div>
             <BulkTermlyReportCommenting
               :levelGroupName="levelGroupName"
+              :classRoom="classRoom"
               v-if="formData.report_type == 'assessment'"
+              @refreshReports="$emit(`refreshReports`)"
             />
             <BulkCompetencyReportCommenting
               :classRoom="classRoom"
               v-if="formData.report_type == 'activity'"
+              @refreshReports="$emit(`refreshReports`)"
             />
           </div>
         </q-card-section>
-        <q-card-actions align="right">
-          <q-btn flat label="Cancel" color="primary" v-close-popup />
-          <q-btn flat label="Turn on Wifi" color="primary" v-close-popup />
-        </q-card-actions>
       </q-card>
     </q-dialog>
   </div>

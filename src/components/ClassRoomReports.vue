@@ -5,7 +5,7 @@
       <div class="flex justify-between q-py-sm">
         <label class="text-h6">Reports</label>
         <download-class-room-report-form />
-        <BulkReportCommenting />
+        <BulkReportCommenting @refreshReports="getReports" />
         <q-btn
           v-if="
             period?.is_promotional &&
@@ -220,7 +220,7 @@ export default {
         .then((response) => {
           this.reports = response.data;
           this.$setLoading(this, false);
-          this.getComputedReports();
+          // this.getComputedReports();
         });
     },
 
