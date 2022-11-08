@@ -40,6 +40,7 @@
 </template>
 <script>
 export default {
+  props: ["classRoom"],
   data() {
     return {
       formData: {
@@ -50,6 +51,13 @@ export default {
         overwrite: true,
       },
     };
+  },
+  computed: {
+    isClassTeacher() {
+      const currentTeacher = this.$getState("user")?.teacher_id;
+      const classTeacher = this.classRoom?.teacher;
+      return currentTeacher == classTeacher;
+    },
   },
   methods: {
     saveComment() {
@@ -66,7 +74,7 @@ export default {
           this.reports = response.data;
           this.resetForm();
           this.$setLoading(this, false);
-          this.$emit("get-reports");
+          this.$emit("refreshReports");
         });
     },
     resetForm() {},

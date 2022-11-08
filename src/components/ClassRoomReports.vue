@@ -4,10 +4,8 @@
     <div class="q-pa-sm">
       <div class="flex justify-between q-py-sm">
         <label class="text-h6">Reports</label>
-        <download-class-room-report-form
-          v-if="$userHasAnyGroups(['dos', 'head_teacher'])"
-        />
-        <BulkReportCommenting @get-reports="getReports" />
+        <download-class-room-report-form />
+        <BulkReportCommenting @refreshReports="getReports" />
         <q-btn
           v-if="
             period?.is_promotional &&

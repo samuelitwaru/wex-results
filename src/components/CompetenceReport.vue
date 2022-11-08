@@ -29,8 +29,11 @@
           <td :class="{ 'mini-col': !cv.subject }">
             {{ subjectReport.subject.name }}
           </td>
-          <td :class="{ 'mini-col': !cv.totalScores }">
-            {{ subjectReport.activity_total_scores }}
+          <td :class="{ 'mini-col': !cv.AOI }">
+            {{ subjectReport.AOI }}
+          </td>
+          <td :class="{ 'mini-col': !cv.scores }">
+            {{ subjectReport.scores_string }}
           </td>
           <td :class="{ 'mini-col': !cv.average }">
             {{ subjectReport.activity_average_score }}
@@ -156,7 +159,8 @@ export default {
       cv: {
         code: true,
         subject: true,
-        totalScores: true,
+        AOI: true,
+        scores: true,
         average: true,
         identifier: true,
         achievement: true,

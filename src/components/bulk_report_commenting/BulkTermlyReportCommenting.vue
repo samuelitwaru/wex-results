@@ -50,7 +50,7 @@
           <q-input outlined v-model="formData.comment" required />
         </div>
 
-        <div v-if="$userHasGroup('head_teacher') || isClassTeacher">
+        <div v-if="isClassTeacher">
           <q-checkbox
             v-model="formData.overwrite"
             label="Overwrite existing comments"
@@ -103,7 +103,7 @@ export default {
           this.reports = response.data;
           this.resetForm();
           this.$setLoading(this, false);
-          this.$emit("get-reports");
+          this.$emit("refreshReports");
         });
     },
     resetForm() {
