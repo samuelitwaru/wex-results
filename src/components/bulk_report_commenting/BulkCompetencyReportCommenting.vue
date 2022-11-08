@@ -45,7 +45,7 @@ export default {
     return {
       formData: {
         competency_score__gte: 0,
-        competency_score__lte: 10,
+        competency_score__lte: 3,
         student__class_room: this.$route.params.id,
         comment: "",
         overwrite: true,

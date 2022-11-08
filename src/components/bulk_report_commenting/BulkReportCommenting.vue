@@ -25,12 +25,14 @@
           </div>
           <div>
             <BulkTermlyReportCommenting
+              ref="bulkTermlyReportCommenting"
               :levelGroupName="levelGroupName"
               :classRoom="classRoom"
               v-if="formData.report_type == 'assessment'"
               @refreshReports="$emit(`refreshReports`)"
             />
             <BulkCompetencyReportCommenting
+              ref="bulkCompetencyReportCommenting"
               :classRoom="classRoom"
               v-if="formData.report_type == 'activity'"
               @refreshReports="$emit(`refreshReports`)"
@@ -75,6 +77,16 @@ export default {
             this.levelGroupName = this.classRoom.level_detail.level_group_name;
           }
         });
+    },
+    saveComment() {
+      if (this.formData.report_type == "assessment") {
+        this.$refs.bulkTermlyReportCommenting.saveComment();
+      } else {
+        this.$refs.bulkCompetencyReportCommenting.saveComment();
+      }
+    },
+    getReports() {
+      this.$emit("get-reports");
     },
   },
   components: { BulkTermlyReportCommenting, BulkCompetencyReportCommenting },
