@@ -39,7 +39,7 @@
             <td :class="{ 'mini-col': !cv.paper }">
               {{ subjectReport.papers[0]?.paper?.description }}
             </td>
-            <td :class="{ 'mini-col': !cv.assessments }" class="text-right">
+            <td :class="{ 'mini-col': !cv.scores }" class="text-right">
               <q-btn
                 v-for="score in subjectReport.papers[0]?.scores"
                 :key="score"
@@ -82,7 +82,7 @@
             </td>
             <td
               v-if="levelGroup?.name == 'O'"
-              :class="{ 'mini-col': !cv.aggregates }"
+              :class="{ 'mini-col': !cv.Grade }"
               :rowspan="subjectReport.papers.length"
             >
               {{ $wrapAggr(subjectReport.aggregate) }}
@@ -122,7 +122,7 @@
               {{ paper.paper.description }}
             </td>
             <td
-              :class="{ 'mini-col': !cv.assessments }"
+              :class="{ 'mini-col': !cv.scores }"
               class="text-right"
               style="
                 border-left: 1px solid rgba(0, 0, 0, 0.12);
@@ -192,7 +192,7 @@
               style="margin-left: 4px"
             />
           </td>
-          <td :class="{ 'mini-col': !cv.aggregates }">
+          <td :class="{ 'mini-col': !cv.Grade }">
             <q-btn
               v-if="levelGroup && levelGroup.name == 'O'"
               class="q-py-none"
@@ -308,14 +308,14 @@ export default {
         code: false,
         subject: true,
         paper: true,
-        assessments: true,
+        scores: true,
         score: false,
         descriptor: false,
         total: true,
         average: true,
         aggregate: true,
         subjectAverage: false,
-        aggregates: true,
+        Grade: true,
         grade: true,
         points: true,
         subjectTeacher: true,
@@ -346,7 +346,7 @@ export default {
       } else if (this.levelGroup?.name == "A") {
         delete this.columns["score"];
         delete this.columns["descriptor"];
-        delete this.columns["aggregates"];
+        delete this.columns["Grade"];
       }
       return this.columns;
     },
