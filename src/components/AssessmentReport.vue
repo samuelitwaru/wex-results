@@ -75,6 +75,12 @@
               {{ $wrapAggr(subjectReport.papers[0]?.aggregate) }}
             </td>
             <td
+              :class="{ 'mini-col': !cv.subjectTotal }"
+              :rowspan="subjectReport.papers.length"
+            >
+              {{ subjectReport.total }}
+            </td>
+            <td
               :class="{ 'mini-col': !cv.subjectAverage }"
               :rowspan="subjectReport.papers.length"
             >
@@ -314,6 +320,7 @@ export default {
         total: true,
         average: true,
         aggregate: true,
+        subjectTotal: false,
         subjectAverage: false,
         Grade: true,
         grade: true,
